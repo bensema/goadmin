@@ -22,3 +22,19 @@ func DeleteAdminRoleByAdminId(c *gin.Context, db *sql.DB, adminId int) (err erro
 	_, err = db.ExecContext(c, query, args...)
 	return err
 }
+
+func DeleteRolePermissionByRoleId(c *gin.Context, db *sql.DB, roleId int) (err error) {
+	obj := &model.RolePermission{}
+	builder := sqlBuilder()
+	query, args := builder.Delete(obj.Table()).Where(entsql.EQ("role_id", roleId)).Query()
+	_, err = db.ExecContext(c, query, args...)
+	return err
+}
+
+func GetRoleByName(c *gin.Context, db *sql.DB, name string) (obj *model.Role, err error) {
+	obj = &model.Role{}
+	builder := sqlBuilder()
+	query, args := builder.Select(obj.Columns()...).From(entsql.Table(obj.Table())).Where(entsql.EQ("name", name)).Query()
+	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
+	return
+}

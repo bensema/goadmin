@@ -346,3 +346,221 @@ func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
 	err = s.dao.CreateLogAdminOperation(c, recordLog)
 	return err
 }
+
+// 角色
+
+func (s *Service) FindRolePageV1(c *gin.Context, req *model.FindRoleReq) (reply *model.FindRoleReplyV1, err error) {
+	reply = &model.FindRoleReplyV1{}
+	var count int
+	var dataTmp []*model.Role
+	var data []*model.RoleV1
+	if count, err = s.dao.PageFindRoleTotal(c, req); err != nil {
+		return
+	}
+	if count <= 0 {
+		return
+	}
+	if dataTmp, err = s.dao.FindRole(c, req); err != nil {
+		return
+	}
+	for _, d := range dataTmp {
+		var ps []*model.Permission
+		frpr := &model.FindRolePermissionReq{}
+		frpr.RoleId = d.Id
+		rolePermissions, _ := s.dao.FindRolePermission(c, frpr)
+
+		for _, rolePermission := range rolePermissions {
+			fpr := &model.FindPermissionReq{}
+			fpr.Id = rolePermission.PermissionId
+			permissions, _ := s.dao.FindPermission(c, fpr)
+			for _, permission := range permissions {
+				ps = append(ps, permission)
+			}
+		}
+
+		data = append(data, &model.RoleV1{
+			Id:          d.Id,
+			Name:        d.Name,
+			Permissions: ps,
+		})
+	}
+	reply.Data = data
+	reply.Total = count
+	reply.Num = req.Num
+	reply.Size = req.Size
+	return
+}
+
+func (s *Service) GetRoleV1(c *gin.Context, id int) (*model.RoleV1, error) {
+	var data *model.RoleV1
+	dataTmp, err := s.dao.GetRoleById(c, id)
+	if err == sql.ErrNoRows {
+		return nil, errors.New("角色不存在")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	var rls []*model.Permission
+	farr := &model.FindRolePermissionReq{}
+	farr.RoleId = id
+	adminRoles, _ := s.dao.FindRolePermission(c, farr)
+
+	for _, adminRole := range adminRoles {
+		frr := &model.FindPermissionReq{}
+		frr.Id = adminRole.PermissionId
+		roles, _ := s.dao.FindPermission(c, frr)
+		for _, role := range roles {
+			rls = append(rls, role)
+		}
+	}
+
+	data = &model.RoleV1{
+		Id:          dataTmp.Id,
+		Name:        dataTmp.Name,
+		Permissions: rls,
+	}
+
+	return data, err
+}
+
+func (s *Service) FindAllPermission(c *gin.Context) (reply []*model.Permission, err error) {
+	return s.dao.FindPermission(c, &model.FindPermissionReq{})
+}
+
+func (s *Service) UpdateRole(c *gin.Context, info *model.UpdateRole, filed []string) error {
+	var content string
+	aInfo, err := s.dao.GetRoleById(c, info.Id)
+	if err != nil {
+		return err
+	}
+	for _, v := range filed {
+		switch v {
+		case "name":
+			content += fmt.Sprintf("名称:%s;", info.Name)
+			_ = s.dao.UpdateRoleById(c, info.Id, "name", info.Name)
+		case "permissions":
+			for _, permission := range info.Permissions {
+				_, err := s.dao.GetPermissionById(c, permission)
+				if err != nil {
+					return errors.New("权限不存在")
+				}
+			}
+			err = s.dao.DeleteRolePermissionByRoleId(c, info.Id)
+			if err != nil {
+				return err
+			}
+			for _, permission := range info.Permissions {
+				rInfo, err := s.dao.GetPermissionById(c, permission)
+				if err != nil {
+					return errors.New("权限不存在")
+				}
+
+				content += fmt.Sprintf("权限编号:%d;权限:%s;", rInfo.Id, rInfo.Name)
+				_ = s.dao.CreateRolePermission(c, &model.RolePermission{
+					RoleId:       info.Id,
+					PermissionId: permission,
+				})
+			}
+		}
+	}
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "role_update",
+		OperationName: "修改角色",
+		Content:       fmt.Sprintf("修改角色:角色:%s;角色编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) AddRole(c *gin.Context, info *model.AddRole) error {
+
+	role := &model.Role{}
+	aInfo, err := s.dao.GetRoleByName(c, info.Name)
+	if err != sql.ErrNoRows {
+		return errors.New("角色名已存在")
+	}
+	role.Name = info.Name
+
+	err = s.dao.CreateRole(c, role)
+	if err != nil {
+		return err
+	}
+	uInfo, err := s.dao.GetRoleByName(c, info.Name)
+	if err != nil {
+		return err
+	}
+	for _, permission := range info.Permissions {
+		_ = s.dao.CreateRolePermission(c, &model.RolePermission{
+			RoleId:       uInfo.Id,
+			PermissionId: permission,
+		})
+	}
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "add_role",
+		OperationName: "添加角色",
+		Content:       fmt.Sprintf("添加角色:角色:%s;角色编号:%d;", aInfo.Name, aInfo.Id),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) DeleteRole(c *gin.Context, id int) error {
+
+	var content string
+	aInfo, err := s.dao.GetRoleById(c, id)
+	if err != nil {
+		return errors.New("角色不存在")
+	}
+
+	u := &model.FindAdminRoleReq{}
+	u.RoleId = id
+	arl, err := s.dao.FindAdminRole(c, u)
+	if err != nil {
+		return errors.New("获取用户-角色失败")
+	}
+	if len(arl) > 0 {
+		return errors.New("还有账户在使用此角色")
+	}
+
+	err = s.dao.DeleteRoleById(c, id)
+	err = s.dao.DeleteRolePermissionByRoleId(c, id)
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "delete_role",
+		OperationName: "删除角色",
+		Content:       fmt.Sprintf("删除角色:角色:%s;角色编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}

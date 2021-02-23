@@ -101,6 +101,9 @@ func buildSqlFindPermission(req *model.FindPermissionReq, sqlType string) (strin
 	// if req.Id != "" {
 	//	  selector = selector.Where(entsql.EQ("id", req.Id))
 	// }
+	if req.Id != 0 {
+		selector = selector.Where(entsql.EQ("id", req.Id))
+	}
 
 	// count 返回
 	if sqlType == SqlPageCount {

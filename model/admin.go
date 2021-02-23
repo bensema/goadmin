@@ -34,3 +34,26 @@ type AddAdmin struct {
 	Status   int    `json:"status"`
 	Roles    []int  `json:"roles"`
 }
+
+// role 数据v1
+type RoleV1 struct {
+	Id          int           `json:"id"`
+	Name        string        `json:"name"`
+	Permissions []*Permission `json:"permissions"`
+}
+
+type FindRoleReplyV1 struct {
+	Data []*RoleV1 `json:"data"`
+	PaginationReply
+}
+
+type UpdateRole struct {
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Permissions []int  `json:"permissions"`
+}
+
+type AddRole struct {
+	Name        string `json:"name"`
+	Permissions []int  `json:"permissions"`
+}

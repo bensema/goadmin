@@ -14,11 +14,22 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,api_admin_page_url: '/api/v1/admin/pages'   // 管理员列表
         ,api_admin_info_url: '/api/v1/admin/info'   // 管理员信息
         ,api_role_all_url: '/api/v1/role/all'   // 获取全部角色
-        ,api_admin_update_url: '/api/v1/admin/update'   // 获取全部角色
+        ,api_admin_update_url: '/api/v1/admin/update'   // 修改账户
         ,api_admin_delete_url: '/api/v1/admin/delete'   // 删除用户
         ,api_admin_add_url: '/api/v1/admin/add'   // 添加用户
+        ,api_role_page_url: '/api/v1/role/pages'
+        ,api_role_add_url: '/api/v1/role/add'
+        ,api_role_delete_url: '/api/v1/role/delete'
+        ,api_role_info_url: '/api/v1/role/info'
+        ,api_permission_all_url: '/api/v1/permission/all'
+        ,api_role_update_url: '/api/v1/role/update'
+
+
         ,web_admin_form_url: '/admin/form'
         ,web_admin_add_url: '/admin/add'
+        ,web_role_add_url: '/role/add'
+        ,web_role_form_url: '/role/form'
+
 
         ,timestampToTime: function(timestamp) {  // 1561953956 => yyyy-MM-dd hh:mm:ss
             var d = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
