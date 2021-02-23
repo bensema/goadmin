@@ -101,6 +101,9 @@ func buildSqlFindAdmin(req *model.FindAdminReq, sqlType string) (string, []inter
 	// if req.Id != "" {
 	//	  selector = selector.Where(entsql.EQ("id", req.Id))
 	// }
+	if req.Name != "" {
+		selector = selector.Where(entsql.EQ("name", req.Name))
+	}
 
 	// count 返回
 	if sqlType == SqlPageCount {

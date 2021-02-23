@@ -1,10 +1,5 @@
 package model
 
-type Pagination struct {
-	Num  int `json:"num"`
-	Size int `json:"size"`
-}
-
 type FindAdminReq struct {
 	Admin
 	OrderBy string `json:"order_by"`

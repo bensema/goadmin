@@ -14,3 +14,11 @@ func GetAdminByName(c *gin.Context, db *sql.DB, name string) (obj *model.Admin, 
 	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
 	return
 }
+
+func DeleteAdminRoleByAdminId(c *gin.Context, db *sql.DB, adminId int) (err error) {
+	obj := &model.AdminRole{}
+	builder := sqlBuilder()
+	query, args := builder.Delete(obj.Table()).Where(entsql.EQ("admin_id", adminId)).Query()
+	_, err = db.ExecContext(c, query, args...)
+	return err
+}

@@ -3,8 +3,10 @@ package service
 import (
 	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/dao"
+	"github.com/bensema/goadmin/model"
 	"github.com/bensema/library/image/captcha"
 	xip "github.com/bensema/library/net/ip"
+	"github.com/gin-gonic/gin"
 )
 
 type Service struct {
@@ -30,4 +32,16 @@ func (s *Service) Close() {
 	// log.Info("Close Dao physically!")
 	s.dao.Close()
 	// log.Info("Service Closed!")
+}
+
+func (s *Service) getAdminFromContext(c *gin.Context) (*model.Admin, error) {
+	sid, err := c.Cookie("admin-session")
+	if err != nil {
+		return nil, err
+	}
+	as, err := s.GetAdminSessionCache(c, sid)
+	if err != nil {
+		return nil, err
+	}
+	return s.dao.GetAdminById(c, as.UserId)
 }

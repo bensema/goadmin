@@ -102,6 +102,10 @@ func buildSqlFindRole(req *model.FindRoleReq, sqlType string) (string, []interfa
 	//	  selector = selector.Where(entsql.EQ("id", req.Id))
 	// }
 
+	if req.Id != 0 {
+		selector = selector.Where(entsql.EQ("id", req.Id))
+	}
+
 	// count 返回
 	if sqlType == SqlPageCount {
 		return selector.Query()

@@ -11,12 +11,15 @@ type HtmlWeb struct{}
 func (_this *HtmlWeb) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/login", _this.login)
 	g.GET("/logout", _this.login)
+	g.GET("/admin/form", _this.adminForm)
+	g.GET("/admin/add", _this.adminAdd)
+
 }
 
 func (_this *HtmlWeb) login(c *gin.Context) {
 	_, err := c.Cookie(internal.AdminSession)
 	if err != nil {
-		c.HTML(http.StatusOK, "base/login-v2.html", gin.H{})
+		c.HTML(http.StatusOK, "base/login.html", gin.H{})
 	} else {
 		c.Redirect(http.StatusFound, "/")
 	}
@@ -28,4 +31,12 @@ func (_this *HtmlWeb) logout(c *gin.Context) {
 
 	}
 	c.Redirect(http.StatusFound, "/login")
+}
+
+func (_this *HtmlWeb) adminForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/adminform.html", gin.H{})
+}
+
+func (_this *HtmlWeb) adminAdd(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/adminadd.html", gin.H{})
 }

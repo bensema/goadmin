@@ -1,6 +1,7 @@
 package contorller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -10,6 +11,7 @@ type HtmlWebAuth struct{}
 func (_this *HtmlWebAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/", _this.index)
 	g.GET("/admin", _this.admin)
+	g.GET("/home/dashboard", _this.common)
 }
 
 func (_this *HtmlWebAuth) index(c *gin.Context) {
@@ -17,5 +19,11 @@ func (_this *HtmlWebAuth) index(c *gin.Context) {
 }
 
 func (_this *HtmlWebAuth) admin(c *gin.Context) {
-	c.HTML(http.StatusOK, "html/admin.html", gin.H{})
+	c.HTML(http.StatusOK, "admin/admin.html", gin.H{})
+}
+
+func (_this *HtmlWebAuth) common(c *gin.Context) {
+	name := fmt.Sprintf("%s.html", c.Request.URL.String())
+	fmt.Println(name)
+	c.HTML(http.StatusOK, name, gin.H{})
 }

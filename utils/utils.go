@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/bensema/library/ecode"
+	"github.com/bensema/goadmin/ecode"
 	"math/rand"
 	"regexp"
 	"strconv"
@@ -38,14 +38,7 @@ func CheckNameLegal(name string) (err error) {
 
 // 检查密码是否符合规范
 func CheckPasswordLegal(password string) (err error) {
-	var b bool
-	if b, err = regexp.MatchString("^[a-zA-Z\\d]\\w{5,17}$", password); err != nil {
-		err = ecode.PasswordTooLeak
-		return
-	}
-	if b == false {
-		err = ecode.PasswordTooLeak
-	}
+	err = Check(5, 20, LevelB, password)
 	return
 }
 
@@ -76,4 +69,18 @@ func RandomString(l int) string {
 		result = append(result, bytes[r.Intn(len(bytes))])
 	}
 	return string(result)
+}
+
+func S2IList(l []string) ([]int, error) {
+	_l := make([]int, len(l))
+
+	for i, v := range l {
+		b, err := strconv.Atoi(v)
+		if err != nil {
+			return _l, err
+		} else {
+			_l[i] = b
+		}
+	}
+	return _l, nil
 }
