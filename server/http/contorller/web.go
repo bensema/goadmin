@@ -15,6 +15,7 @@ func (_this *HtmlWeb) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/admin/add", _this.adminAdd)
 	g.GET("/role/add", _this.roleAdd)
 	g.GET("/role/form", _this.roleForm)
+	g.GET("/permission/add", _this.permissionAdd)
 
 }
 
@@ -49,4 +50,8 @@ func (_this *HtmlWeb) roleForm(c *gin.Context) {
 
 func (_this *HtmlWeb) roleAdd(c *gin.Context) {
 	c.HTML(http.StatusOK, "role/roleadd.html", gin.H{})
+}
+
+func (_this *HtmlWeb) permissionAdd(c *gin.Context) {
+	c.HTML(http.StatusOK, "permission/permissionadd.html", gin.H{})
 }

@@ -14,21 +14,30 @@ import (
 type ApiAuth struct{}
 
 func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
-	g.GET("/api/v1/menu", _this.menu)
-	g.GET("/api/v1/admin/pages", _this.adminPagesV1)
-	g.GET("/api/v1/admin/info", _this.adminInfoV1)
-	g.POST("/api/v1/admin/update", _this.updateAdmin)
-	g.POST("/api/v1/admin/delete", _this.deleteAdmin)
-	g.POST("/api/v1/admin/add", _this.addAdmin)
-	g.GET("/api/v1/role/all", _this.roleAll)
+	g.GET("/api/v1/menu", _this.menu)                 // 获取菜单
+	g.GET("/api/v1/admin/pages", _this.adminPagesV1)  // 分页查询管理员
+	g.GET("/api/v1/admin/info", _this.adminInfoV1)    // 管理员信息
+	g.POST("/api/v1/admin/update", _this.updateAdmin) // 更新管理员 （管理员，角色）
+	g.POST("/api/v1/admin/delete", _this.deleteAdmin) // 删除管理员
+	g.POST("/api/v1/admin/add", _this.addAdmin)       // 添加管理员
 
-	g.GET("/api/v1/role/pages", _this.rolePagesV1)
-	g.GET("/api/v1/role/info", _this.roleInfoV1)
-	g.POST("/api/v1/role/update", _this.updateRole)
-	g.POST("/api/v1/role/add", _this.addRole)
-	g.POST("/api/v1/role/delete", _this.deleteRole)
+	g.GET("/api/v1/role/pages", _this.rolePagesV1)  // 分页查询角色
+	g.GET("/api/v1/role/info", _this.roleInfoV1)    // 角色信息
+	g.POST("/api/v1/role/update", _this.updateRole) // 更新角色（角色，权限）
+	g.POST("/api/v1/role/add", _this.addRole)       // 添加角色
+	g.POST("/api/v1/role/delete", _this.deleteRole) // 删除角色
 
-	g.GET("/api/v1/permission/all", _this.permissionAll)
+	g.GET("/api/v1/permission/pages", _this.permissionPages)                  // 分页查询权限
+	g.POST("/api/v1/permission/add", _this.addPermission)                     // 添加权限
+	g.POST("/api/v1/permission/update", _this.updatePermission)               // 更新权限（权限，菜单，操作）
+	g.POST("/api/v1/permission/delete", _this.deletePermission)               // 删除权限
+	g.GET("/api/v1/permission_menu/find", _this.findPermissionMenu)           // 查询指定权限菜单
+	g.GET("/api/v1/permission_operation/find", _this.findPermissionOperation) // 查询指定权限操作
+
+	g.GET("/api/v1/role/all", _this.roleAll)             // 获取所有角色
+	g.GET("/api/v1/permission/all", _this.permissionAll) // 获取所有权限
+	g.GET("/api/v1/menu/all", _this.menuAll)             // 获取所有菜单
+	g.GET("/api/v1/operation/all", _this.operationAll)   // 获取所有操作
 
 }
 
@@ -174,6 +183,16 @@ func (_this *ApiAuth) permissionAll(c *gin.Context) {
 	internal.JSON(c, reply, err)
 }
 
+func (_this *ApiAuth) menuAll(c *gin.Context) {
+	reply, err := global.Srv.FindAllMenu(c)
+	internal.JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) operationAll(c *gin.Context) {
+	reply, err := global.Srv.FindAllOperation(c)
+	internal.JSON(c, reply, err)
+}
+
 func (_this *ApiAuth) updateRole(c *gin.Context) {
 	var filed []string
 	arg := &model.UpdateRole{}
@@ -221,4 +240,96 @@ func (_this *ApiAuth) deleteRole(c *gin.Context) {
 	}
 
 	internal.JSON(c, nil, global.Srv.DeleteRole(c, utils.GetInt(id)))
+}
+
+// 权限
+
+func (_this *ApiAuth) permissionPages(c *gin.Context) {
+	arg := &model.FindPermissionReq{}
+	//name, _ := c.GetQuery("name")
+	orderBy, _ := c.GetQuery("order_by")
+	sort, _ := c.GetQuery("sort")
+	num, _ := c.GetQuery("num")
+	size, _ := c.GetQuery("size")
+
+	//arg.Name = name
+	arg.OrderBy = orderBy
+	arg.Sort = sort
+	arg.Num = utils.GetInt(num)
+	arg.Size = utils.GetInt(size)
+
+	arg.Verify()
+	reply, err := global.Srv.FindPermissionPage(c, arg)
+	internal.JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) addPermission(c *gin.Context) {
+	arg := &model.Permission{}
+	name, _ := c.GetPostForm("name")
+
+	arg.Name = name
+	internal.JSON(c, nil, global.Srv.AddPermission(c, arg))
+}
+
+func (_this *ApiAuth) updatePermission(c *gin.Context) {
+	var filed []string
+	arg := &model.UpdatePermission{}
+	id, _ := c.GetPostForm("id")
+	name, _ := c.GetPostForm("name")
+	var ms []int
+	var ops []int
+	var err error
+
+	menus, b := c.GetPostForm("menus")
+	if b {
+		filed = append(filed, "menus")
+		ms, err = utils.S2IList(strings.Split(menus, ","))
+		if err != nil {
+			internal.JSON(c, nil, errors.New("菜单数据错误"))
+			return
+		}
+	}
+	operations, b := c.GetPostForm("operations")
+	if b {
+		filed = append(filed, "operations")
+		ops, err = utils.S2IList(strings.Split(operations, ","))
+		if err != nil {
+			internal.JSON(c, nil, errors.New("操作数据错误"))
+			return
+		}
+	}
+
+	arg.Id = utils.GetInt(id)
+	arg.Name = name
+	arg.Menus = ms
+	arg.Operation = ops
+	internal.JSON(c, nil, global.Srv.UpdatePermission(c, arg, filed))
+}
+
+func (_this *ApiAuth) deletePermission(c *gin.Context) {
+	id, b := c.GetPostForm("id")
+	if !b {
+		internal.JSON(c, nil, errors.New("id不能空"))
+		return
+	}
+
+	internal.JSON(c, nil, global.Srv.DeletePermission(c, utils.GetInt(id)))
+}
+
+func (_this *ApiAuth) findPermissionMenu(c *gin.Context) {
+	id, _ := c.GetQuery("id")
+	req := &model.FindPermissionMenuReq{}
+	req.PermissionId = utils.GetInt(id)
+
+	reply, err := global.Srv.FindPermissionMenu(c, req)
+	internal.JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) findPermissionOperation(c *gin.Context) {
+	id, _ := c.GetQuery("id")
+	req := &model.FindPermissionOperationReq{}
+	req.PermissionId = utils.GetInt(id)
+
+	reply, err := global.Srv.FindPermissionOperation(c, req)
+	internal.JSON(c, reply, err)
 }

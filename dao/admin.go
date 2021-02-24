@@ -14,10 +14,22 @@ func (d *Dao) DeleteAdminRoleByAdminId(c *gin.Context, adminId int) error {
 	return internal.DeleteAdminRoleByAdminId(c, d.db, adminId)
 }
 
-func (d *Dao) DeleteRolePermissionByRoleId(c *gin.Context, adminId int) error {
-	return internal.DeleteRolePermissionByRoleId(c, d.db, adminId)
+func (d *Dao) DeleteRolePermissionByRoleId(c *gin.Context, id int) error {
+	return internal.DeleteRolePermissionByRoleId(c, d.db, id)
 }
 
 func (d *Dao) GetRoleByName(c *gin.Context, name string) (*model.Role, error) {
 	return internal.GetRoleByName(c, d.db, name)
+}
+
+func (d *Dao) GetPermissionByName(c *gin.Context, name string) (*model.Permission, error) {
+	return internal.GetPermissionByName(c, d.db, name)
+}
+
+func (d *Dao) DeletePermissionMenuByPermissionId(c *gin.Context, id int) error {
+	return internal.DeletePermissionMenuByPermissionId(c, d.db, id)
+}
+
+func (d *Dao) DeletePermissionOperationByPermissionId(c *gin.Context, id int) error {
+	return internal.DeletePermissionOperationByPermissionId(c, d.db, id)
 }

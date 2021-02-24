@@ -57,3 +57,10 @@ type AddRole struct {
 	Name        string `json:"name"`
 	Permissions []int  `json:"permissions"`
 }
+
+type UpdatePermission struct {
+	Id        int    `json:"id"`
+	Name      string `json:"name"`
+	Menus     []int  `json:"menus"`
+	Operation []int  `json:"operation"`
+}

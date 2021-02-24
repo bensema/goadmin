@@ -429,6 +429,14 @@ func (s *Service) FindAllPermission(c *gin.Context) (reply []*model.Permission, 
 	return s.dao.FindPermission(c, &model.FindPermissionReq{})
 }
 
+func (s *Service) FindAllMenu(c *gin.Context) (reply []*model.Menu, err error) {
+	return s.dao.FindMenu(c, &model.FindMenuReq{})
+}
+
+func (s *Service) FindAllOperation(c *gin.Context) (reply []*model.Operation, err error) {
+	return s.dao.FindOperation(c, &model.FindOperationReq{})
+}
+
 func (s *Service) UpdateRole(c *gin.Context, info *model.UpdateRole, filed []string) error {
 	var content string
 	aInfo, err := s.dao.GetRoleById(c, info.Id)
@@ -563,4 +571,186 @@ func (s *Service) DeleteRole(c *gin.Context, id int) error {
 	}
 	err = s.dao.CreateLogAdminOperation(c, recordLog)
 	return err
+}
+
+// 权限
+
+func (s *Service) FindPermissionPage(c *gin.Context, req *model.FindPermissionReq) (reply *model.FindPermissionReply, err error) {
+	reply = &model.FindPermissionReply{}
+	var count int
+	var data []*model.Permission
+	if count, err = s.dao.PageFindPermissionTotal(c, req); err != nil {
+		return
+	}
+	if count <= 0 {
+		return
+	}
+	if data, err = s.dao.FindPermission(c, req); err != nil {
+		return
+	}
+	reply.Data = data
+	reply.Total = count
+	reply.Num = req.Num
+	reply.Size = req.Size
+	return
+}
+
+func (s *Service) AddPermission(c *gin.Context, info *model.Permission) error {
+
+	_, err := s.dao.GetPermissionByName(c, info.Name)
+	if err != sql.ErrNoRows {
+		return errors.New("权限已存在")
+	}
+
+	err = s.dao.CreatePermission(c, &model.Permission{Name: info.Name})
+	if err != nil {
+		return err
+	}
+	uInfo, err := s.dao.GetPermissionByName(c, info.Name)
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "add_permission",
+		OperationName: "添加权限",
+		Content:       fmt.Sprintf("添加权限:权限:%s;权限编号:%d;", uInfo.Name, uInfo.Id),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) DeletePermission(c *gin.Context, id int) error {
+
+	var content string
+	aInfo, err := s.dao.GetPermissionById(c, id)
+	if err != nil {
+		return errors.New("权限不存在")
+	}
+
+	u := &model.FindRolePermissionReq{}
+	u.PermissionId = id
+	arl, err := s.dao.FindRolePermission(c, u)
+	if err != nil {
+		return errors.New("获取角色-权限失败")
+	}
+	if len(arl) > 0 {
+		return errors.New("还有角色在使用此权限")
+	}
+
+	err = s.dao.DeletePermissionById(c, id)
+	err = s.dao.DeletePermissionMenuByPermissionId(c, id)
+	err = s.dao.DeletePermissionOperationByPermissionId(c, id)
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "delete_permission",
+		OperationName: "删除权限",
+		Content:       fmt.Sprintf("删除权限:权限:%s;权限编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) UpdatePermission(c *gin.Context, info *model.UpdatePermission, filed []string) error {
+	var content string
+	aInfo, err := s.dao.GetPermissionById(c, info.Id)
+	if err == sql.ErrNoRows {
+		return errors.New("权限对象不存在")
+	}
+	if err != nil {
+		return err
+	}
+	for _, v := range filed {
+		switch v {
+		case "name":
+			content += fmt.Sprintf("名称:%s;", info.Name)
+			_ = s.dao.UpdatePermissionById(c, info.Id, "name", info.Name)
+		case "menus":
+			for _, menu := range info.Menus {
+				_, err := s.dao.GetMenuById(c, menu)
+				if err != nil {
+					return errors.New("菜单不存在")
+				}
+			}
+			err = s.dao.DeletePermissionMenuByPermissionId(c, info.Id)
+			if err != nil {
+				return err
+			}
+			for _, menu := range info.Menus {
+				rInfo, err := s.dao.GetMenuById(c, menu)
+				if err != nil {
+					return errors.New("菜单不存在")
+				}
+
+				content += fmt.Sprintf("菜单编号:%d;菜单:%s;", rInfo.Id, rInfo.Name)
+				_ = s.dao.CreatePermissionMenu(c, &model.PermissionMenu{
+					PermissionId: info.Id,
+					MenuId:       menu,
+				})
+			}
+		case "operations":
+			for _, operation := range info.Operation {
+				_, err := s.dao.GetMenuById(c, operation)
+				if err != nil {
+					return errors.New("操作不存在")
+				}
+			}
+			err = s.dao.DeletePermissionOperationByPermissionId(c, info.Id)
+			if err != nil {
+				return err
+			}
+			for _, operation := range info.Operation {
+				rInfo, err := s.dao.GetMenuById(c, operation)
+				if err != nil {
+					return errors.New("操作不存在")
+				}
+
+				content += fmt.Sprintf("操作编号:%d;操作:%s;", rInfo.Id, rInfo.Name)
+				_ = s.dao.CreatePermissionOperation(c, &model.PermissionOperation{
+					PermissionId: info.Id,
+					OperationId:  operation,
+				})
+			}
+		}
+
+	}
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "permission_update",
+		OperationName: "修改权限",
+		Content:       fmt.Sprintf("修改权限:权限:%s;权限编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) FindPermissionMenu(c *gin.Context, req *model.FindPermissionMenuReq) (reply []*model.PermissionMenu, err error) {
+	return s.dao.FindPermissionMenu(c, req)
+}
+
+func (s *Service) FindPermissionOperation(c *gin.Context, req *model.FindPermissionOperationReq) (reply []*model.PermissionOperation, err error) {
+	return s.dao.FindPermissionOperation(c, req)
 }

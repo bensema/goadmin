@@ -22,13 +22,22 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,api_role_delete_url: '/api/v1/role/delete'
         ,api_role_info_url: '/api/v1/role/info'
         ,api_permission_all_url: '/api/v1/permission/all'
+        ,api_menu_all_url: '/api/v1/menu/all'
+        ,api_operation_all_url: '/api/v1/operation/all'
         ,api_role_update_url: '/api/v1/role/update'
+        ,api_permission_page_url: '/api/v1/permission/pages'
+        ,api_permission_delete_url: '/api/v1/permission/delete'
+        ,api_permission_menu_url: '/api/v1/permission_menu/find'
+        ,api_permission_operation_url: '/api/v1/permission_operation/find'
+        ,api_permission_add_url: '/api/v1/permission/add'
+        ,api_permission_update_url: '/api/v1/permission/update'
 
 
         ,web_admin_form_url: '/admin/form'
         ,web_admin_add_url: '/admin/add'
         ,web_role_add_url: '/role/add'
         ,web_role_form_url: '/role/form'
+        ,web_permission_add_url: '/permission/add'
 
 
         ,timestampToTime: function(timestamp) {  // 1561953956 => yyyy-MM-dd hh:mm:ss

@@ -38,3 +38,27 @@ func GetRoleByName(c *gin.Context, db *sql.DB, name string) (obj *model.Role, er
 	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
 	return
 }
+
+func GetPermissionByName(c *gin.Context, db *sql.DB, name string) (obj *model.Permission, err error) {
+	obj = &model.Permission{}
+	builder := sqlBuilder()
+	query, args := builder.Select(obj.Columns()...).From(entsql.Table(obj.Table())).Where(entsql.EQ("name", name)).Query()
+	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
+	return
+}
+
+func DeletePermissionMenuByPermissionId(c *gin.Context, db *sql.DB, id int) (err error) {
+	obj := &model.PermissionMenu{}
+	builder := sqlBuilder()
+	query, args := builder.Delete(obj.Table()).Where(entsql.EQ("permission_id", id)).Query()
+	_, err = db.ExecContext(c, query, args...)
+	return err
+}
+
+func DeletePermissionOperationByPermissionId(c *gin.Context, db *sql.DB, id int) (err error) {
+	obj := &model.PermissionOperation{}
+	builder := sqlBuilder()
+	query, args := builder.Delete(obj.Table()).Where(entsql.EQ("permission_id", id)).Query()
+	_, err = db.ExecContext(c, query, args...)
+	return err
+}
