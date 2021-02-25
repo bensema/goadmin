@@ -1,0 +1,316 @@
+{{ define "resources/resources.html"}}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>资源</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="/static/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <style>
+    .list_button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        /*padding: 15px 32px;*/
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 10px;
+        /*margin: 4px 2px;*/
+        cursor: pointer;
+        margin-right:5px;
+        float: right;
+        border-radius: 2px;
+        /*border: 1px solid green;*/
+        width: 10%;
+    }
+    .list_button:hover {
+        /*box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);*/
+    }
+    .button1 {
+        background-color: #4CAF50;
+        color: white;
+    } /* Green */
+    .button2 {
+        background-color: #008CBA;
+        color: white;
+    } /* Blue */
+    .button3 {
+        background-color: #f44336;
+        color: white;
+    } /* Red */
+
+    .button1:hover {
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+    }
+    .button2:hover {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+    }
+    .button3:hover  {
+        background-color: white;
+        color: black;
+        border: 2px solid #f44336;
+    }
+
+    </style>
+
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+
+                <div class="layui-card-body">
+
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-list " data-type="refresh">刷新</button>
+                    </div>
+
+                    <ul id="edit_tree" class="ztree"></ul>
+
+                    <div class="menu_content_wrap" hidden="hidden">
+                        <div class="zTreeDemoBackground left">
+                            <ul id="tree_menu" class="ztree"></ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header"></div>
+                <div class="layui-card-body">
+                    <div class="layui-tab" lay-filter="demo">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this" lay-id="tab_edit_menu">编辑菜单</li>
+                            <li class="" lay-id="tab_edit_operation">编辑API</li>
+                            <li class="">添加菜单</li>
+                            <li>添加API</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">上级</label>
+
+                                        <div class="layui-input-inline">
+                                            <input type="hidden" id="edit_cur_id" name="extra" value="">
+                                            <input type="hidden" id="edit_menu_pid" name="extra" value="">
+                                            <input type="text" id="edit_menu_pid_name"  autocomplete="off" class="layui-input" style="background:#CCCCCC" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="pid_edit_menu" >选择</button>
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="edit_menu_set_no_pid" >无上级</button>
+
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_menu_name">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">icon</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="code" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_menu_icon">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">URL</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="url" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_menu_url">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">排序</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="index_sort" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_menu_index_sort">
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <button class="layui-btn layuiadmin-btn-list " data-type="update_menu">更新菜单</button>
+                                </div>
+
+
+                            </div>
+                            <div class="layui-tab-item ">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">上级</label>
+
+                                        <div class="layui-input-inline">
+                                            <input type="hidden" id="edit_cur_id" name="extra" value="">
+                                            <input type="hidden" id="edit_operation_pid" name="extra" value="">
+                                            <input type="text" id="edit_operation_pid_name"  autocomplete="off" class="layui-input" style="background:#CCCCCC" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="pid_edit_operation" >选择</button>
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="edit_operation_set_no_pid" >无上级</button>
+
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_operation_name">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">code</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="code" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_operation_code">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">method</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="method" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_operation_method">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">URL</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="url" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="edit_operation_url">
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-form-item">
+                                    <button class="layui-btn layuiadmin-btn-list " data-type="update_operation">更新操作API</button>
+                                </div>
+
+
+                            </div>
+
+                            <div class="layui-tab-item">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">上级</label>
+
+                                        <div class="layui-input-inline">
+                                            <input type="hidden" id="add_menu_pid" name="extra" value="">
+                                            <input type="text" id="add_menu_pid_name"  autocomplete="off" class="layui-input" style="background:#CCCCCC" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="pid_add_api" >选择</button>
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="add_menu_reset" >重置</button>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_menu_name">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">icon</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="code" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_menu_icon">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">URL</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="url" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_menu_url">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">排序</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="index_sort" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_menu_index_sort">
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <button class="layui-btn layuiadmin-btn-list " data-type="add_menu">添加菜单</button>
+                                </div>
+
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">上级</label>
+
+                                        <div class="layui-input-inline">
+                                            <input type="hidden" id="add_operation_pid" name="extra" value="">
+                                            <input type="text" id="add_operation_pid_name"  autocomplete="off" class="layui-input" style="background:#CCCCCC" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="pid_add_api" >选择</button>
+                                        <button class="layui-btn layuiadmin-btn-list " data-type="add_operation_reset" >重置</button>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_operation_name">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">code</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="code" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_operation_code">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">method</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="method" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_operation_method">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">URL</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="url" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="add_operation_url">
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <button class="layui-btn layuiadmin-btn-list " data-type="add_operation">添加API</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="/static/layuiadmin/layui/layui.js"></script>
+<script src="/static/js/resources.js"></script>
+
+<script src="/static/zTree_v3/js/jquery-1.4.4.min.js"></script>
+<script src="/static/zTree_v3/js/jquery.ztree.all.js"></script>
+<script src="/static/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="/static/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script src="/static/zTree_v3/js/jquery.ztree.exedit.js"></script>
+
+
+</body>
+</html>
+
+{{end}}

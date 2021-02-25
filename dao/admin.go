@@ -33,3 +33,11 @@ func (d *Dao) DeletePermissionMenuByPermissionId(c *gin.Context, id int) error {
 func (d *Dao) DeletePermissionOperationByPermissionId(c *gin.Context, id int) error {
 	return internal.DeletePermissionOperationByPermissionId(c, d.db, id)
 }
+
+func (d *Dao) GetMenuByName(c *gin.Context, name string) (*model.Menu, error) {
+	return internal.GetMenuByName(c, d.db, name)
+}
+
+func (d *Dao) GetOperationByName(c *gin.Context, name string) (*model.Operation, error) {
+	return internal.GetOperationByName(c, d.db, name)
+}

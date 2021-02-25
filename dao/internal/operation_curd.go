@@ -101,6 +101,9 @@ func buildSqlFindOperation(req *model.FindOperationReq, sqlType string) (string,
 	// if req.Id != "" {
 	//	  selector = selector.Where(entsql.EQ("id", req.Id))
 	// }
+	if req.Pid != 0 {
+		selector = selector.Where(entsql.EQ("pid", req.Pid))
+	}
 
 	// count 返回
 	if sqlType == SqlPageCount {

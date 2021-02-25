@@ -31,6 +31,13 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,api_permission_operation_url: '/api/v1/permission_operation/find'
         ,api_permission_add_url: '/api/v1/permission/add'
         ,api_permission_update_url: '/api/v1/permission/update'
+        ,api_menu_delete_url: '/api/v1/menu/delete'
+        ,api_menu_update_url: '/api/v1/menu/update'
+        ,api_operation_update_url: '/api/v1/operation/update'
+        ,api_operation_delete_url: '/api/v1/operation/delete'
+        ,api_operation_add_url: '/api/v1/operation/add'
+        ,api_menu_add_url: '/api/v1/menu/add'
+
 
 
         ,web_admin_form_url: '/admin/form'
@@ -38,6 +45,7 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,web_role_add_url: '/role/add'
         ,web_role_form_url: '/role/form'
         ,web_permission_add_url: '/permission/add'
+        ,web_resource_add_url: '/resource/add'
 
 
         ,timestampToTime: function(timestamp) {  // 1561953956 => yyyy-MM-dd hh:mm:ss
@@ -57,6 +65,7 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
           statusName: 'code' //数据状态的字段名称
           ,statusCode: {
             ok: 0 //数据状态一切正常的状态码
+            ,nologin: -101 // 未登录
             ,logout: 1001 //登录状态失效的状态码
           }
           ,msgName: 'message' //状态信息的字段名称
@@ -90,6 +99,11 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
              else if(res[response.statusName] == statusCode.logout){
                layui.layer.alert(res.message)
              }
+
+             else if(res[response.statusName] == statusCode.nologin){
+                layui.layer.alert(res.message)
+                location.href = '/login';
+              }
 
              //其它异常
              else {

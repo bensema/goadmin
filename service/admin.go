@@ -704,9 +704,9 @@ func (s *Service) UpdatePermission(c *gin.Context, info *model.UpdatePermission,
 			}
 		case "operations":
 			for _, operation := range info.Operation {
-				_, err := s.dao.GetMenuById(c, operation)
+				_, err := s.dao.GetOperationById(c, operation)
 				if err != nil {
-					return errors.New("操作不存在")
+					return errors.New("操作API不存在")
 				}
 			}
 			err = s.dao.DeletePermissionOperationByPermissionId(c, info.Id)
@@ -714,7 +714,7 @@ func (s *Service) UpdatePermission(c *gin.Context, info *model.UpdatePermission,
 				return err
 			}
 			for _, operation := range info.Operation {
-				rInfo, err := s.dao.GetMenuById(c, operation)
+				rInfo, err := s.dao.GetOperationById(c, operation)
 				if err != nil {
 					return errors.New("操作不存在")
 				}
@@ -753,4 +753,230 @@ func (s *Service) FindPermissionMenu(c *gin.Context, req *model.FindPermissionMe
 
 func (s *Service) FindPermissionOperation(c *gin.Context, req *model.FindPermissionOperationReq) (reply []*model.PermissionOperation, err error) {
 	return s.dao.FindPermissionOperation(c, req)
+}
+
+func (s *Service) AddMenu(c *gin.Context, info *model.Menu) error {
+
+	_, err := s.dao.GetMenuByName(c, info.Name)
+	if err != sql.ErrNoRows {
+		return errors.New("菜单已存在")
+	}
+
+	err = s.dao.CreateMenu(c, info)
+	if err != nil {
+		return err
+	}
+	uInfo, err := s.dao.GetMenuByName(c, info.Name)
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "add_menu",
+		OperationName: "添加菜单",
+		Content:       fmt.Sprintf("添加菜单:权菜单限:%s;菜单编号:%d;", uInfo.Name, uInfo.Id),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) AddOperation(c *gin.Context, info *model.Operation) error {
+
+	_, err := s.dao.GetOperationByName(c, info.Name)
+	if err != sql.ErrNoRows {
+		return errors.New("操作功能已存在")
+	}
+
+	if info.Pid != 0 {
+		_, err = s.dao.GetMenuById(c, info.Pid)
+		if err != nil {
+			return errors.New("上级菜单不存在")
+		}
+	}
+
+	err = s.dao.CreateOperation(c, info)
+	if err != nil {
+		return err
+	}
+	uInfo, err := s.dao.GetOperationByName(c, info.Name)
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "add_operation",
+		OperationName: "添加操作功能",
+		Content:       fmt.Sprintf("添加操作功能:操作功能:%s;操作功能编号:%d;", uInfo.Name, uInfo.Id),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) DeleteMenu(c *gin.Context, id int) error {
+
+	var content string
+	aInfo, err := s.dao.GetMenuById(c, id)
+	if err != nil {
+		return errors.New("菜单不存在")
+	}
+
+	u := &model.FindOperationReq{}
+	u.Pid = id
+	arl, err := s.dao.FindOperation(c, u)
+	if err != nil {
+		return errors.New("获取操作功能失败")
+	}
+	if len(arl) > 0 {
+		return errors.New("菜单下还有操作功能")
+	}
+
+	err = s.dao.DeleteMenuById(c, id)
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "delete_menu",
+		OperationName: "删除菜单",
+		Content:       fmt.Sprintf("删除菜单:菜单:%s;菜单编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) UpdateMenu(c *gin.Context, info *model.Menu, filed []string) error {
+	var content string
+	aInfo, err := s.dao.GetMenuById(c, info.Id)
+	if err != nil {
+		return errors.New("id不存在")
+	}
+	for _, v := range filed {
+		switch v {
+		case "name":
+			content += fmt.Sprintf("名称:%s;", info.Name)
+			_ = s.dao.UpdateMenuById(c, info.Id, "name", info.Name)
+		case "pid":
+			if info.Id == info.Pid {
+				return errors.New("上级不能是自己")
+			}
+			content += fmt.Sprintf("pid:%d;", info.Pid)
+			_ = s.dao.UpdateMenuById(c, info.Id, "pid", info.Pid)
+		case "icon":
+			content += fmt.Sprintf("icon:%s;", info.Icon)
+			_ = s.dao.UpdateMenuById(c, info.Id, "icon", info.Icon)
+		case "url":
+			content += fmt.Sprintf("url:%s;", info.Url)
+			_ = s.dao.UpdateMenuById(c, info.Id, "url", info.Url)
+		case "index_sort":
+			content += fmt.Sprintf("index_sort:%d;", info.IndexSort)
+			_ = s.dao.UpdateMenuById(c, info.Id, "index_sort", info.IndexSort)
+
+		}
+	}
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "update_menu",
+		OperationName: "更新菜单",
+		Content:       fmt.Sprintf("修改菜单:菜单:%s;菜单编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) DeleteOperation(c *gin.Context, id int) error {
+
+	var content string
+	aInfo, err := s.dao.GetOperationById(c, id)
+	if err != nil {
+		return errors.New("操作功能不存在")
+	}
+
+	err = s.dao.DeleteOperationById(c, id)
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "delete_operation",
+		OperationName: "删除操作功能",
+		Content:       fmt.Sprintf("删除操作功能:操作功能:%s;操作功能编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
+}
+
+func (s *Service) UpdateOperation(c *gin.Context, info *model.Operation, filed []string) error {
+	var content string
+	aInfo, err := s.dao.GetOperationById(c, info.Id)
+	if err != nil {
+		return errors.New("id不存在")
+	}
+	for _, v := range filed {
+		switch v {
+		case "name":
+			content += fmt.Sprintf("名称:%s;", info.Name)
+			_ = s.dao.UpdateOperationById(c, info.Id, "name", info.Name)
+		case "pid":
+			content += fmt.Sprintf("pid:%d;", info.Pid)
+			_ = s.dao.UpdateOperationById(c, info.Id, "pid", info.Pid)
+		case "code":
+			content += fmt.Sprintf("code:%s;", info.Code)
+			_ = s.dao.UpdateOperationById(c, info.Id, "code", info.Code)
+		case "url":
+			content += fmt.Sprintf("url:%s;", info.Url)
+			_ = s.dao.UpdateOperationById(c, info.Id, "url", info.Url)
+		case "method":
+			content += fmt.Sprintf("method:%s;", info.Method)
+			_ = s.dao.UpdateOperationById(c, info.Id, "method", info.Method)
+
+		}
+	}
+
+	operatorInfo, err := s.getAdminFromContext(c)
+	if err != nil {
+		return err
+	}
+	recordLog := &model.LogAdminOperation{
+		AdminId:       operatorInfo.Id,
+		Name:          operatorInfo.Name,
+		OperationCode: "update_operation",
+		OperationName: "更新操作功能",
+		Content:       fmt.Sprintf("修改操作功能:操作功能:%s;操作功能编号:%d;%s", aInfo.Name, aInfo.Id, content),
+		Result:        1,
+		Ip:            c.ClientIP(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
+	}
+	err = s.dao.CreateLogAdminOperation(c, recordLog)
+	return err
 }

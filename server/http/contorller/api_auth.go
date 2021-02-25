@@ -34,6 +34,14 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/api/v1/permission_menu/find", _this.findPermissionMenu)           // 查询指定权限菜单
 	g.GET("/api/v1/permission_operation/find", _this.findPermissionOperation) // 查询指定权限操作
 
+	g.POST("/api/v1/menu/add", _this.addMenu)       // 添加菜单
+	g.POST("/api/v1/menu/delete", _this.deleteMenu) // 删除菜单
+	g.POST("/api/v1/menu/update", _this.updateMenu) // 更新菜单
+
+	g.POST("/api/v1/operation/add", _this.addOperation)       // 添加操作功能
+	g.POST("/api/v1/operation/delete", _this.deleteOperation) // 删除操作功能
+	g.POST("/api/v1/operation/update", _this.updateOperation) // 更新操作功能
+
 	g.GET("/api/v1/role/all", _this.roleAll)             // 获取所有角色
 	g.GET("/api/v1/permission/all", _this.permissionAll) // 获取所有权限
 	g.GET("/api/v1/menu/all", _this.menuAll)             // 获取所有菜单
@@ -332,4 +340,136 @@ func (_this *ApiAuth) findPermissionOperation(c *gin.Context) {
 
 	reply, err := global.Srv.FindPermissionOperation(c, req)
 	internal.JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) addMenu(c *gin.Context) {
+	arg := &model.Menu{}
+	name, _ := c.GetPostForm("name")
+	pid, _ := c.GetPostForm("pid")
+	icon, _ := c.GetPostForm("icon")
+	url, _ := c.GetPostForm("url")
+	indexSort, _ := c.GetPostForm("index_sort")
+
+	arg.Name = name
+	arg.Pid = utils.GetInt(pid)
+	arg.Icon = icon
+	arg.Url = url
+	arg.IndexSort = utils.GetInt(indexSort)
+
+	internal.JSON(c, nil, global.Srv.AddMenu(c, arg))
+}
+
+func (_this *ApiAuth) updateMenu(c *gin.Context) {
+	arg := &model.Menu{}
+	var filed []string
+	id, b := c.GetPostForm("id")
+	if !b {
+		internal.JSON(c, nil, errors.New("id不能空"))
+		return
+	}
+	name, b := c.GetPostForm("name")
+	if b {
+		filed = append(filed, "name")
+	}
+	pid, b := c.GetPostForm("pid")
+	if b {
+		filed = append(filed, "pid")
+	}
+	icon, b := c.GetPostForm("icon")
+	if b {
+		filed = append(filed, "icon")
+	}
+	url, b := c.GetPostForm("url")
+	if b {
+		filed = append(filed, "url")
+	}
+	indexSort, b := c.GetPostForm("index_sort")
+	if b {
+		filed = append(filed, "index_sort")
+	}
+
+	arg.Id = utils.GetInt(id)
+	arg.Name = name
+	arg.Pid = utils.GetInt(pid)
+	arg.Icon = icon
+	arg.Url = url
+	arg.IndexSort = utils.GetInt(indexSort)
+
+	internal.JSON(c, nil, global.Srv.UpdateMenu(c, arg, filed))
+}
+
+func (_this *ApiAuth) deleteMenu(c *gin.Context) {
+	id, b := c.GetPostForm("id")
+	if !b {
+		internal.JSON(c, nil, errors.New("id不能空"))
+		return
+	}
+
+	internal.JSON(c, nil, global.Srv.DeleteMenu(c, utils.GetInt(id)))
+}
+
+func (_this *ApiAuth) addOperation(c *gin.Context) {
+	arg := &model.Operation{}
+	name, _ := c.GetPostForm("name")
+	pid, _ := c.GetPostForm("pid")
+	code, _ := c.GetPostForm("code")
+	method, _ := c.GetPostForm("method")
+	url, _ := c.GetPostForm("url")
+
+	arg.Name = name
+	arg.Pid = utils.GetInt(pid)
+	arg.Code = code
+	arg.Url = url
+	arg.Method = method
+
+	internal.JSON(c, nil, global.Srv.AddOperation(c, arg))
+}
+
+func (_this *ApiAuth) deleteOperation(c *gin.Context) {
+	id, b := c.GetPostForm("id")
+	if !b {
+		internal.JSON(c, nil, errors.New("id不能空"))
+		return
+	}
+
+	internal.JSON(c, nil, global.Srv.DeleteOperation(c, utils.GetInt(id)))
+}
+
+func (_this *ApiAuth) updateOperation(c *gin.Context) {
+	arg := &model.Operation{}
+	var filed []string
+	id, b := c.GetPostForm("id")
+	if !b {
+		internal.JSON(c, nil, errors.New("id不能空"))
+		return
+	}
+	name, b := c.GetPostForm("name")
+	if b {
+		filed = append(filed, "name")
+	}
+	pid, b := c.GetPostForm("pid")
+	if b {
+		filed = append(filed, "pid")
+	}
+	code, b := c.GetPostForm("code")
+	if b {
+		filed = append(filed, "code")
+	}
+	url, b := c.GetPostForm("url")
+	if b {
+		filed = append(filed, "url")
+	}
+	method, b := c.GetPostForm("method")
+	if b {
+		filed = append(filed, "method")
+	}
+
+	arg.Id = utils.GetInt(id)
+	arg.Name = name
+	arg.Pid = utils.GetInt(pid)
+	arg.Code = code
+	arg.Url = url
+	arg.Method = method
+
+	internal.JSON(c, nil, global.Srv.UpdateOperation(c, arg, filed))
 }
