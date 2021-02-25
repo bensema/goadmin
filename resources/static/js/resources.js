@@ -210,8 +210,32 @@ layui.config({
                        layer.alert("请选择")
                        return
                    }
-                  layui.$('#add_operation_pid').val(MenuClickObj.id.substring(5));
+                  layui.$('#add_operation_pid').val(MenuClickObj.id);
                   layui.$('#add_operation_pid_name').val(MenuClickObj.name);
+
+                  layer.close(index);
+                }
+                ,end: function(){
+                    $('.menu_content_wrap').hide()
+                }
+              });
+
+        },
+        pid_add_menu: function(){
+              layer.open({
+                type: 1
+                ,title: '选择菜单'
+                ,content: $('.menu_content_wrap')
+                ,maxmin: true
+                ,area: ['550px', '550px']
+                ,btn: ['确定', '取消']
+                ,yes: function(index, layero){
+                   if (typeof MenuClickObj.id === 'undefined'){
+                       layer.alert("请选择")
+                       return
+                   }
+                  layui.$('#add_menu_pid').val(MenuClickObj.id);
+                  layui.$('#add_menu_pid_name').val(MenuClickObj.name);
 
                   layer.close(index);
                 }
@@ -287,7 +311,7 @@ layui.config({
             params.code = layui.$('#add_operation_code').val()
             params.method = layui.$('#add_operation_method').val()
             params.url = layui.$('#add_operation_url').val()
-            params.pid = layui.$('#add_operation_pid').val()
+            params.pid = layui.$('#add_operation_pid').val().substring(5)
 
             layui.goadmin.req({
                 type: 'post'
@@ -314,6 +338,7 @@ layui.config({
         add_menu: function(){
             params = {}
             params.name = layui.$('#add_menu_name').val()
+            params.pid = layui.$('#add_menu_pid').val().substring(5)
             params.icon = layui.$('#add_menu_icon').val()
             params.url = layui.$('#add_menu_url').val()
             params.sort_index = layui.$('#add_menu_sort_index').val()
@@ -340,7 +365,7 @@ layui.config({
             params.name = layui.$('#edit_menu_name').val()
             params.icon = layui.$('#edit_menu_icon').val()
             params.url = layui.$('#edit_menu_url').val()
-            params.sort_index = layui.$('#edit_menu_sort_index').val()
+            params.index_sort = layui.$('#edit_menu_index_sort').val()
 
             layui.goadmin.req({
                 type: 'post'
@@ -404,7 +429,7 @@ layui.config({
                 params.id = ClickObj.id.substring(5)
                 url = layui.goadmin.api_menu_delete_url
             } else if (resource_type === "operation"){
-               tip = '确定删除功能:'
+               tip = '确定删除API功能:'
                 params.id = ClickObj.id.substring(10)
                 url = layui.goadmin.api_operation_delete_url
             }

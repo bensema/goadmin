@@ -64,3 +64,12 @@ type UpdatePermission struct {
 	Menus     []int  `json:"menus"`
 	Operation []int  `json:"operation"`
 }
+
+type FindLogAdminLoginReq struct {
+	LogAdminLogin
+	RecordAtFrom xtime.Time `json:"record_at_from"`
+	RecordAtTo   xtime.Time `json:"record_at_to"`
+	OrderBy      string     `json:"order_by"`
+	Sort         string     `json:"sort"`
+	Pagination
+}

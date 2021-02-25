@@ -102,6 +102,33 @@ func buildSqlFindLogAdminLogin(req *model.FindLogAdminLoginReq, sqlType string) 
 	//	  selector = selector.Where(entsql.EQ("id", req.Id))
 	// }
 
+	if req.Id != 0 {
+		selector = selector.Where(entsql.EQ("id", req.Id))
+	}
+
+	if req.AdminId != 0 {
+		selector = selector.Where(entsql.EQ("admin_id", req.AdminId))
+	}
+	if req.Name != "" {
+		selector = selector.Where(entsql.EQ("name", req.Name))
+	}
+
+	if req.Ip != "" {
+		selector = selector.Where(entsql.EQ("ip", req.Ip))
+	}
+
+	if req.Result != 0 {
+		selector = selector.Where(entsql.EQ("result", req.Result))
+	}
+
+	if req.RecordAtFrom != 0 {
+		selector = selector.Where(entsql.GTE("record_at", req.RecordAtFrom))
+	}
+
+	if req.RecordAtTo != 0 {
+		selector = selector.Where(entsql.LT("record_at", req.RecordAtTo))
+	}
+
 	// count 返回
 	if sqlType == SqlPageCount {
 		return selector.Query()

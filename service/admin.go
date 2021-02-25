@@ -37,17 +37,17 @@ func (s *Service) AdminLogin(c *gin.Context, arg *model.AdminLoginReq) (string, 
 	ua := user_agent.New(c.Request.UserAgent())
 	b1, bv := ua.Browser()
 	loginLog := &model.LogAdminLogin{
-		AdminId:    au.Id,
-		Name:       au.Name,
-		Location:   fmt.Sprintf("%s %s", ipInfo.Province, ipInfo.City),
-		Os:         ua.OS(),
-		Browser:    b1 + bv,
-		UserAgent:  ua.UA(),
-		Url:        c.FullPath(),
-		Result:     1,
-		Ip:         c.ClientIP(),
-		RecordTime: xtime.Time(time.Now().Unix()),
-		Remark:     "",
+		AdminId:   au.Id,
+		Name:      au.Name,
+		Location:  fmt.Sprintf("%s %s", ipInfo.Province, ipInfo.City),
+		Os:        ua.OS(),
+		Browser:   b1 + bv,
+		UserAgent: ua.UA(),
+		Url:       c.FullPath(),
+		Result:    1,
+		Ip:        c.ClientIP(),
+		RecordAt:  xtime.Time(time.Now().Unix()),
+		Remark:    "",
 	}
 	_ = s.dao.CreateLogAdminLogin(c, loginLog)
 
@@ -837,7 +837,7 @@ func (s *Service) DeleteMenu(c *gin.Context, id int) error {
 		return errors.New("获取操作功能失败")
 	}
 	if len(arl) > 0 {
-		return errors.New("菜单下还有操作功能")
+		return errors.New("菜单下还有API操作功能")
 	}
 
 	err = s.dao.DeleteMenuById(c, id)
@@ -979,4 +979,44 @@ func (s *Service) UpdateOperation(c *gin.Context, info *model.Operation, filed [
 	}
 	err = s.dao.CreateLogAdminOperation(c, recordLog)
 	return err
+}
+
+func (s *Service) FindAdminLoginPage(c *gin.Context, req *model.FindLogAdminLoginReq) (reply *model.FindLogAdminLoginReply, err error) {
+	reply = &model.FindLogAdminLoginReply{}
+	var count int
+	var data []*model.LogAdminLogin
+	if count, err = s.dao.PageFindLogAdminLoginTotal(c, req); err != nil {
+		return
+	}
+	if count <= 0 {
+		return
+	}
+	if data, err = s.dao.PageFindLogAdminLogin(c, req); err != nil {
+		return
+	}
+	reply.Data = data
+	reply.Total = count
+	reply.Num = req.Num
+	reply.Size = req.Size
+	return
+}
+
+func (s *Service) PageFindLogAdminOperation(c *gin.Context, req *model.FindLogAdminOperationReq) (reply *model.FindLogAdminOperationReply, err error) {
+	reply = &model.FindLogAdminOperationReply{}
+	var count int
+	var data []*model.LogAdminOperation
+	if count, err = s.dao.PageFindLogAdminOperationTotal(c, req); err != nil {
+		return
+	}
+	if count <= 0 {
+		return
+	}
+	if data, err = s.dao.PageFindLogAdminOperation(c, req); err != nil {
+		return
+	}
+	reply.Data = data
+	reply.Total = count
+	reply.Num = req.Num
+	reply.Size = req.Size
+	return
 }

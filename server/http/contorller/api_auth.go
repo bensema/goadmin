@@ -7,6 +7,7 @@ import (
 	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/server/http/internal"
 	"github.com/bensema/goadmin/utils"
+	xtime "github.com/bensema/library/time"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -41,6 +42,9 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.POST("/api/v1/operation/add", _this.addOperation)       // 添加操作功能
 	g.POST("/api/v1/operation/delete", _this.deleteOperation) // 删除操作功能
 	g.POST("/api/v1/operation/update", _this.updateOperation) // 更新操作功能
+
+	g.GET("/api/v1/log_login/pages", _this.logLogin)         // 分页查询登录信息
+	g.GET("/api/v1/log_operation/pages", _this.logOperation) // 分页查询操作记录
 
 	g.GET("/api/v1/role/all", _this.roleAll)             // 获取所有角色
 	g.GET("/api/v1/permission/all", _this.permissionAll) // 获取所有权限
@@ -232,7 +236,7 @@ func (_this *ApiAuth) addRole(c *gin.Context) {
 
 	r, err := utils.S2IList(strings.Split(permissions, ","))
 	if err != nil {
-		internal.JSON(c, nil, errors.New("选择适当的角色"))
+		internal.JSON(c, nil, errors.New("选择适当的权限"))
 		return
 	}
 	arg.Name = name
@@ -274,6 +278,9 @@ func (_this *ApiAuth) permissionPages(c *gin.Context) {
 func (_this *ApiAuth) addPermission(c *gin.Context) {
 	arg := &model.Permission{}
 	name, _ := c.GetPostForm("name")
+	if name == "" {
+		internal.JSON(c, nil, errors.New("name不能为空"))
+	}
 
 	arg.Name = name
 	internal.JSON(c, nil, global.Srv.AddPermission(c, arg))
@@ -289,7 +296,7 @@ func (_this *ApiAuth) updatePermission(c *gin.Context) {
 	var err error
 
 	menus, b := c.GetPostForm("menus")
-	if b {
+	if b && menus != "" {
 		filed = append(filed, "menus")
 		ms, err = utils.S2IList(strings.Split(menus, ","))
 		if err != nil {
@@ -298,7 +305,7 @@ func (_this *ApiAuth) updatePermission(c *gin.Context) {
 		}
 	}
 	operations, b := c.GetPostForm("operations")
-	if b {
+	if b && operations != "" {
 		filed = append(filed, "operations")
 		ops, err = utils.S2IList(strings.Split(operations, ","))
 		if err != nil {
@@ -472,4 +479,58 @@ func (_this *ApiAuth) updateOperation(c *gin.Context) {
 	arg.Method = method
 
 	internal.JSON(c, nil, global.Srv.UpdateOperation(c, arg, filed))
+}
+
+func (_this *ApiAuth) logLogin(c *gin.Context) {
+	arg := &model.FindLogAdminLoginReq{}
+	name, _ := c.GetQuery("name")
+	ip, _ := c.GetQuery("ip")
+	result, _ := c.GetQuery("result")
+	recordAtFrom, _ := c.GetQuery("record_at_from")
+	recordAtTo, _ := c.GetQuery("record_at_to")
+	orderBy, _ := c.GetQuery("order_by")
+	sort, _ := c.GetQuery("sort")
+	num, _ := c.GetQuery("num")
+	size, _ := c.GetQuery("size")
+
+	arg.Name = name
+	arg.Ip = ip
+	arg.Result = utils.GetInt(result)
+	arg.RecordAtFrom = xtime.Time(utils.GetInt64(recordAtFrom))
+	arg.RecordAtTo = xtime.Time(utils.GetInt64(recordAtTo))
+	arg.OrderBy = orderBy
+	arg.Sort = sort
+	arg.Num = utils.GetInt(num)
+	arg.Size = utils.GetInt(size)
+
+	arg.Verify()
+	reply, err := global.Srv.FindAdminLoginPage(c, arg)
+	internal.JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) logOperation(c *gin.Context) {
+	arg := &model.FindLogAdminOperationReq{}
+	name, _ := c.GetQuery("name")
+	ip, _ := c.GetQuery("ip")
+	result, _ := c.GetQuery("result")
+	recordAtFrom, _ := c.GetQuery("record_at_from")
+	recordAtTo, _ := c.GetQuery("record_at_to")
+	orderBy, _ := c.GetQuery("order_by")
+	sort, _ := c.GetQuery("sort")
+	num, _ := c.GetQuery("num")
+	size, _ := c.GetQuery("size")
+
+	arg.Name = name
+	arg.Ip = ip
+	arg.Result = utils.GetInt(result)
+	arg.RecordAtFrom = xtime.Time(utils.GetInt64(recordAtFrom))
+	arg.RecordAtTo = xtime.Time(utils.GetInt64(recordAtTo))
+	arg.OrderBy = orderBy
+	arg.Sort = sort
+	arg.Num = utils.GetInt(num)
+	arg.Size = utils.GetInt(size)
+
+	arg.Verify()
+	reply, err := global.Srv.PageFindLogAdminOperation(c, arg)
+	internal.JSON(c, reply, err)
 }

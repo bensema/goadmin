@@ -74,7 +74,7 @@ layui.config({
               formType: 0
               ,title: '敏感操作，请手动输入被删除权限'
             }, function(value, index){
-              if (value !== obj.data.name) {
+              if (value !== obj.data.name) {    
                 layer.alert("输入权限名与被删权限不同");
                 return;
               }

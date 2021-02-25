@@ -37,7 +37,8 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,api_operation_delete_url: '/api/v1/operation/delete'
         ,api_operation_add_url: '/api/v1/operation/add'
         ,api_menu_add_url: '/api/v1/menu/add'
-
+        ,api_log_login_page_url: '/api/v1/log_login/pages'
+        ,api_log_operation_page_url: '/api/v1/log_operation/pages'
 
 
         ,web_admin_form_url: '/admin/form'

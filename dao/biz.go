@@ -30,6 +30,10 @@ func (d *Dao) PageFindAdminTotal(c *gin.Context, req *model.FindAdminReq) (int, 
 	return internal.PageFindAdminTotal(c, d.db, req)
 }
 
+func (d *Dao) PageFindAdmin(c *gin.Context, req *model.FindAdminReq) ([]*model.Admin, error) {
+	return internal.PageFindAdmin(c, d.db, req)
+}
+
 func (d *Dao) CreateAdminRole(c *gin.Context, m *model.AdminRole) error {
 	return internal.CreateAdminRole(c, d.db, m)
 }
@@ -52,6 +56,10 @@ func (d *Dao) FindAdminRole(c *gin.Context, req *model.FindAdminRoleReq) ([]*mod
 
 func (d *Dao) PageFindAdminRoleTotal(c *gin.Context, req *model.FindAdminRoleReq) (int, error) {
 	return internal.PageFindAdminRoleTotal(c, d.db, req)
+}
+
+func (d *Dao) PageFindAdminRole(c *gin.Context, req *model.FindAdminRoleReq) ([]*model.AdminRole, error) {
+	return internal.PageFindAdminRole(c, d.db, req)
 }
 
 func (d *Dao) CreateLogAdminLogin(c *gin.Context, m *model.LogAdminLogin) error {
@@ -78,6 +86,10 @@ func (d *Dao) PageFindLogAdminLoginTotal(c *gin.Context, req *model.FindLogAdmin
 	return internal.PageFindLogAdminLoginTotal(c, d.db, req)
 }
 
+func (d *Dao) PageFindLogAdminLogin(c *gin.Context, req *model.FindLogAdminLoginReq) ([]*model.LogAdminLogin, error) {
+	return internal.PageFindLogAdminLogin(c, d.db, req)
+}
+
 func (d *Dao) CreateLogAdminOperation(c *gin.Context, m *model.LogAdminOperation) error {
 	return internal.CreateLogAdminOperation(c, d.db, m)
 }
@@ -100,6 +112,10 @@ func (d *Dao) FindLogAdminOperation(c *gin.Context, req *model.FindLogAdminOpera
 
 func (d *Dao) PageFindLogAdminOperationTotal(c *gin.Context, req *model.FindLogAdminOperationReq) (int, error) {
 	return internal.PageFindLogAdminOperationTotal(c, d.db, req)
+}
+
+func (d *Dao) PageFindLogAdminOperation(c *gin.Context, req *model.FindLogAdminOperationReq) ([]*model.LogAdminOperation, error) {
+	return internal.PageFindLogAdminOperation(c, d.db, req)
 }
 
 func (d *Dao) CreateMenu(c *gin.Context, m *model.Menu) error {
@@ -126,6 +142,10 @@ func (d *Dao) PageFindMenuTotal(c *gin.Context, req *model.FindMenuReq) (int, er
 	return internal.PageFindMenuTotal(c, d.db, req)
 }
 
+func (d *Dao) PageFindMenu(c *gin.Context, req *model.FindMenuReq) ([]*model.Menu, error) {
+	return internal.PageFindMenu(c, d.db, req)
+}
+
 func (d *Dao) CreateOperation(c *gin.Context, m *model.Operation) error {
 	return internal.CreateOperation(c, d.db, m)
 }
@@ -148,6 +168,10 @@ func (d *Dao) FindOperation(c *gin.Context, req *model.FindOperationReq) ([]*mod
 
 func (d *Dao) PageFindOperationTotal(c *gin.Context, req *model.FindOperationReq) (int, error) {
 	return internal.PageFindOperationTotal(c, d.db, req)
+}
+
+func (d *Dao) PageFindOperation(c *gin.Context, req *model.FindOperationReq) ([]*model.Operation, error) {
+	return internal.PageFindOperation(c, d.db, req)
 }
 
 func (d *Dao) CreatePermission(c *gin.Context, m *model.Permission) error {
@@ -174,6 +198,10 @@ func (d *Dao) PageFindPermissionTotal(c *gin.Context, req *model.FindPermissionR
 	return internal.PageFindPermissionTotal(c, d.db, req)
 }
 
+func (d *Dao) PageFindPermission(c *gin.Context, req *model.FindPermissionReq) ([]*model.Permission, error) {
+	return internal.PageFindPermission(c, d.db, req)
+}
+
 func (d *Dao) CreatePermissionMenu(c *gin.Context, m *model.PermissionMenu) error {
 	return internal.CreatePermissionMenu(c, d.db, m)
 }
@@ -196,6 +224,10 @@ func (d *Dao) FindPermissionMenu(c *gin.Context, req *model.FindPermissionMenuRe
 
 func (d *Dao) PageFindPermissionMenuTotal(c *gin.Context, req *model.FindPermissionMenuReq) (int, error) {
 	return internal.PageFindPermissionMenuTotal(c, d.db, req)
+}
+
+func (d *Dao) PageFindPermissionMenu(c *gin.Context, req *model.FindPermissionMenuReq) ([]*model.PermissionMenu, error) {
+	return internal.PageFindPermissionMenu(c, d.db, req)
 }
 
 func (d *Dao) CreatePermissionOperation(c *gin.Context, m *model.PermissionOperation) error {
@@ -222,6 +254,10 @@ func (d *Dao) PageFindPermissionOperationTotal(c *gin.Context, req *model.FindPe
 	return internal.PageFindPermissionOperationTotal(c, d.db, req)
 }
 
+func (d *Dao) PageFindPermissionOperation(c *gin.Context, req *model.FindPermissionOperationReq) ([]*model.PermissionOperation, error) {
+	return internal.PageFindPermissionOperation(c, d.db, req)
+}
+
 func (d *Dao) CreateRole(c *gin.Context, m *model.Role) error {
 	return internal.CreateRole(c, d.db, m)
 }
@@ -246,6 +282,10 @@ func (d *Dao) PageFindRoleTotal(c *gin.Context, req *model.FindRoleReq) (int, er
 	return internal.PageFindRoleTotal(c, d.db, req)
 }
 
+func (d *Dao) PageFindRole(c *gin.Context, req *model.FindRoleReq) ([]*model.Role, error) {
+	return internal.PageFindRole(c, d.db, req)
+}
+
 func (d *Dao) CreateRolePermission(c *gin.Context, m *model.RolePermission) error {
 	return internal.CreateRolePermission(c, d.db, m)
 }
@@ -268,4 +308,8 @@ func (d *Dao) FindRolePermission(c *gin.Context, req *model.FindRolePermissionRe
 
 func (d *Dao) PageFindRolePermissionTotal(c *gin.Context, req *model.FindRolePermissionReq) (int, error) {
 	return internal.PageFindRolePermissionTotal(c, d.db, req)
+}
+
+func (d *Dao) PageFindRolePermission(c *gin.Context, req *model.FindRolePermissionReq) ([]*model.RolePermission, error) {
+	return internal.PageFindRolePermission(c, d.db, req)
 }

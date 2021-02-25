@@ -44,18 +44,18 @@ func (m *AdminRole) Fields() []interface{} {
 }
 
 type LogAdminLogin struct {
-	Id         int        `json:"id"`          // 自增编号
-	AdminId    int        `json:"admin_id"`    // 管理员编号
-	Name       string     `json:"name"`        // 管理员名
-	Location   string     `json:"location"`    // 位置
-	Os         string     `json:"os"`          // 操作系统
-	Browser    string     `json:"browser"`     // 浏览器
-	UserAgent  string     `json:"user_agent"`  // 浏览器详情
-	Url        string     `json:"url"`         // url
-	Result     int        `json:"result"`      // 2:失败;1:成功
-	Ip         string     `json:"ip"`          // IP
-	RecordTime xtime.Time `json:"record_time"` // 记录时间
-	Remark     string     `json:"remark"`      // 备注
+	Id        int        `json:"id"`         // 自增编号
+	AdminId   int        `json:"admin_id"`   // 管理员编号
+	Name      string     `json:"name"`       // 管理员名
+	Location  string     `json:"location"`   // 位置
+	Os        string     `json:"os"`         // 操作系统
+	Browser   string     `json:"browser"`    // 浏览器
+	UserAgent string     `json:"user_agent"` // 浏览器详情
+	Url       string     `json:"url"`        // url
+	Result    int        `json:"result"`     // 2:失败;1:成功
+	Ip        string     `json:"ip"`         // IP
+	RecordAt  xtime.Time `json:"record_at"`  // 记录时间
+	Remark    string     `json:"remark"`     // 备注
 }
 
 func (m *LogAdminLogin) Table() string {
@@ -63,11 +63,11 @@ func (m *LogAdminLogin) Table() string {
 }
 
 func (m *LogAdminLogin) Columns() []string {
-	return []string{"id", "admin_id", "name", "location", "os", "browser", "user_agent", "url", "result", "ip", "record_time", "remark"}
+	return []string{"id", "admin_id", "name", "location", "os", "browser", "user_agent", "url", "result", "ip", "record_at", "remark"}
 }
 
 func (m *LogAdminLogin) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.Location, &m.Os, &m.Browser, &m.UserAgent, &m.Url, &m.Result, &m.Ip, &m.RecordTime, &m.Remark}
+	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.Location, &m.Os, &m.Browser, &m.UserAgent, &m.Url, &m.Result, &m.Ip, &m.RecordAt, &m.Remark}
 }
 
 type LogAdminOperation struct {
