@@ -2,6 +2,7 @@ package contorller
 
 import (
 	"fmt"
+	"github.com/bensema/goadmin/global"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -20,7 +21,8 @@ func (_this *HtmlWebAuth) RegisterRoute(g *gin.RouterGroup) {
 }
 
 func (_this *HtmlWebAuth) index(c *gin.Context) {
-	c.HTML(http.StatusOK, "base/index.html", gin.H{})
+	operatorInfo, _ := global.Srv.GetAdminFromContext(c)
+	c.HTML(http.StatusOK, "base/index.html", gin.H{"name": operatorInfo.Name})
 }
 
 func (_this *HtmlWebAuth) admin(c *gin.Context) {

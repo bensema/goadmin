@@ -193,7 +193,7 @@ layui.config({
                 ,url: layui.goadmin.api_permission_update_url
                 ,data: params
                 ,done: function(res){
-                    layui.layer.alert("操作成功")
+                    layui.layer.msg("操作成功")
                 }
             });
         },
@@ -318,7 +318,7 @@ layui.config({
                 ,url: layui.goadmin.api_operation_add_url
                 ,data: params
                 ,done: function(res){
-                    layui.layer.alert("操作成功")
+                    layui.layer.msg("操作成功")
                     treeInit()
                     layui.$('#add_operation_name').val("")
                     layui.$('#add_operation_code').val("")
@@ -348,7 +348,7 @@ layui.config({
                 ,url: layui.goadmin.api_menu_add_url
                 ,data: params
                 ,done: function(res){
-                    layui.layer.alert("操作成功")
+                    layui.layer.msg("操作成功")
                     treeInit()
                     layui.$('#add_menu_name').val("")
                     layui.$('#add_menu_icon').val("")
@@ -372,7 +372,7 @@ layui.config({
                 ,url: layui.goadmin.api_menu_update_url
                 ,data: params
                 ,done: function(res){
-                    layui.layer.alert("操作成功")
+                    layui.layer.msg("操作成功")
                     treeInit()
                     layui.$('#edit_cur_id').val("")
                     layui.$('#edit_menu_pid').val("")
@@ -399,7 +399,7 @@ layui.config({
                 ,url: layui.goadmin.api_operation_update_url
                 ,data: params
                 ,done: function(res){
-                    layui.layer.alert("操作成功")
+                    layui.layer.msg("操作成功")
                     treeInit()
                     layui.$('#edit_cur_id').val("")
                     layui.$('#edit_operation_pid').val("")
@@ -441,7 +441,7 @@ layui.config({
                   url: url,
                   data: params,
                   done: function(res) {
-                      layer.alert("操作成功");
+                      layer.msg("操作成功");
                       treeInit();
                   }
               });

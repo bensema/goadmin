@@ -78,6 +78,16 @@ func (d *Dao) SetAdminSessionCache(c *gin.Context, key string, adminSession *mod
 	return
 }
 
+func (d *Dao) DeleteAdminSessionCache(c *gin.Context, key string) (err error) {
+	conn, err := d.rds.GetContext(c.Request.Context())
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	_, err = conn.Do("DEL", key)
+	return
+}
+
 func (d *Dao) GetAdminSessionCache(c *gin.Context, key string) (adminSession *model.AdminSession, err error) {
 	var (
 		data []byte

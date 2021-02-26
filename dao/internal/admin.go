@@ -77,3 +77,19 @@ func GetOperationByName(c *gin.Context, db *sql.DB, name string) (obj *model.Ope
 	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
 	return
 }
+
+func GetOperationByUrl(c *gin.Context, db *sql.DB, url string) (obj *model.Operation, err error) {
+	obj = &model.Operation{}
+	builder := sqlBuilder()
+	query, args := builder.Select(obj.Columns()...).From(entsql.Table(obj.Table())).Where(entsql.EQ("url", url)).Query()
+	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
+	return
+}
+
+func GetMenuByUrl(c *gin.Context, db *sql.DB, url string) (obj *model.Menu, err error) {
+	obj = &model.Menu{}
+	builder := sqlBuilder()
+	query, args := builder.Select(obj.Columns()...).From(entsql.Table(obj.Table())).Where(entsql.EQ("url", url)).Query()
+	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
+	return
+}

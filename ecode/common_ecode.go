@@ -2,8 +2,9 @@ package ecode
 
 // All common ecode
 var (
-	OK     = add(0, "")                  // 正确
-	public = add(-10086, "public error") // 其他错误
+	OK              = add(0, "")                  // 正确
+	public          = add(-10086, "public error") // 其他错误
+	RejectOperation = add(-8888, "拒绝此操作")         // 拒绝操作
 
 	AppKeyInvalid           = add(-1, "应用程序不存在或已被封禁")    // 应用程序不存在或已被封禁
 	AccessKeyErr            = add(-2, "Access Key错误")    // Access Key错误

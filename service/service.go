@@ -45,3 +45,7 @@ func (s *Service) getAdminFromContext(c *gin.Context) (*model.Admin, error) {
 	}
 	return s.dao.GetAdminById(c, as.UserId)
 }
+
+func (s *Service) GetAdminFromContext(c *gin.Context) (*model.Admin, error) {
+	return s.getAdminFromContext(c)
+}

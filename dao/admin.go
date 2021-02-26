@@ -41,3 +41,11 @@ func (d *Dao) GetMenuByName(c *gin.Context, name string) (*model.Menu, error) {
 func (d *Dao) GetOperationByName(c *gin.Context, name string) (*model.Operation, error) {
 	return internal.GetOperationByName(c, d.db, name)
 }
+
+func (d *Dao) GetOperationByUrl(c *gin.Context, url string) (*model.Operation, error) {
+	return internal.GetOperationByUrl(c, d.db, url)
+}
+
+func (d *Dao) GetMenuByUrl(c *gin.Context, url string) (*model.Menu, error) {
+	return internal.GetMenuByUrl(c, d.db, url)
+}

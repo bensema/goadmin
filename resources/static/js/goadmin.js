@@ -7,7 +7,7 @@
 layui.define(function(exports){ //提示：模块也可以依赖其它模块，如：layui.define('layer', callback);
     var $ = layui.jquery
       ,setter = layui.setter
-
+      ,v = "0.1.0"
       ,obj = {
         api_login_url : '/api/v1/login'  // 登陆地址
         ,api_menu_url: '/api/v1/menu'   // 菜单地址
@@ -67,6 +67,7 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
           ,statusCode: {
             ok: 0 //数据状态一切正常的状态码
             ,nologin: -101 // 未登录
+            ,access_denied: -403
             ,logout: 1001 //登录状态失效的状态码
           }
           ,msgName: 'message' //状态信息的字段名称

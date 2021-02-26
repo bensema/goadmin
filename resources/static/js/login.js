@@ -19,7 +19,7 @@ layui.config({
     form.on('submit(LAY-user-login-submit)', function(obj){
 
       //请求登入接口
-      admin.req({
+      layui.goadmin.req({
         type: 'post'
         ,url: layui.goadmin.api_login_url
         ,data: obj.field

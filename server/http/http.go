@@ -26,7 +26,7 @@ func router(e *gin.Engine) {
 	{
 		new(contorller.HtmlWeb).RegisterRoute(web)
 	}
-	webAuth := e.Group("/", middleware.AuthAdmin())
+	webAuth := e.Group("/", middleware.PermitWeb())
 	{
 		new(contorller.HtmlWebAuth).RegisterRoute(webAuth)
 	}
@@ -34,7 +34,7 @@ func router(e *gin.Engine) {
 	{
 		new(contorller.Api).RegisterRoute(api)
 	}
-	apiAuth := e.Group("/", middleware.AuthApi())
+	apiAuth := e.Group("/", middleware.PermitApi())
 	{
 		new(contorller.ApiAuth).RegisterRoute(apiAuth)
 	}

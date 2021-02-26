@@ -3,6 +3,7 @@ package contorller
 import (
 	"errors"
 	"fmt"
+	"github.com/bensema/goadmin/ecode"
 	"github.com/bensema/goadmin/global"
 	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/server/http/internal"
@@ -138,6 +139,11 @@ func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
 	id, b := c.GetPostForm("id")
 	if !b {
 		internal.JSON(c, nil, errors.New("id不能空"))
+		return
+	}
+
+	if utils.GetInt(id) == internal.RootId {
+		internal.JSON(c, nil, ecode.RejectOperation)
 		return
 	}
 
