@@ -5,6 +5,14 @@ import xtime "github.com/bensema/library/time"
 type AdminSession struct {
 	UserId int
 	Name   string
+	AesKey string
+}
+
+type AdminLoginV2 struct {
+	Username string     `json:"username"`
+	Password string     `json:"password"`
+	AesKey   string     `json:"aesKey"`
+	T        xtime.Time `json:"t"`
 }
 
 // admin 数据v1

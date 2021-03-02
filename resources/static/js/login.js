@@ -15,14 +15,44 @@ layui.config({
 
     form.render();
 
+      layui.goadmin.req({
+        type: 'get'
+        ,url: layui.goadmin.api_rsa_url
+        ,data: {}
+        ,done: function(res){
+            layui.data('crypto', {
+              key: 'rsa'
+              ,value: res.data
+            });
+            layui.data('crypto', {
+              key: 'aes'
+              ,value: generateMixed(16)
+            });
+        }
+      })
+
     //提交
     form.on('submit(LAY-user-login-submit)', function(obj){
+      cc = layui.data('crypto')
+      rsa =  cc.rsa
+      aes = cc.aes
+      var encrypt = new JSEncrypt();
+      encrypt.setPublicKey(rsa);
+
+      var params = {}
+      var data = {}
+      data.Username = obj.field.username
+      data.Password = obj.field.password
+      data.AesKey = aes
+      data.t = new Date().getTime()
+      params.vercode = obj.field.vercode
+      params.data = encrypt.encrypt(JSON.stringify(data));
 
       //请求登入接口
       layui.goadmin.req({
         type: 'post'
         ,url: layui.goadmin.api_login_url
-        ,data: obj.field
+        ,data: params
         ,done: function(res){
 
           //请求成功后，写入 access_token
@@ -46,3 +76,13 @@ layui.config({
 
 
   });
+
+  function generateMixed(n) {
+       var str = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+       var res = "";
+       for(var i = 0; i < n ; i ++) {
+           var id = Math.ceil(Math.random()*35);
+           res += str[id];
+       }
+       return res;
+  }

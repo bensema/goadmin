@@ -31,6 +31,7 @@ func (s *Service) AdminLogin(c *gin.Context, arg *model.AdminLoginReq) (string, 
 	adminSession := model.AdminSession{
 		UserId: au.Id,
 		Name:   au.Name,
+		AesKey: arg.AesKey,
 	}
 	err = s.dao.SetAdminSessionCache(c, adminSessionKey, &adminSession)
 	ipInfo, _ := s.Ip2Region.BtreeSearch(c.ClientIP())

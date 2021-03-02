@@ -9,7 +9,8 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
       ,setter = layui.setter
       ,v = "0.1.0"
       ,obj = {
-        api_login_url : '/api/v1/login'  // 登陆地址
+        api_rsa_url : '/api/v1/rsa'  // rsa
+        ,api_login_url : '/api/v1/login'  // 登陆地址
         ,api_menu_url: '/api/v1/menu'   // 菜单地址
         ,api_admin_page_url: '/api/v1/admin/pages'   // 管理员列表
         ,api_admin_info_url: '/api/v1/admin/info'   // 管理员信息

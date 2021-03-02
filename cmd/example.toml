@@ -12,7 +12,7 @@
     dir = "../resources"
     static = "static"
     template = "template/**/*"
-    openTrace = true
+    openTrace = false
 
 [captcha]
 
@@ -39,7 +39,7 @@
 
 [redis]
     name = ""
-    openTrace = true
+    openTrace = false
     maxIdle = 100
     maxActive = 100
     idleTimeout = "10s"

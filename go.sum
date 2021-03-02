@@ -51,6 +51,12 @@ github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmV
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/bensema/library v0.0.0-20210302041632-806f81122114 h1:h6LbBpaZfc6ci4OhXNfPuO1VAndJmj8+sLkoXKiiD3g=
 github.com/bensema/library v0.0.0-20210302041632-806f81122114/go.mod h1:Op5r/+gQvMnInIVDgYSkD6aFQPydKclHM6PXk5MDB88=
+github.com/bensema/library v0.0.0-20210302091218-531d9d6ae89f h1:dDJo+4tSL3+PMFzPYZb7InfHls2UFrOgDOgXYeTcv80=
+github.com/bensema/library v0.0.0-20210302091218-531d9d6ae89f/go.mod h1:Op5r/+gQvMnInIVDgYSkD6aFQPydKclHM6PXk5MDB88=
+github.com/bensema/library v0.0.0-20210302114950-f2c03f044356 h1:6dkVVCfGjSs0urvcRx0qpNMbMiEByHSoCVpdE73APtI=
+github.com/bensema/library v0.0.0-20210302114950-f2c03f044356/go.mod h1:Op5r/+gQvMnInIVDgYSkD6aFQPydKclHM6PXk5MDB88=
+github.com/bensema/library v0.0.0-20210302115325-5b237b567502 h1:PdA/OYL2bv3CjCxmy7Wje4cSuU4aS/kIvugMgGavMc0=
+github.com/bensema/library v0.0.0-20210302115325-5b237b567502/go.mod h1:Op5r/+gQvMnInIVDgYSkD6aFQPydKclHM6PXk5MDB88=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
