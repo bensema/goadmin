@@ -50,8 +50,9 @@ type Ip2Region struct {
 }
 
 type Web struct {
-	Port     int
-	Dir      string
-	Template string
-	Static   string
+	Port      int
+	Dir       string
+	Template  string
+	Static    string
+	OpenTrace bool
 }

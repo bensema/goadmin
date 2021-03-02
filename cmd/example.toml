@@ -12,12 +12,13 @@
     dir = "../resources"
     static = "static"
     template = "template/**/*"
+    openTrace = true
 
 [captcha]
 
 [trace]
     dsn = "http://localhost:14268/api/traces"
-    serviceName = "admin"
+    serviceName = "goadmin"
     proto = "http"
 
 [bm]
@@ -38,7 +39,7 @@
 
 [redis]
     name = ""
-    openTrace = false
+    openTrace = true
     maxIdle = 100
     maxActive = 100
     idleTimeout = "10s"
