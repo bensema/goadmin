@@ -7,7 +7,6 @@ import (
 	"github.com/bensema/library/database/sql"
 	"github.com/bensema/library/image/captcha"
 	"github.com/bensema/library/log"
-	"github.com/bensema/library/net/http/blademaster"
 	"github.com/bensema/library/net/trace"
 	"github.com/bensema/library/time"
 )
@@ -22,15 +21,13 @@ func init() {
 }
 
 type Config struct {
-	Web        *Web
-	MySQL      *sql.Config
-	Captcha    *captcha.Config
-	Trace      *trace.Config
-	BM         *blademaster.ServerConfig
-	Log        *log.Config
-	Redis      *Redis
-	HttpClient *blademaster.ClientConfig
-	Ip2Region  *Ip2Region
+	Web       *Web
+	MySQL     *sql.Config
+	Captcha   *captcha.Config
+	Trace     *trace.Config
+	Log       *log.Config
+	Redis     *Redis
+	Ip2Region *Ip2Region
 }
 
 func local() (err error) {

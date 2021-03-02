@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/bensema/goadmin/ecode"
 	"github.com/bensema/goadmin/model"
+	"github.com/bensema/library/ecode"
 	"github.com/bensema/library/log"
 	"github.com/gin-gonic/gin"
 )

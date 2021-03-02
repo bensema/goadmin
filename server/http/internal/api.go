@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/bensema/goadmin/ecode"
+	"github.com/bensema/library/ecode"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

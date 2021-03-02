@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"github.com/bensema/goadmin/ecode"
+	"github.com/bensema/library/ecode"
 	"regexp"
 )
 

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/bensema/goadmin/ecode"
+	"github.com/bensema/library/ecode"
 	"math/rand"
 	"regexp"
 	"strconv"

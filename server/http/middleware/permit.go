@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"github.com/bensema/goadmin/ecode"
 	"github.com/bensema/goadmin/global"
 	"github.com/bensema/goadmin/server/http/internal"
+	"github.com/bensema/library/ecode"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

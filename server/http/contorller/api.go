@@ -2,11 +2,11 @@ package contorller
 
 import (
 	"errors"
-	"github.com/bensema/goadmin/ecode"
 	"github.com/bensema/goadmin/global"
 	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/server/http/internal"
 	"github.com/bensema/library/cache/redis"
+	"github.com/bensema/library/ecode"
 	"github.com/bensema/library/log"
 	"github.com/gin-gonic/gin"
 	"image/gif"
