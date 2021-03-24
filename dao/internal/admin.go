@@ -15,7 +15,31 @@ func GetAdminByName(c *gin.Context, db *sql.DB, name string) (obj *model.Admin, 
 	return
 }
 
-func DeleteAdminRoleByAdminId(c *gin.Context, db *sql.DB, adminId int) (err error) {
+func GetAdminByAdminId(c *gin.Context, db *sql.DB, adminId string) (obj *model.Admin, err error) {
+	obj = &model.Admin{}
+	builder := sqlBuilder()
+	query, args := builder.Select(obj.Columns()...).From(entsql.Table(obj.Table())).Where(entsql.EQ("admin_id", adminId)).Query()
+	err = db.QueryRowContext(c, query, args...).Scan(obj.Fields()...)
+	return
+}
+
+func UpdateAdminByAdminId(c *gin.Context, db *sql.DB, adminId string, key string, value interface{}) (err error) {
+	obj := &model.Admin{}
+	builder := sqlBuilder()
+	query, args := builder.Update(obj.Table()).Set(key, value).Where(entsql.EQ("admin_id", adminId)).Query()
+	_, err = db.ExecContext(c, query, args...)
+	return
+}
+
+func DeleteAdminByAdminId(c *gin.Context, db *sql.DB, adminId string) (err error) {
+	obj := &model.Admin{}
+	builder := sqlBuilder()
+	query, args := builder.Delete(obj.Table()).Where(entsql.EQ("admin_id", adminId)).Query()
+	_, err = db.ExecContext(c, query, args...)
+	return err
+}
+
+func DeleteAdminRoleByAdminId(c *gin.Context, db *sql.DB, adminId string) (err error) {
 	obj := &model.AdminRole{}
 	builder := sqlBuilder()
 	query, args := builder.Delete(obj.Table()).Where(entsql.EQ("admin_id", adminId)).Query()

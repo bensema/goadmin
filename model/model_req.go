@@ -1,7 +1,5 @@
 package model
 
-import xtime "github.com/bensema/library/time"
-
 type FindAdminReq struct {
 	Admin
 	OrderBy string `json:"order_by"`
@@ -13,15 +11,6 @@ type FindAdminRoleReq struct {
 	AdminRole
 	OrderBy string `json:"order_by"`
 	Sort    string `json:"sort"`
-	Pagination
-}
-
-type FindLogAdminOperationReq struct {
-	LogAdminOperation
-	OrderBy      string     `json:"order_by"`
-	Sort         string     `json:"sort"`
-	RecordAtFrom xtime.Time `json:"record_at_from"`
-	RecordAtTo   xtime.Time `json:"record_at_to"`
 	Pagination
 }
 

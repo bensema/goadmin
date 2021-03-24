@@ -57,7 +57,7 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 func (_this *ApiAuth) menu(c *gin.Context) {
 	session, _ := c.Cookie(internal.AdminSession)
 	adminSession, _ := global.Srv.GetAdminSessionCache(c, session)
-	menus, err := global.Srv.FindAdminMenu(c, adminSession.UserId)
+	menus, err := global.Srv.FindAdminMenu(c, adminSession.AdminId)
 	internal.JSON(c, menus, err)
 }
 
@@ -101,8 +101,8 @@ func (_this *ApiAuth) adminPagesV1(c *gin.Context) {
 }
 
 func (_this *ApiAuth) adminInfoV1(c *gin.Context) {
-	id, _ := c.GetQuery("id")
-	reply, err := global.Srv.GetAdminV1(c, utils.GetInt(id))
+	adminId, _ := c.GetQuery("admin_id")
+	reply, err := global.Srv.GetAdminV1(c, adminId)
 	internal.JSON(c, reply, err)
 }
 
@@ -114,7 +114,7 @@ func (_this *ApiAuth) roleAll(c *gin.Context) {
 func (_this *ApiAuth) updateAdmin(c *gin.Context) {
 	var filed []string
 	arg := &model.UpdateAdmin{}
-	id, _ := c.GetPostForm("id")
+	adminId, _ := c.GetPostForm("admin_id")
 	status, b := c.GetPostForm("status")
 	if b {
 		filed = append(filed, "status")
@@ -128,7 +128,7 @@ func (_this *ApiAuth) updateAdmin(c *gin.Context) {
 		internal.JSON(c, nil, err)
 		return
 	}
-	arg.Id = utils.GetInt(id)
+	arg.AdminId = adminId
 	arg.Status = utils.GetInt(status)
 	arg.Roles = r
 
@@ -136,18 +136,18 @@ func (_this *ApiAuth) updateAdmin(c *gin.Context) {
 }
 
 func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
-	id, b := c.GetPostForm("id")
+	adminId, b := c.GetPostForm("admin_id")
 	if !b {
-		internal.JSON(c, nil, errors.New("id不能空"))
+		internal.JSON(c, nil, errors.New("admin_id 不能空"))
 		return
 	}
 
-	if utils.GetInt(id) == internal.RootId {
+	if adminId == internal.RootId {
 		internal.JSON(c, nil, ecode.RejectOperation)
 		return
 	}
 
-	internal.JSON(c, nil, global.Srv.DeleteAdmin(c, utils.GetInt(id)))
+	internal.JSON(c, nil, global.Srv.DeleteAdmin(c, adminId))
 }
 
 func (_this *ApiAuth) addAdmin(c *gin.Context) {

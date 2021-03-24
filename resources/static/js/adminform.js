@@ -11,9 +11,9 @@
     ,admin = layui.admin
     ,transfer = layui.transfer
 
-    id = getQueryVariable('id')
+    admin_id = getQueryVariable('admin_id')
     params = {}
-    params.id = getQueryVariable('id')
+    params.admin_id = getQueryVariable('admin_id')
     roles = []
     role_data = []
 
@@ -70,7 +70,7 @@
 
         var roles = layui.transfer.getData('edit_roles');
 
-        params.id = getQueryVariable('id');
+        params.admin_id = getQueryVariable('admin_id');
         params.status = layui.$('#edit_status').val();
         params.roles = roles.map(function(elem){return elem.id;}).join(",");
 

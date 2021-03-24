@@ -29,16 +29,16 @@ func (s *Service) AdminLogin(c *gin.Context, arg *model.AdminLoginReq) (string, 
 	}
 	adminSessionKey := utils.RandomString(40)
 	adminSession := model.AdminSession{
-		UserId: au.Id,
-		Name:   au.Name,
-		AesKey: arg.AesKey,
+		AdminId: au.AdminId,
+		Name:    au.Name,
+		AesKey:  arg.AesKey,
 	}
 	err = s.dao.SetAdminSessionCache(c, adminSessionKey, &adminSession)
 	ipInfo, _ := s.Ip2Region.BtreeSearch(c.ClientIP())
 	ua := user_agent.New(c.Request.UserAgent())
 	b1, bv := ua.Browser()
 	loginLog := &model.LogAdminLogin{
-		AdminId:   au.Id,
+		AdminId:   au.AdminId,
 		Name:      au.Name,
 		Location:  fmt.Sprintf("%s %s", ipInfo.Province, ipInfo.City),
 		Os:        ua.OS(),
@@ -55,11 +55,11 @@ func (s *Service) AdminLogin(c *gin.Context, arg *model.AdminLoginReq) (string, 
 	return adminSessionKey, err
 }
 
-func (s *Service) FindAdminMenu(c *gin.Context, uid int) ([]*model.Menu, error) {
+func (s *Service) FindAdminMenu(c *gin.Context, adminId string) ([]*model.Menu, error) {
 	var res []*model.Menu
 	temp := map[int]struct{}{}
 	farr := &model.FindAdminRoleReq{}
-	farr.AdminId = uid
+	farr.AdminId = adminId
 	adminRoles, err := s.dao.FindAdminRole(c, farr)
 	if err != nil {
 		return nil, err
@@ -134,7 +134,7 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *model.FindAdminReq) (repl
 	for _, d := range dataTmp {
 		var rls []*model.Role
 		farr := &model.FindAdminRoleReq{}
-		farr.AdminId = d.Id
+		farr.AdminId = d.AdminId
 		adminRoles, _ := s.dao.FindAdminRole(c, farr)
 
 		for _, adminRole := range adminRoles {
@@ -147,7 +147,7 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *model.FindAdminReq) (repl
 		}
 
 		data = append(data, &model.AdminV1{
-			Id:        d.Id,
+			AdminId:   d.AdminId,
 			Name:      d.Name,
 			Status:    d.Status,
 			CreatedAt: d.CreatedAt,
@@ -163,9 +163,9 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *model.FindAdminReq) (repl
 }
 
 // 获取管理员信息过滤密码，添加角色
-func (s *Service) GetAdminV1(c *gin.Context, id int) (*model.AdminV1, error) {
+func (s *Service) GetAdminV1(c *gin.Context, adminId string) (*model.AdminV1, error) {
 	var data *model.AdminV1
-	dataTmp, err := s.dao.GetAdminById(c, id)
+	dataTmp, err := s.dao.GetAdminByAdminId(c, adminId)
 	if err == sql.ErrNoRows {
 		return nil, errors.New("账户不存在")
 	}
@@ -176,7 +176,7 @@ func (s *Service) GetAdminV1(c *gin.Context, id int) (*model.AdminV1, error) {
 
 	var rls []*model.Role
 	farr := &model.FindAdminRoleReq{}
-	farr.AdminId = id
+	farr.AdminId = adminId
 	adminRoles, _ := s.dao.FindAdminRole(c, farr)
 
 	for _, adminRole := range adminRoles {
@@ -189,7 +189,7 @@ func (s *Service) GetAdminV1(c *gin.Context, id int) (*model.AdminV1, error) {
 	}
 
 	data = &model.AdminV1{
-		Id:        dataTmp.Id,
+		AdminId:   dataTmp.AdminId,
 		Name:      dataTmp.Name,
 		Status:    dataTmp.Status,
 		CreatedAt: dataTmp.CreatedAt,
@@ -206,7 +206,7 @@ func (s *Service) FindAllRole(c *gin.Context) (reply []*model.Role, err error) {
 
 func (s *Service) UpdateAdmin(c *gin.Context, info *model.UpdateAdmin, filed []string) error {
 	var content string
-	aInfo, err := s.dao.GetAdminById(c, info.Id)
+	aInfo, err := s.dao.GetAdminByAdminId(c, info.AdminId)
 	if err != nil {
 		return err
 	}
@@ -214,7 +214,7 @@ func (s *Service) UpdateAdmin(c *gin.Context, info *model.UpdateAdmin, filed []s
 		switch v {
 		case "status":
 			content += fmt.Sprintf("状态:%d;", info.Status)
-			_ = s.dao.UpdateAdminById(c, info.Id, "status", info.Status)
+			_ = s.dao.UpdateAdminByAdminId(c, info.AdminId, "status", info.Status)
 		case "roles":
 			for _, role := range info.Roles {
 				_, err := s.dao.GetRoleById(c, role)
@@ -222,7 +222,7 @@ func (s *Service) UpdateAdmin(c *gin.Context, info *model.UpdateAdmin, filed []s
 					return errors.New("角色不存在")
 				}
 			}
-			err = s.dao.DeleteAdminRoleByAdminId(c, info.Id)
+			err = s.dao.DeleteAdminRoleByAdminId(c, info.AdminId)
 			if err != nil {
 				return err
 			}
@@ -234,7 +234,7 @@ func (s *Service) UpdateAdmin(c *gin.Context, info *model.UpdateAdmin, filed []s
 
 				content += fmt.Sprintf("角色编号:%d;角色:%s;", rInfo.Id, rInfo.Name)
 				_ = s.dao.CreateAdminRole(c, &model.AdminRole{
-					AdminId: info.Id,
+					AdminId: info.AdminId,
 					RoleId:  rInfo.Id,
 				})
 			}
@@ -246,10 +246,10 @@ func (s *Service) UpdateAdmin(c *gin.Context, info *model.UpdateAdmin, filed []s
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
-		OperationCode: "",
-		OperationName: "",
+		OperationCode: "update_admin",
+		OperationName: "更新管理员",
 		Content:       fmt.Sprintf("修改管理员:账户:%s;账户编号:%d;%s", aInfo.Name, aInfo.Id, content),
 		Result:        1,
 		Ip:            c.ClientIP(),
@@ -259,26 +259,26 @@ func (s *Service) UpdateAdmin(c *gin.Context, info *model.UpdateAdmin, filed []s
 	return err
 }
 
-func (s *Service) DeleteAdmin(c *gin.Context, id int) error {
-	if id == 0 || id == 1 {
+func (s *Service) DeleteAdmin(c *gin.Context, adminId string) error {
+	if adminId == "0" || adminId == "1" || adminId == "" {
 		return errors.New("权限不足")
 	}
 
 	var content string
-	aInfo, err := s.dao.GetAdminById(c, id)
+	aInfo, err := s.dao.GetAdminByAdminId(c, adminId)
 	if err != nil {
 		return errors.New("账户不存在")
 	}
 
-	err = s.dao.DeleteAdminById(c, id)
-	err = s.dao.DeleteAdminRoleByAdminId(c, id)
+	err = s.dao.DeleteAdminByAdminId(c, adminId)
+	err = s.dao.DeleteAdminRoleByAdminId(c, adminId)
 
 	operatorInfo, err := s.getAdminFromContext(c)
 	if err != nil {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "delete_admin",
 		OperationName: "删除账户",
@@ -310,6 +310,7 @@ func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
 		return ecode.PasswordEncodeErr
 	}
 
+	user.AdminId = utils.RandInt(7)
 	user.Name = info.Name
 	user.Password = hashPwd
 	user.Status = info.Status
@@ -325,7 +326,7 @@ func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
 	}
 	for _, role := range info.Roles {
 		_ = s.dao.CreateAdminRole(c, &model.AdminRole{
-			AdminId: uInfo.Id,
+			AdminId: uInfo.AdminId,
 			RoleId:  role,
 		})
 	}
@@ -335,7 +336,7 @@ func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "add_admin",
 		OperationName: "添加账户",
@@ -480,7 +481,7 @@ func (s *Service) UpdateRole(c *gin.Context, info *model.UpdateRole, filed []str
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "role_update",
 		OperationName: "修改角色",
@@ -522,7 +523,7 @@ func (s *Service) AddRole(c *gin.Context, info *model.AddRole) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "add_role",
 		OperationName: "添加角色",
@@ -561,7 +562,7 @@ func (s *Service) DeleteRole(c *gin.Context, id int) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "delete_role",
 		OperationName: "删除角色",
@@ -613,7 +614,7 @@ func (s *Service) AddPermission(c *gin.Context, info *model.Permission) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "add_permission",
 		OperationName: "添加权限",
@@ -653,7 +654,7 @@ func (s *Service) DeletePermission(c *gin.Context, id int) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "delete_permission",
 		OperationName: "删除权限",
@@ -735,7 +736,7 @@ func (s *Service) UpdatePermission(c *gin.Context, info *model.UpdatePermission,
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "permission_update",
 		OperationName: "修改权限",
@@ -773,7 +774,7 @@ func (s *Service) AddMenu(c *gin.Context, info *model.Menu) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "add_menu",
 		OperationName: "添加菜单",
@@ -810,7 +811,7 @@ func (s *Service) AddOperation(c *gin.Context, info *model.Operation) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "add_operation",
 		OperationName: "添加操作功能",
@@ -848,7 +849,7 @@ func (s *Service) DeleteMenu(c *gin.Context, id int) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "delete_menu",
 		OperationName: "删除菜单",
@@ -896,7 +897,7 @@ func (s *Service) UpdateMenu(c *gin.Context, info *model.Menu, filed []string) e
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "update_menu",
 		OperationName: "更新菜单",
@@ -924,7 +925,7 @@ func (s *Service) DeleteOperation(c *gin.Context, id int) error {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "delete_operation",
 		OperationName: "删除操作功能",
@@ -969,7 +970,7 @@ func (s *Service) UpdateOperation(c *gin.Context, info *model.Operation, filed [
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
+		AdminId:       operatorInfo.AdminId,
 		Name:          operatorInfo.Name,
 		OperationCode: "update_operation",
 		OperationName: "更新操作功能",

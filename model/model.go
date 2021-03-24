@@ -6,7 +6,8 @@ import (
 
 type Admin struct {
 	Id        int        `json:"id"`         // 自增编号
-	Name      string     `json:"name"`       // 账户
+	AdminId   string     `json:"admin_id"`   // 管理员编号
+	Name      string     `json:"name"`       // 管理员
 	Password  string     `json:"password"`   // 密码
 	Status    int        `json:"status"`     // 1:正常;2:禁用
 	CreatedAt xtime.Time `json:"created_at"` // 创建时间
@@ -18,17 +19,17 @@ func (m *Admin) Table() string {
 }
 
 func (m *Admin) Columns() []string {
-	return []string{"id", "name", "password", "status", "created_at", "updated_at"}
+	return []string{"id", "admin_id", "name", "password", "status", "created_at", "updated_at"}
 }
 
 func (m *Admin) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.Name, &m.Password, &m.Status, &m.CreatedAt, &m.UpdatedAt}
+	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.Password, &m.Status, &m.CreatedAt, &m.UpdatedAt}
 }
 
 type AdminRole struct {
-	Id      int `json:"id"`       // 编号
-	AdminId int `json:"admin_id"` // 账户编号
-	RoleId  int `json:"role_id"`  // 角色编号
+	Id      int    `json:"id"`       // 编号
+	AdminId string `json:"admin_id"` // 账户编号
+	RoleId  int    `json:"role_id"`  // 角色编号
 }
 
 func (m *AdminRole) Table() string {
@@ -45,7 +46,7 @@ func (m *AdminRole) Fields() []interface{} {
 
 type LogAdminLogin struct {
 	Id        int        `json:"id"`         // 自增编号
-	AdminId   int        `json:"admin_id"`   // 管理员编号
+	AdminId   string     `json:"admin_id"`   // 管理员编号
 	Name      string     `json:"name"`       // 管理员名
 	Location  string     `json:"location"`   // 位置
 	Os        string     `json:"os"`         // 操作系统
@@ -72,7 +73,7 @@ func (m *LogAdminLogin) Fields() []interface{} {
 
 type LogAdminOperation struct {
 	Id            int        `json:"id"`             // 操作编号
-	AdminId       int        `json:"admin_id"`       // 管理员编号
+	AdminId       string     `json:"admin_id"`       // 管理员编号
 	Name          string     `json:"name"`           // 账户
 	OperationCode string     `json:"operation_code"` // 行为编号
 	OperationName string     `json:"operation_name"` // 行为

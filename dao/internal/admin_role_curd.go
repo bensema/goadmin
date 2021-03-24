@@ -102,7 +102,7 @@ func buildSqlFindAdminRole(req *model.FindAdminRoleReq, sqlType string) (string,
 	//	  selector = selector.Where(entsql.EQ("id", req.Id))
 	// }
 
-	if req.AdminId != 0 {
+	if req.AdminId != "" {
 		selector = selector.Where(entsql.EQ("admin_id", req.AdminId))
 	}
 

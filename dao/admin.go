@@ -10,7 +10,19 @@ func (d *Dao) GetAdminByName(c *gin.Context, name string) (*model.Admin, error) 
 	return internal.GetAdminByName(c, d.db, name)
 }
 
-func (d *Dao) DeleteAdminRoleByAdminId(c *gin.Context, adminId int) error {
+func (d *Dao) GetAdminByAdminId(c *gin.Context, adminId string) (*model.Admin, error) {
+	return internal.GetAdminByAdminId(c, d.db, adminId)
+}
+
+func (d *Dao) UpdateAdminByAdminId(c *gin.Context, adminId string, key string, value interface{}) error {
+	return internal.UpdateAdminByAdminId(c, d.db, adminId, key, value)
+}
+
+func (d *Dao) DeleteAdminByAdminId(c *gin.Context, adminId string) error {
+	return internal.DeleteAdminByAdminId(c, d.db, adminId)
+}
+
+func (d *Dao) DeleteAdminRoleByAdminId(c *gin.Context, adminId string) error {
 	return internal.DeleteAdminRoleByAdminId(c, d.db, adminId)
 }
 

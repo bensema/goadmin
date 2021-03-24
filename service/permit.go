@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) PermitAPI(c *gin.Context, uid int) error {
+func (s *Service) PermitAPI(c *gin.Context, adminId string) error {
 	url := c.FullPath()
 	operation, err := s.dao.GetOperationByUrl(c, url)
 	if err != nil {
@@ -15,7 +15,7 @@ func (s *Service) PermitAPI(c *gin.Context, uid int) error {
 		return ecode.AccessDenied
 	}
 	farr := &model.FindAdminRoleReq{}
-	farr.AdminId = uid
+	farr.AdminId = adminId
 	admRoles, err := s.dao.FindAdminRole(c, farr)
 	if err != nil {
 		log.Errorf(err.Error())
@@ -46,7 +46,7 @@ func (s *Service) PermitAPI(c *gin.Context, uid int) error {
 	return ecode.AccessDenied
 }
 
-func (s *Service) PermitWeb(c *gin.Context, uid int) error {
+func (s *Service) PermitWeb(c *gin.Context, adminId string) error {
 	url := c.FullPath()
 	menu, err := s.dao.GetMenuByUrl(c, url)
 	if err != nil {
@@ -54,7 +54,7 @@ func (s *Service) PermitWeb(c *gin.Context, uid int) error {
 		return ecode.AccessDenied
 	}
 	farr := &model.FindAdminRoleReq{}
-	farr.AdminId = uid
+	farr.AdminId = adminId
 	admRoles, err := s.dao.FindAdminRole(c, farr)
 	if err != nil {
 		log.Errorf(err.Error())

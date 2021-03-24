@@ -11,7 +11,7 @@
  Target Server Version : 50723
  File Encoding         : 65001
 
- Date: 26/02/2021 13:28:32
+ Date: 24/03/2021 21:22:44
 */
 
 SET NAMES utf8mb4;
@@ -23,21 +23,23 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增编号',
-  `name` varchar(32) NOT NULL DEFAULT '' COMMENT '账户',
+  `admin_id` varchar(50) NOT NULL COMMENT '管理员编号',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '管理员',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:正常;2:禁用',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='管理员';
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `admin_id` (`admin_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='管理员';
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
 BEGIN;
-INSERT INTO `admin` VALUES (1, 'root', '$2a$10$muCPVqgBylixJjYfdhJorOfauVad9ywpFU.zdy1.XaMIoIZyVTECG', 1, '2021-02-18 15:24:46', '2021-02-18 15:24:46');
-INSERT INTO `admin` VALUES (9, 'demo996', '$2a$10$fMmFoKXbVpWxtSIy7fiTL.Ay4.QlTdIIuRdkjApPM6qsXBwCInL0q', 1, '2021-02-26 13:26:33', '2021-02-26 13:26:33');
+INSERT INTO `admin` VALUES (1, '1', 'root', '$2a$10$muCPVqgBylixJjYfdhJorOfauVad9ywpFU.zdy1.XaMIoIZyVTECG', 1, '2021-02-18 15:24:46', '2021-02-18 15:24:46');
+INSERT INTO `admin` VALUES (9, '9', 'demo996', '$2a$10$fMmFoKXbVpWxtSIy7fiTL.Ay4.QlTdIIuRdkjApPM6qsXBwCInL0q', 1, '2021-02-26 13:26:33', '2021-02-26 13:26:33');
 COMMIT;
 
 -- ----------------------------
@@ -46,19 +48,23 @@ COMMIT;
 DROP TABLE IF EXISTS `admin_role`;
 CREATE TABLE `admin_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `admin_id` int(11) NOT NULL COMMENT '账户编号',
+  `admin_id` varchar(50) NOT NULL COMMENT '账户编号',
   `role_id` int(11) NOT NULL COMMENT '角色编号',
   PRIMARY KEY (`id`),
   KEY `admin_id` (`admin_id`),
   KEY `role_id` (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COMMENT='管理员-角色';
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COMMENT='管理员-角色';
 
 -- ----------------------------
 -- Records of admin_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `admin_role` VALUES (58, 1, 1);
-INSERT INTO `admin_role` VALUES (60, 9, 1);
+INSERT INTO `admin_role` VALUES (61, '1', 1);
+INSERT INTO `admin_role` VALUES (62, '1', 5);
+INSERT INTO `admin_role` VALUES (63, '1', 8);
+INSERT INTO `admin_role` VALUES (64, '9', 1);
+INSERT INTO `admin_role` VALUES (65, '9', 8);
+INSERT INTO `admin_role` VALUES (66, '', 2);
 COMMIT;
 
 -- ----------------------------
@@ -67,7 +73,7 @@ COMMIT;
 DROP TABLE IF EXISTS `log_admin_login`;
 CREATE TABLE `log_admin_login` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增编号',
-  `admin_id` int(11) NOT NULL COMMENT '管理员编号',
+  `admin_id` varchar(50) NOT NULL COMMENT '管理员编号',
   `name` varchar(36) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '管理员名',
   `location` varchar(100) NOT NULL DEFAULT '' COMMENT '位置',
   `os` text NOT NULL COMMENT '操作系统',
@@ -84,7 +90,33 @@ CREATE TABLE `log_admin_login` (
   KEY `url` (`url`,`record_at`),
   KEY `record_time` (`record_at`),
   KEY `user_id` (`admin_id`,`record_at`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='管理员登录日志';
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='管理员登录日志';
+
+-- ----------------------------
+-- Records of log_admin_login
+-- ----------------------------
+BEGIN;
+INSERT INTO `log_admin_login` VALUES (42, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.182', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-02-26 13:59:50', '');
+INSERT INTO `log_admin_login` VALUES (43, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.182', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-02-26 14:03:35', '');
+INSERT INTO `log_admin_login` VALUES (44, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.182', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-02-26 23:20:08', '');
+INSERT INTO `log_admin_login` VALUES (45, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-02-27 15:43:31', '');
+INSERT INTO `log_admin_login` VALUES (46, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-02-27 15:44:24', '');
+INSERT INTO `log_admin_login` VALUES (47, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-02-27 15:45:39', '');
+INSERT INTO `log_admin_login` VALUES (48, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-02-27 15:48:00', '');
+INSERT INTO `log_admin_login` VALUES (49, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 12:19:02', '');
+INSERT INTO `log_admin_login` VALUES (50, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 12:39:03', '');
+INSERT INTO `log_admin_login` VALUES (51, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 13:29:47', '');
+INSERT INTO `log_admin_login` VALUES (52, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 14:16:37', '');
+INSERT INTO `log_admin_login` VALUES (53, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 14:21:11', '');
+INSERT INTO `log_admin_login` VALUES (54, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 17:28:05', '');
+INSERT INTO `log_admin_login` VALUES (55, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 19:30:23', '');
+INSERT INTO `log_admin_login` VALUES (56, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 19:33:39', '');
+INSERT INTO `log_admin_login` VALUES (57, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-02 19:37:12', '');
+INSERT INTO `log_admin_login` VALUES (58, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-03 07:13:08', '');
+INSERT INTO `log_admin_login` VALUES (59, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome88.0.4324.192', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-03 11:08:47', '');
+INSERT INTO `log_admin_login` VALUES (60, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome89.0.4389.82', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-24 12:07:55', '');
+INSERT INTO `log_admin_login` VALUES (61, '1', 'root', '0 内网IP', 'Intel Mac OS X 10_15_7', 'Chrome89.0.4389.82', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36', '/api/v1/login', 1, '127.0.0.1', '2021-03-24 20:51:34', '');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for log_admin_operation
@@ -92,7 +124,7 @@ CREATE TABLE `log_admin_login` (
 DROP TABLE IF EXISTS `log_admin_operation`;
 CREATE TABLE `log_admin_operation` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '操作编号',
-  `admin_id` int(11) NOT NULL COMMENT '管理员编号',
+  `admin_id` varchar(50) NOT NULL COMMENT '管理员编号',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '账户',
   `operation_code` varchar(50) NOT NULL DEFAULT '' COMMENT '行为编号',
   `operation_name` varchar(50) NOT NULL DEFAULT '' COMMENT '行为',
@@ -105,7 +137,7 @@ CREATE TABLE `log_admin_operation` (
   KEY `user_id` (`admin_id`,`operation_code`,`record_at`),
   KEY `user_id_2` (`admin_id`,`record_at`),
   KEY `action_module` (`operation_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=232 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='管理员操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=253 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='管理员操作日志';
 
 -- ----------------------------
 -- Table structure for menu
@@ -119,19 +151,22 @@ CREATE TABLE `menu` (
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url',
   `index_sort` int(11) NOT NULL DEFAULT '1' COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COMMENT='菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COMMENT='菜单';
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
 BEGIN;
 INSERT INTO `menu` VALUES (1, '系统管理', 0, 'layui-icon-component', '', 1);
-INSERT INTO `menu` VALUES (2, '用户管理', 1, 'layui-icon-user', '/admin', 1);
+INSERT INTO `menu` VALUES (2, '管理员管理', 1, 'layui-icon-user', '/admin', 1);
 INSERT INTO `menu` VALUES (3, '角色管理', 1, 'layui-icon-edit', '/role', 2);
 INSERT INTO `menu` VALUES (7, '权限管理', 1, 'layui-icon-edit', '/permission', 3);
 INSERT INTO `menu` VALUES (8, '资源管理', 1, 'layui-icon-edit', '/resources', 4);
 INSERT INTO `menu` VALUES (16, '登录日志', 1, 'layui-icon-list', '/log/login', 5);
 INSERT INTO `menu` VALUES (23, '操作日志', 1, 'layui-icon-list', '/log/operation', 6);
+INSERT INTO `menu` VALUES (24, '内容管理', 0, 'layui-icon-component', '', 2);
+INSERT INTO `menu` VALUES (25, '广告管理', 24, '', '', 0);
+INSERT INTO `menu` VALUES (26, '公告管理', 24, '', '', 0);
 COMMIT;
 
 -- ----------------------------
@@ -212,7 +247,7 @@ CREATE TABLE `permission_menu` (
   PRIMARY KEY (`id`),
   KEY `permission_id` (`permission_id`),
   KEY `menu_id` (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COMMENT='权限-菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=172 DEFAULT CHARSET=utf8mb4 COMMENT='权限-菜单';
 
 -- ----------------------------
 -- Records of permission_menu
@@ -224,19 +259,23 @@ INSERT INTO `permission_menu` VALUES (90, 2, 7);
 INSERT INTO `permission_menu` VALUES (91, 2, 8);
 INSERT INTO `permission_menu` VALUES (92, 2, 16);
 INSERT INTO `permission_menu` VALUES (93, 2, 23);
-INSERT INTO `permission_menu` VALUES (101, 10, 1);
-INSERT INTO `permission_menu` VALUES (102, 10, 2);
-INSERT INTO `permission_menu` VALUES (103, 10, 3);
-INSERT INTO `permission_menu` VALUES (104, 10, 7);
-INSERT INTO `permission_menu` VALUES (105, 10, 8);
-INSERT INTO `permission_menu` VALUES (106, 10, 16);
-INSERT INTO `permission_menu` VALUES (107, 10, 23);
-INSERT INTO `permission_menu` VALUES (142, 1, 1);
-INSERT INTO `permission_menu` VALUES (143, 1, 2);
-INSERT INTO `permission_menu` VALUES (144, 1, 3);
-INSERT INTO `permission_menu` VALUES (145, 1, 7);
-INSERT INTO `permission_menu` VALUES (146, 1, 8);
-INSERT INTO `permission_menu` VALUES (147, 1, 16);
+INSERT INTO `permission_menu` VALUES (155, 1, 1);
+INSERT INTO `permission_menu` VALUES (156, 1, 2);
+INSERT INTO `permission_menu` VALUES (157, 1, 3);
+INSERT INTO `permission_menu` VALUES (158, 1, 7);
+INSERT INTO `permission_menu` VALUES (159, 1, 8);
+INSERT INTO `permission_menu` VALUES (160, 1, 16);
+INSERT INTO `permission_menu` VALUES (161, 1, 23);
+INSERT INTO `permission_menu` VALUES (162, 1, 24);
+INSERT INTO `permission_menu` VALUES (163, 1, 25);
+INSERT INTO `permission_menu` VALUES (164, 1, 26);
+INSERT INTO `permission_menu` VALUES (165, 10, 1);
+INSERT INTO `permission_menu` VALUES (166, 10, 2);
+INSERT INTO `permission_menu` VALUES (167, 10, 3);
+INSERT INTO `permission_menu` VALUES (168, 10, 7);
+INSERT INTO `permission_menu` VALUES (169, 10, 8);
+INSERT INTO `permission_menu` VALUES (170, 10, 16);
+INSERT INTO `permission_menu` VALUES (171, 10, 23);
 COMMIT;
 
 -- ----------------------------
@@ -250,7 +289,7 @@ CREATE TABLE `permission_operation` (
   PRIMARY KEY (`id`),
   KEY `permission_id` (`permission_id`),
   KEY `operation_id` (`operation_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=266 DEFAULT CHARSET=utf8mb4 COMMENT='权限-操作';
+) ENGINE=InnoDB AUTO_INCREMENT=336 DEFAULT CHARSET=utf8mb4 COMMENT='权限-操作';
 
 -- ----------------------------
 -- Records of permission_operation
@@ -278,45 +317,48 @@ INSERT INTO `permission_operation` VALUES (74, 2, 45);
 INSERT INTO `permission_operation` VALUES (75, 2, 46);
 INSERT INTO `permission_operation` VALUES (76, 2, 43);
 INSERT INTO `permission_operation` VALUES (77, 2, 44);
-INSERT INTO `permission_operation` VALUES (91, 10, 21);
-INSERT INTO `permission_operation` VALUES (92, 10, 47);
-INSERT INTO `permission_operation` VALUES (93, 10, 26);
-INSERT INTO `permission_operation` VALUES (94, 10, 27);
-INSERT INTO `permission_operation` VALUES (95, 10, 48);
-INSERT INTO `permission_operation` VALUES (96, 10, 31);
-INSERT INTO `permission_operation` VALUES (97, 10, 35);
-INSERT INTO `permission_operation` VALUES (98, 10, 36);
-INSERT INTO `permission_operation` VALUES (99, 10, 45);
-INSERT INTO `permission_operation` VALUES (100, 10, 46);
-INSERT INTO `permission_operation` VALUES (101, 10, 43);
-INSERT INTO `permission_operation` VALUES (102, 10, 44);
-INSERT INTO `permission_operation` VALUES (239, 1, 21);
-INSERT INTO `permission_operation` VALUES (240, 1, 22);
-INSERT INTO `permission_operation` VALUES (241, 1, 23);
-INSERT INTO `permission_operation` VALUES (242, 1, 24);
-INSERT INTO `permission_operation` VALUES (243, 1, 25);
-INSERT INTO `permission_operation` VALUES (244, 1, 47);
-INSERT INTO `permission_operation` VALUES (245, 1, 26);
-INSERT INTO `permission_operation` VALUES (246, 1, 27);
-INSERT INTO `permission_operation` VALUES (247, 1, 28);
-INSERT INTO `permission_operation` VALUES (248, 1, 29);
-INSERT INTO `permission_operation` VALUES (249, 1, 30);
-INSERT INTO `permission_operation` VALUES (250, 1, 48);
-INSERT INTO `permission_operation` VALUES (251, 1, 31);
-INSERT INTO `permission_operation` VALUES (252, 1, 32);
-INSERT INTO `permission_operation` VALUES (253, 1, 33);
-INSERT INTO `permission_operation` VALUES (254, 1, 34);
-INSERT INTO `permission_operation` VALUES (255, 1, 35);
-INSERT INTO `permission_operation` VALUES (256, 1, 36);
-INSERT INTO `permission_operation` VALUES (257, 1, 37);
-INSERT INTO `permission_operation` VALUES (258, 1, 38);
-INSERT INTO `permission_operation` VALUES (259, 1, 39);
-INSERT INTO `permission_operation` VALUES (260, 1, 40);
-INSERT INTO `permission_operation` VALUES (261, 1, 41);
-INSERT INTO `permission_operation` VALUES (262, 1, 42);
-INSERT INTO `permission_operation` VALUES (263, 1, 45);
-INSERT INTO `permission_operation` VALUES (264, 1, 46);
-INSERT INTO `permission_operation` VALUES (265, 1, 43);
+INSERT INTO `permission_operation` VALUES (294, 1, 21);
+INSERT INTO `permission_operation` VALUES (295, 1, 22);
+INSERT INTO `permission_operation` VALUES (296, 1, 23);
+INSERT INTO `permission_operation` VALUES (297, 1, 24);
+INSERT INTO `permission_operation` VALUES (298, 1, 25);
+INSERT INTO `permission_operation` VALUES (299, 1, 47);
+INSERT INTO `permission_operation` VALUES (300, 1, 26);
+INSERT INTO `permission_operation` VALUES (301, 1, 27);
+INSERT INTO `permission_operation` VALUES (302, 1, 28);
+INSERT INTO `permission_operation` VALUES (303, 1, 29);
+INSERT INTO `permission_operation` VALUES (304, 1, 30);
+INSERT INTO `permission_operation` VALUES (305, 1, 48);
+INSERT INTO `permission_operation` VALUES (306, 1, 31);
+INSERT INTO `permission_operation` VALUES (307, 1, 32);
+INSERT INTO `permission_operation` VALUES (308, 1, 33);
+INSERT INTO `permission_operation` VALUES (309, 1, 34);
+INSERT INTO `permission_operation` VALUES (310, 1, 35);
+INSERT INTO `permission_operation` VALUES (311, 1, 36);
+INSERT INTO `permission_operation` VALUES (312, 1, 37);
+INSERT INTO `permission_operation` VALUES (313, 1, 38);
+INSERT INTO `permission_operation` VALUES (314, 1, 39);
+INSERT INTO `permission_operation` VALUES (315, 1, 40);
+INSERT INTO `permission_operation` VALUES (316, 1, 41);
+INSERT INTO `permission_operation` VALUES (317, 1, 42);
+INSERT INTO `permission_operation` VALUES (318, 1, 45);
+INSERT INTO `permission_operation` VALUES (319, 1, 46);
+INSERT INTO `permission_operation` VALUES (320, 1, 43);
+INSERT INTO `permission_operation` VALUES (321, 1, 44);
+INSERT INTO `permission_operation` VALUES (322, 10, 21);
+INSERT INTO `permission_operation` VALUES (323, 10, 22);
+INSERT INTO `permission_operation` VALUES (324, 10, 23);
+INSERT INTO `permission_operation` VALUES (325, 10, 47);
+INSERT INTO `permission_operation` VALUES (326, 10, 26);
+INSERT INTO `permission_operation` VALUES (327, 10, 27);
+INSERT INTO `permission_operation` VALUES (328, 10, 48);
+INSERT INTO `permission_operation` VALUES (329, 10, 31);
+INSERT INTO `permission_operation` VALUES (330, 10, 35);
+INSERT INTO `permission_operation` VALUES (331, 10, 36);
+INSERT INTO `permission_operation` VALUES (332, 10, 45);
+INSERT INTO `permission_operation` VALUES (333, 10, 46);
+INSERT INTO `permission_operation` VALUES (334, 10, 43);
+INSERT INTO `permission_operation` VALUES (335, 10, 44);
 COMMIT;
 
 -- ----------------------------

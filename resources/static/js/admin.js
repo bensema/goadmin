@@ -40,7 +40,7 @@ layui.config({
         ,url: layui.goadmin.api_admin_page_url
         ,cols: [[
           {type: 'checkbox', fixed: 'left'}
-          ,{field: 'id', width: 100, title: '账户ID', sort: true, align: 'center'}
+          ,{field: 'admin_id', width: 100, title: '账户ID', sort: true, align: 'center'}
           ,{field: 'name', title: '账户', minWidth: 100, align: 'center'}
           ,{field: 'roles', title: '角色', templet: roles, align: 'center'}
           ,{field: 'status', title: '状态', templet: admin_status, align: 'center'}
@@ -85,7 +85,7 @@ layui.config({
                 layui.goadmin.req({
                     type: "post",
                     url: layui.goadmin.api_admin_delete_url,
-                    data: {"id": obj.data.id},
+                    data: {"admin_id": obj.data.admin_id},
                     done: function(res) {
                         layer.alert("删除成功")
                         layui.table.reload('LAY-app-content-list'); //重载表格
@@ -99,7 +99,7 @@ layui.config({
           layer.open({
             type: 2
             ,title: '编辑管理员'
-            ,content: layui.goadmin.web_admin_form_url + '?id='+ data.id
+            ,content: layui.goadmin.web_admin_form_url + '?admin_id='+ data.admin_id
             ,maxmin: true
             ,area: ['650px', '650px']
             ,btn: ['确定', '取消']

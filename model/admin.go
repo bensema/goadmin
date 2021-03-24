@@ -3,9 +3,9 @@ package model
 import xtime "github.com/bensema/library/time"
 
 type AdminSession struct {
-	UserId int
-	Name   string
-	AesKey string
+	AdminId string
+	Name    string
+	AesKey  string
 }
 
 type AdminLoginV2 struct {
@@ -17,7 +17,7 @@ type AdminLoginV2 struct {
 
 // admin 数据v1
 type AdminV1 struct {
-	Id        int        `json:"id"`         // 自增编号
+	AdminId   string     `json:"admin_id"`   // 自增编号
 	Name      string     `json:"name"`       // 账户
 	Status    int        `json:"status"`     // 1:正常;2:禁用
 	CreatedAt xtime.Time `json:"created_at"` // 创建时间
@@ -31,9 +31,9 @@ type FindAdminReplyV1 struct {
 }
 
 type UpdateAdmin struct {
-	Id     int   `json:"id"`
-	Status int   `json:"status"`
-	Roles  []int `json:"roles"`
+	AdminId string `json:"admin_id"`
+	Status  int    `json:"status"`
+	Roles   []int  `json:"roles"`
 }
 
 type AddAdmin struct {
@@ -79,5 +79,14 @@ type FindLogAdminLoginReq struct {
 	RecordAtTo   xtime.Time `json:"record_at_to"`
 	OrderBy      string     `json:"order_by"`
 	Sort         string     `json:"sort"`
+	Pagination
+}
+
+type FindLogAdminOperationReq struct {
+	LogAdminOperation
+	OrderBy      string     `json:"order_by"`
+	Sort         string     `json:"sort"`
+	RecordAtFrom xtime.Time `json:"record_at_from"`
+	RecordAtTo   xtime.Time `json:"record_at_to"`
 	Pagination
 }

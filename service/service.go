@@ -43,7 +43,7 @@ func (s *Service) getAdminFromContext(c *gin.Context) (*model.Admin, error) {
 	if err != nil {
 		return nil, err
 	}
-	return s.dao.GetAdminById(c, as.UserId)
+	return s.dao.GetAdminByAdminId(c, as.AdminId)
 }
 
 func (s *Service) GetAdminFromContext(c *gin.Context) (*model.Admin, error) {

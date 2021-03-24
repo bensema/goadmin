@@ -31,7 +31,7 @@ func PermitWeb() gin.HandlerFunc {
 			return
 		}
 
-		err = global.Srv.PermitWeb(c, adminSession.UserId)
+		err = global.Srv.PermitWeb(c, adminSession.AdminId)
 		if err != nil {
 			c.Redirect(http.StatusFound, "/403")
 			c.Abort()
@@ -65,7 +65,7 @@ func PermitApi() gin.HandlerFunc {
 			return
 		}
 
-		err = global.Srv.PermitAPI(c, adminSession.UserId)
+		err = global.Srv.PermitAPI(c, adminSession.AdminId)
 		if err != nil {
 			internal.JSON(c, nil, err)
 			c.Abort()

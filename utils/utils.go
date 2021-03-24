@@ -71,6 +71,24 @@ func RandomString(l int) string {
 	return string(result)
 }
 
+func RandInt(n int) string {
+	str := "0123456789"
+	str19 := "123456789"
+
+	bytes := []byte(str)
+	bytes19 := []byte(str19)
+
+	result := []byte{}
+
+	for i := 0; i < n; i++ {
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		result = append(result, bytes[r.Intn(len(bytes))])
+	}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	result[0] = bytes19[r.Intn(len(bytes19))]
+	return string(result)
+}
+
 func S2IList(l []string) ([]int, error) {
 	_l := make([]int, len(l))
 
