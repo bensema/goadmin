@@ -64,3 +64,6 @@
     url="http://127.0.0.1:9970/admin"
     aesKey="t!/NeG8~yR#pt2VG(fD0yQQMt2^p]nBo"
     aesIv="}6`9ewO_@RQ0ki|J"
+
+[upload]
+    path="./upload"

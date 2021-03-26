@@ -11,40 +11,39 @@ layui.config({
       ,form = layui.form
       ,layer = layui.layer;
 
-      function created_time(d) {
-         return layui.goadmin.timestampToTime(d.created_at);
+      function start_at(d) {
+         return layui.goadmin.timestampToTime(d.start_at);
       }
+       function end_at(d) {
+           return layui.goadmin.timestampToTime(d.end_at);
+       }
 
       function admin_status(d) {
-        if (d.status === 1){
-            return '<button class="layui-btn layui-btn-xs">正常</button>'
-        } else {
-            return '<button class="layui-btn layui-btn-primary layui-btn-xs">禁用</button>'
+        if (d.status == "1"){
+            return '<button class="layui-btn layui-btn-xs">开启</button>'
+        }
+        if (d.status == "2"){
+           return '<button class="layui-btn layui-btn-primary layui-btn-xs">关闭</button>'
         }
       }
 
-      function roles(d) {
-        text = '<div class="layui-btn-group">'
-        if (d.roles !== undefined && d.roles !== null && d.roles.length > 0) {
-            for (const item of d.roles) {
-                text += '<button class="layui-btn layui-btn-xs">'+item.name+'</button>'
-            }
-        }
-        text += '</div>'
-        return text
+      function imgUrl(d) {
+        return '<img style="display: inline-block; width: 100%; height: 100%;" src="'+d.img_url+'">'
       }
 
-      //文章管理
+      //广告管理
       table.render({
         elem: '#LAY-app-content-list'
         ,url: layui.goadmin.bb_admin_api_advertise_pages
         ,cols: [[
           {type: 'checkbox', fixed: 'left'}
-          ,{field: 'admin_id', width: 100, title: '账户ID', sort: true, align: 'center'}
-          ,{field: 'name', title: '账户', minWidth: 100, align: 'center'}
-          ,{field: 'roles', title: '角色', templet: roles, align: 'center'}
+          ,{field: 'id', width: 100, title: 'ID', sort: true, align: 'center'}
+          ,{field: 'title', title: '标题', minWidth: 100, align: 'center'}
+          ,{field: 'img_url', title: '图片', event: 'img_event', templet: imgUrl, align: 'center'}
+          ,{field: 'sort_index', title: '排序', align: 'center'}
           ,{field: 'status', title: '状态', templet: admin_status, align: 'center'}
-          ,{field: 'created_at', title: '创建时间', templet: created_time, align: 'center'}
+          ,{field: 'start_at', title: '起始时间', templet: start_at, align: 'center'}
+          ,{field: 'end_at', title: '结束时间', templet: end_at, align: 'center'}
           ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#table-content-list'}
         ]]
         ,page: true
@@ -63,38 +62,31 @@ layui.config({
                   "data": res.data.data //解析数据列表
               };
           }
+          ,done : function(res, curr, count){
+              if (res.count == 0)
+              {
+                  $(".layui-table-main").html('<div class="layui-none">暂无数据</div>');
+              }
+           }
       });
 
       //监听工具条
       table.on('tool(LAY-app-content-list)', function(obj){
         var data = obj.data;
         if(obj.event === 'del'){
-          layer.prompt({
-              formType: 0
-              ,title: '敏感操作，请手动输入被删除账户'
-            }, function(value, index){
-              if (value !== obj.data.name) {
-                layer.alert("输入用户名与被删用户名不同");
-                return;
-              }
-              layer.close(index);
-
-              layer.confirm(value + ' 确定删除吗？', function(index) {
-
-                //执行 Ajax 后重载
-                layui.goadmin.req({
-                    type: "post",
-                    url: layui.goadmin.api_admin_delete_url,
-                    data: {"admin_id": obj.data.admin_id},
-                    done: function(res) {
-                        layer.alert("删除成功")
-                        layui.table.reload('LAY-app-content-list'); //重载表格
-
-                    },
-                });
-
+          layer.confirm(' 确定删除？', function(index) {
+              //执行 Ajax 后重载
+              layui.goadmin.req({
+                  type: "post",
+                  url: layui.goadmin.bb_admin_api_advertise_del,
+                  data: {"id": obj.data.id},
+                  done: function(res) {
+                      layer.alert("删除成功")
+                      layui.table.reload('LAY-app-content-list'); //重载表格
+                  },
               });
-            });
+
+            })
         } else if(obj.event === 'edit'){
           layer.open({
             type: 2
@@ -109,6 +101,11 @@ layui.config({
                submit.click();
             }
           });
+        } else if(obj.event === 'img_event'){
+            layer.photos({
+                photos: { "data": [{"src": data.img_url}] },
+                anim:5
+            });
         }
       });
 
@@ -127,8 +124,8 @@ layui.config({
         add: function(){
           layer.open({
             type: 2
-            ,title: '添加账户'
-            ,content: layui.goadmin.web_admin_add_url
+            ,title: '添加广告'
+            ,content: layui.goadmin.web_bb_advertise_add_url
             ,maxmin: true
             ,area: ['650px', '650px']
             ,btn: ['确定', '取消']

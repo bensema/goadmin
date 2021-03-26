@@ -19,19 +19,15 @@
     <div class="layui-card">
         <div class="layui-form layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
-
-                <div class="layui-inline">
-                    <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
-                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                    </button>
-                </div>
+                <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
+                <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search" style="float:right">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                </button>
             </div>
         </div>
 
         <div class="layui-card-body">
-            <div style="padding-bottom: 10px;">
-                <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
-            </div>
+
             <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
             <script type="text/html" id="buttonTpl">
 

@@ -28,7 +28,8 @@ type Config struct {
 	Log       *log.Config
 	Redis     *Redis
 	Ip2Region *Ip2Region
-	AdminApi  AdminApi
+	AdminApi  *AdminApi
+	Upload    *Upload
 }
 
 func local() (err error) {
@@ -62,4 +63,8 @@ type AdminApi struct {
 	Url    string
 	AesKey string
 	AesIv  string
+}
+
+type Upload struct {
+	Path string
 }
