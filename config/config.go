@@ -28,6 +28,7 @@ type Config struct {
 	Log       *log.Config
 	Redis     *Redis
 	Ip2Region *Ip2Region
+	AdminApi  AdminApi
 }
 
 func local() (err error) {
@@ -55,4 +56,10 @@ type Web struct {
 	Template  string
 	Static    string
 	OpenTrace bool
+}
+
+type AdminApi struct {
+	Url    string
+	AesKey string
+	AesIv  string
 }

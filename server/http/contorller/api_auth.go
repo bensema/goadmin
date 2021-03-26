@@ -52,6 +52,7 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/api/v1/menu/all", _this.menuAll)             // 获取所有菜单
 	g.GET("/api/v1/operation/all", _this.operationAll)   // 获取所有操作
 
+	_this.RegisterBBAdminRoute(g)
 }
 
 func (_this *ApiAuth) menu(c *gin.Context) {

@@ -15,6 +15,7 @@ func (_this *HtmlWebAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/role", _this.role)
 	g.GET("/permission", _this.permission)
 	g.GET("/resources", _this.resources)
+	g.GET("/advertise", _this.advertise)
 	g.GET("/home/dashboard", _this.common)
 	g.GET("/log/login", _this.logLogin)
 	g.GET("/log/operation", _this.logOperation)
@@ -52,4 +53,8 @@ func (_this *HtmlWebAuth) logOperation(c *gin.Context) {
 func (_this *HtmlWebAuth) common(c *gin.Context) {
 	name := fmt.Sprintf("%s.html", c.Request.URL.String())
 	c.HTML(http.StatusOK, name, gin.H{})
+}
+
+func (_this *HtmlWebAuth) advertise(c *gin.Context) {
+	c.HTML(http.StatusOK, "advertise/advertise.html", gin.H{})
 }

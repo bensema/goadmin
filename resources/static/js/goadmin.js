@@ -41,6 +41,8 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,api_log_login_page_url: '/api/v1/log_login/pages'
         ,api_log_operation_page_url: '/api/v1/log_operation/pages'
 
+        ,bb_admin_api_advertise_pages:'/api/v1/advertise/pages'
+
 
         ,web_admin_form_url: '/admin/form'
         ,web_admin_add_url: '/admin/add'
