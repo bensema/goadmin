@@ -1,4 +1,4 @@
-package contorller
+package controller
 
 import (
 	"fmt"

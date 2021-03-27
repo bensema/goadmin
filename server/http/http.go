@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/global"
-	"github.com/bensema/goadmin/server/http/contorller"
+	"github.com/bensema/goadmin/server/http/controller"
 	"github.com/bensema/goadmin/server/http/middleware"
 	"github.com/bensema/goadmin/service"
 	"github.com/gin-gonic/gin"
@@ -28,19 +28,19 @@ func Init(c *config.Config, s *service.Service) {
 func router(e *gin.Engine) {
 	web := e.Group("/")
 	{
-		new(contorller.HtmlWeb).RegisterRoute(web)
+		new(controller.HtmlWeb).RegisterRoute(web)
 	}
 	webAuth := e.Group("/", middleware.PermitWeb())
 	{
-		new(contorller.HtmlWebAuth).RegisterRoute(webAuth)
+		new(controller.HtmlWebAuth).RegisterRoute(webAuth)
 	}
 	api := e.Group("/")
 	{
-		new(contorller.Api).RegisterRoute(api)
+		new(controller.Api).RegisterRoute(api)
 	}
 	apiAuth := e.Group("/", middleware.PermitApi())
 	{
-		new(contorller.ApiAuth).RegisterRoute(apiAuth)
+		new(controller.ApiAuth).RegisterRoute(apiAuth)
 	}
 
 }

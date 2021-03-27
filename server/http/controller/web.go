@@ -1,4 +1,4 @@
-package contorller
+package controller
 
 import (
 	"github.com/bensema/goadmin/global"

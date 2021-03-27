@@ -19,46 +19,6 @@ import (
 	"time"
 )
 
-func (s *Service) FindAdvertisePage(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AdvertisePages)
-}
-
-func (s *Service) AdvertiseAdd(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AdvertiseAdd)
-}
-
-func (s *Service) AdvertiseDel(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AdvertiseDel)
-}
-
-func (s *Service) AdvertiseQuery(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AdvertiseQuery)
-}
-
-func (s *Service) AdvertiseUpdate(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AdvertiseUpdate)
-}
-
-func (s *Service) FindAnnouncementPage(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AnnouncementPages)
-}
-
-func (s *Service) AnnouncementAdd(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AnnouncementAdd)
-}
-
-func (s *Service) AnnouncementDel(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AnnouncementDel)
-}
-
-func (s *Service) AnnouncementQuery(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AnnouncementQuery)
-}
-
-func (s *Service) AnnouncementUpdate(c *gin.Context) (reply *model.AdminApiReply, err error) {
-	return s.doRequest(c, biz.AnnouncementUpdate)
-}
-
 func (s *Service) doRequest(c *gin.Context, cmd biz.AdminCmd) (reply *model.AdminApiReply, err error) {
 	reply = new(model.AdminApiReply)
 
