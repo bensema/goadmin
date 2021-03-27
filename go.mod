@@ -5,7 +5,7 @@ go 1.15
 require (
 	entgo.io/ent v0.6.0
 	github.com/BurntSushi/toml v0.3.1
-	github.com/bensema/library v0.0.0-20210326051747-51360e7dd044
+	github.com/bensema/library v0.0.0-20210327063955-7fd948666e10
 	github.com/gin-gonic/gin v1.6.3
 	github.com/mssola/user_agent v0.5.2
 	github.com/pkg/errors v0.9.1

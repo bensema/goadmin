@@ -22,6 +22,9 @@ func (_this *HtmlWeb) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/advertise/add", _this.advertiseAdd)
 	g.GET("/advertise/form", _this.advertiseForm)
 
+	g.GET("/announcement/add", _this.announcementAdd)
+	g.GET("/announcement/form", _this.announcementForm)
+
 }
 
 func (_this *HtmlWeb) login(c *gin.Context) {
@@ -73,4 +76,12 @@ func (_this *HtmlWeb) advertiseAdd(c *gin.Context) {
 
 func (_this *HtmlWeb) advertiseForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "advertise/advertiseform.html", gin.H{})
+}
+
+func (_this *HtmlWeb) announcementAdd(c *gin.Context) {
+	c.HTML(http.StatusOK, "announcement/announcementadd.html", gin.H{})
+}
+
+func (_this *HtmlWeb) announcementForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "announcement/announcementform.html", gin.H{})
 }

@@ -16,6 +16,7 @@ func (_this *HtmlWebAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/permission", _this.permission)
 	g.GET("/resources", _this.resources)
 	g.GET("/advertise", _this.advertise)
+	g.GET("/announcements", _this.announcements)
 	g.GET("/home/dashboard", _this.common)
 	g.GET("/log/login", _this.logLogin)
 	g.GET("/log/operation", _this.logOperation)
@@ -57,4 +58,8 @@ func (_this *HtmlWebAuth) common(c *gin.Context) {
 
 func (_this *HtmlWebAuth) advertise(c *gin.Context) {
 	c.HTML(http.StatusOK, "advertise/advertise.html", gin.H{})
+}
+
+func (_this *HtmlWebAuth) announcements(c *gin.Context) {
+	c.HTML(http.StatusOK, "announcements/announcements.html", gin.H{})
 }

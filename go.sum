@@ -57,6 +57,8 @@ github.com/bensema/library v0.0.0-20210326032602-a761ace9c1e7 h1:Ws2HFOlkpLx3LID
 github.com/bensema/library v0.0.0-20210326032602-a761ace9c1e7/go.mod h1:Op5r/+gQvMnInIVDgYSkD6aFQPydKclHM6PXk5MDB88=
 github.com/bensema/library v0.0.0-20210326051747-51360e7dd044 h1:rhfGJlJtQZ2VDK8XqgumNG6eDxq1/+ODtO2DVPzVKRo=
 github.com/bensema/library v0.0.0-20210326051747-51360e7dd044/go.mod h1:Op5r/+gQvMnInIVDgYSkD6aFQPydKclHM6PXk5MDB88=
+github.com/bensema/library v0.0.0-20210327063955-7fd948666e10 h1:MuigwIpgnIIvzAH5e6fZgYA0oqZc4GD2din52aM4Yas=
+github.com/bensema/library v0.0.0-20210327063955-7fd948666e10/go.mod h1:Op5r/+gQvMnInIVDgYSkD6aFQPydKclHM6PXk5MDB88=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
