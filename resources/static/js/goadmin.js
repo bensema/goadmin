@@ -44,6 +44,8 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,bb_admin_api_advertise_pages:'/api/v1/advertise/pages'
         ,bb_admin_api_advertise_add:'/api/v1/advertise/add'
         ,bb_admin_api_advertise_del:'/api/v1/advertise/del'
+        ,bb_admin_api_advertise_query: '/api/v1/advertise/query'
+        ,bb_admin_api_advertise_update: '/api/v1/advertise/update'
 
 
         ,web_admin_form_url: '/admin/form'
@@ -54,6 +56,7 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,web_resource_add_url: '/resource/add'
 
         ,web_bb_advertise_add_url: '/advertise/add'
+        ,web_bb_advertise_form_url: '/advertise/form'
 
 
         ,timestampToTime: function(timestamp) {  // 1561953956 => yyyy-MM-dd hh:mm:ss

@@ -26,6 +26,14 @@ layui.config({
            return '<button class="layui-btn layui-btn-primary layui-btn-xs">关闭</button>'
         }
       }
+      function popup(d) {
+              if (d.popup == "1"){
+                  return '<button class="layui-btn layui-btn-xs">开启</button>'
+              }
+              if (d.popup == "2"){
+                 return '<button class="layui-btn layui-btn-primary layui-btn-xs">关闭</button>'
+              }
+            }
 
       function imgUrl(d) {
         return '<img style="display: inline-block; width: 100%; height: 100%;" src="'+d.img_url+'">'
@@ -41,6 +49,7 @@ layui.config({
           ,{field: 'title', title: '标题', minWidth: 100, align: 'center'}
           ,{field: 'img_url', title: '图片', event: 'img_event', templet: imgUrl, align: 'center'}
           ,{field: 'sort_index', title: '排序', align: 'center'}
+          ,{field: 'popup', title: '弹窗', templet: popup, align: 'center'}
           ,{field: 'status', title: '状态', templet: admin_status, align: 'center'}
           ,{field: 'start_at', title: '起始时间', templet: start_at, align: 'center'}
           ,{field: 'end_at', title: '结束时间', templet: end_at, align: 'center'}
@@ -90,8 +99,8 @@ layui.config({
         } else if(obj.event === 'edit'){
           layer.open({
             type: 2
-            ,title: '编辑管理员'
-            ,content: layui.goadmin.web_admin_form_url + '?admin_id='+ data.admin_id
+            ,title: '编辑管广告'
+            ,content: layui.goadmin.web_bb_advertise_form_url + '?id='+ data.id
             ,maxmin: true
             ,area: ['650px', '650px']
             ,btn: ['确定', '取消']

@@ -20,6 +20,7 @@ func (_this *HtmlWeb) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/permission/add", _this.permissionAdd)
 
 	g.GET("/advertise/add", _this.advertiseAdd)
+	g.GET("/advertise/form", _this.advertiseForm)
 
 }
 
@@ -68,4 +69,8 @@ func (_this *HtmlWeb) e403(c *gin.Context) {
 
 func (_this *HtmlWeb) advertiseAdd(c *gin.Context) {
 	c.HTML(http.StatusOK, "advertise/advertiseadd.html", gin.H{})
+}
+
+func (_this *HtmlWeb) advertiseForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "advertise/advertiseform.html", gin.H{})
 }

@@ -31,6 +31,13 @@ func (s *Service) AdvertiseDel(c *gin.Context) (reply *model.AdminApiReply, err 
 	return s.doRequest(c, biz.AdvertiseDel)
 }
 
+func (s *Service) AdvertiseQuery(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.AdvertiseQuery)
+}
+
+func (s *Service) AdvertiseUpdate(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.AdvertiseUpdate)
+}
 func (s *Service) doRequest(c *gin.Context, cmd biz.AdminCmd) (reply *model.AdminApiReply, err error) {
 	reply = new(model.AdminApiReply)
 
