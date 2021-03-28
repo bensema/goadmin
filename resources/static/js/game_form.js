@@ -18,24 +18,48 @@
     roles = []
     role_data = []
 
-    // 获取账户信息
     layui.goadmin.req({
-        type: 'get'
-        ,url: layui.goadmin.bb_admin_api_announcements_query
-        ,data: params
-        ,done: function(res){
-            layui.$('#edit_title').val(res.data.title);
-            layui.$('#edit_content').val(res.data.content);
-            layui.$('#edit_img_url').val(res.data.img_url);
-            layui.$('#edit_sort_index').val(res.data.sort_index);
-            layui.$('#edit_status').val(res.data.status);
-            layui.$('#edit_hot').val(res.data.hot);
-            layui.$('#edit_popup').val(res.data.popup);
+      type: 'get'
+      ,url: layui.goadmin.bb_admin_api_game_type_pages
+      ,data: {"num":1,"size":100}
+      ,done: function(res){
+         $.each(res.data.data, function(index, item) {
+              $('#edit_game_type').append(new Option(item.game_type_display_name, item.game_type));
+         });
+
+         layui.goadmin.req({
+           type: 'get'
+           ,url: layui.goadmin.bb_admin_api_game_group_pages
+           ,data: {"num":1,"size":100}
+           ,done: function(res){
+              $.each(res.data.data, function(index, item) {
+                   $('#edit_game_group').append(new Option(item.game_group_display_name, item.game_group));
+              });
+
+              layui.goadmin.req({
+                  type: 'get'
+                  ,url: layui.goadmin.bb_admin_api_game_query
+                  ,data: params
+                  ,done: function(res){
+                    layui.$('#edit_name').val(res.data.name);
+                    layui.$('#edit_display_name').val(res.data.display_name);
+                    layui.$('#edit_game_code').val(res.data.game_code);
+                    layui.$('#edit_game_type').val(res.data.game_type);
+                    layui.$('#edit_game_group').val(res.data.game_group);
+                    layui.$('#edit_sort_index').val(res.data.sort_index);
+                    layui.$('#edit_status').val(res.data.status);
+                    layui.$('#edit_remark').val(res.data.remark);
 
 
-            layui.form.render();
-        }
+                      layui.form.render();
+                  }
+              });
+           }
+         });
+      }
     });
+
+
 
     //监听提交
     form.on('submit(layuiadmin-app-form-submit)', function(data){
@@ -52,17 +76,18 @@
         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
         params = {}
         params.id=id;
-        params.title = layui.$('#edit_title').val();
-        params.content = layui.$('#edit_content').val();
-        params.img_url = layui.$('#edit_img_url').val();
+        params.name = layui.$('#edit_name').val();
+        params.display_name = layui.$('#edit_display_name').val();
+        params.game_code = layui.$('#edit_game_code').val();
+        params.game_type = layui.$('#edit_game_type').val();
+        params.game_group = layui.$('#edit_game_group').val();
         params.sort_index = layui.$('#edit_sort_index').val();
         params.status = layui.$('#edit_status').val();
-        params.hot = layui.$('#edit_hot').val();
-        params.popup = layui.$('#edit_popup').val();
+        params.remark = layui.$('#edit_remark').val();
 
          layui.goadmin.req({
              type: 'post'
-             ,url: layui.goadmin.bb_admin_api_announcements_update
+             ,url: layui.goadmin.bb_admin_api_game_update
              ,data: params
              ,done: function(res){
                 layer.confirm('操作成功', {

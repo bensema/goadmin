@@ -14,8 +14,6 @@
     roles = []
     role_data = []
 
-    // 获取账户信息
-
 
     layui.goadmin.req({
       type: 'get'

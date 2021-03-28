@@ -1,0 +1,85 @@
+{{ define "game/game_form.html"}}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>编辑游戏</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/static/layuiadmin/layui/css/layui.css" media="all">
+</head>
+<body>
+
+  <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">名称</label>
+    <div class="layui-input-inline">
+      <input type="text" name="name"  autocomplete="off" class="layui-input" id="edit_name">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">显示名称</label>
+    <div class="layui-input-inline">
+      <input type="text" name="display_name"  autocomplete="off" class="layui-input" id="edit_display_name">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">游戏编码</label>
+    <div class="layui-input-inline">
+      <input type="text" name="game_code"  autocomplete="off" class="layui-input" id="edit_game_code">
+    </div>
+  </div>
+
+  <div  class="layui-form-item">
+    <label class="layui-form-label">游戏类型</label>
+    <div class="layui-input-inline">
+      <select name="game_type" id="edit_game_type">
+
+      </select>
+    </div>
+  </div>
+
+  <div  class="layui-form-item">
+    <label class="layui-form-label">游戏组</label>
+    <div class="layui-input-inline">
+      <select name="game_type" id="edit_game_group">
+
+      </select>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">排序</label>
+    <div class="layui-input-inline">
+      <input type="text" name="sort_index"  autocomplete="off" class="layui-input" id="edit_sort_index">
+    </div>
+  </div>
+
+  <div  class="layui-form-item">
+    <label class="layui-form-label">状态</label>
+    <div class="layui-input-inline">
+      <select name="status" id="edit_status">
+        <option value="1">启用</option>
+        <option value="2">关闭</option>
+        <option value="3">禁用</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-hide">
+    <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" id="layuiadmin-app-form-submit" value="确认添加">
+    <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="确认编辑">
+  </div>
+</div>
+
+  <script src="/static/layuiadmin/layui/layui.js"></script>
+  <script src="/static/js/mz.js"></script>
+  <script src="/static/js/game_form.js"></script>
+
+</body>
+</html>
+
+{{end}}

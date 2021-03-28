@@ -47,11 +47,29 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,bb_admin_api_advertise_query: '/api/v1/advertise/query'
         ,bb_admin_api_advertise_update: '/api/v1/advertise/update'
 
-        ,bb_admin_api_announcement_pages:'/api/v1/announcement/pages'
-        ,bb_admin_api_announcement_add:'/api/v1/announcement/add'
-        ,bb_admin_api_announcement_del:'/api/v1/announcement/del'
-        ,bb_admin_api_announcement_query: '/api/v1/announcement/query'
-        ,bb_admin_api_announcement_update: '/api/v1/announcement/update'
+        ,bb_admin_api_announcements_pages:'/api/v1/announcements/pages'
+        ,bb_admin_api_announcements_add:'/api/v1/announcements/add'
+        ,bb_admin_api_announcements_del:'/api/v1/announcements/del'
+        ,bb_admin_api_announcements_query: '/api/v1/announcements/query'
+        ,bb_admin_api_announcements_update: '/api/v1/announcements/update'
+
+        ,bb_admin_api_game_pages:'/api/v1/game/pages'
+        ,bb_admin_api_game_add:'/api/v1/game/add'
+        ,bb_admin_api_game_del:'/api/v1/game/del'
+        ,bb_admin_api_game_query: '/api/v1/game/query'
+        ,bb_admin_api_game_update: '/api/v1/game/update'
+
+        ,bb_admin_api_game_type_pages:'/api/v1/game_type/pages'
+        ,bb_admin_api_game_type_add:'/api/v1/game_type/add'
+        ,bb_admin_api_game_type_del:'/api/v1/game_type/del'
+        ,bb_admin_api_game_type_query: '/api/v1/game_type/query'
+        ,bb_admin_api_game_type_update: '/api/v1/game_type/update'
+
+        ,bb_admin_api_game_group_pages:'/api/v1/game_group/pages'
+        ,bb_admin_api_game_group_add:'/api/v1/game_group/add'
+        ,bb_admin_api_game_group_del:'/api/v1/game_group/del'
+        ,bb_admin_api_game_group_query: '/api/v1/game_group/query'
+        ,bb_admin_api_game_group_update: '/api/v1/game_group/update'
 
 
         ,web_admin_form_url: '/admin/form'
@@ -67,6 +85,8 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,web_bb_announcement_add_url: '/announcement/add'
         ,web_bb_announcement_form_url: '/announcement/form'
 
+        ,web_bb_game_add_url: '/game/add'
+        ,web_bb_game_form_url: '/game/form'
 
         ,timestampToTime: function(timestamp) {  // 1561953956 => yyyy-MM-dd hh:mm:ss
             var d = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000

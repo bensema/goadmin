@@ -24,22 +24,32 @@
         ,value: get_current_day_end_time()
     });
 
-      upload.render({
-        elem: '#test8'
-//        ,url: 'https://httpbin.org/post' //改成您自己的上传接口
-        ,url: 'https://www.niupic.com/api/upload' //改成您自己的上传接口
-        ,auto: false
-        //,multiple: true
-        ,bindAction: '#test9'
-        ,done: function(res){
-          layer.msg('上传成功');
-          layui.$('#add_img_url').val(res.data);
-          console.log(res)
-        }
-      });
-
     roles = []
     role_data = []
+
+    layui.goadmin.req({
+      type: 'get'
+      ,url: layui.goadmin.bb_admin_api_game_type_pages
+      ,data: {"num":1,"size":100}
+      ,done: function(res){
+         $.each(res.data.data, function(index, item) {
+              $('#add_game_type').append(new Option(item.game_type_display_name, item.game_type));
+         });
+
+         layui.goadmin.req({
+           type: 'get'
+           ,url: layui.goadmin.bb_admin_api_game_group_pages
+           ,data: {"num":1,"size":100}
+           ,done: function(res){
+              $.each(res.data.data, function(index, item) {
+                   $('#add_game_group').append(new Option(item.game_group_display_name, item.game_group));
+              });
+              layui.form.render();
+
+           }
+         });
+      }
+    });
 
 
     //监听提交
@@ -47,20 +57,19 @@
         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
         params = {}
 
-        params.title = layui.$('#add_title').val();
-        params.content = layui.$('#add_content').val();
-        params.img_url = layui.$('#add_img_url').val();
+        params.name = layui.$('#add_name').val();
+        params.display_name = layui.$('#add_display_name').val();
+        params.game_code = layui.$('#add_game_code').val();
+        params.game_type = layui.$('#add_game_type').val();
+        params.game_group = layui.$('#add_game_group').val();
         params.sort_index = layui.$('#add_sort_index').val();
         params.status = layui.$('#add_status').val();
-        params.hot = layui.$('#add_hot').val();
-        params.popup = layui.$('#add_popup').val();
+        params.remark = layui.$('#add_remark').val();
 
-        params.start_at = parseDateTime(layui.$('#add_start_at').val())
-        params.end_at = parseDateTime(layui.$('#add_end_at').val())
 
          layui.goadmin.req({
              type: 'post'
-             ,url: layui.goadmin.bb_admin_api_announcements_add
+             ,url: layui.goadmin.bb_admin_api_game_add
              ,data: params
              ,done: function(res){
                 layer.confirm('操作成功', {

@@ -20,41 +20,24 @@ layui.config({
         if (d.status == "2"){
            return '<button class="layui-btn layui-btn-primary layui-btn-xs">关闭</button>'
         }
-      }
-      function popup(d) {
-          if (d.popup == "1"){
-              return '<button class="layui-btn layui-btn-xs">开启</button>'
-          }
-          if (d.popup == "2"){
-             return '<button class="layui-btn layui-btn-primary layui-btn-xs">关闭</button>'
-          }
+         if (d.status == "3"){
+           return '<button class="layui-btn layui-btn-primary layui-btn-xs">禁用</button>'
         }
-      function hot(d) {
-          if (d.hot == "1"){
-              return '<button class="layui-btn layui-btn-xs">开启</button>'
-          }
-          if (d.hot == "2"){
-             return '<button class="layui-btn layui-btn-primary layui-btn-xs">关闭</button>'
-          }
-        }
-
-      function imgUrl(d) {
-        return '<img style="display: inline-block; width: 100%; height: 100%;" src="'+d.img_url+'">'
       }
 
       table.render({
         elem: '#LAY-app-content-list'
-        ,url: layui.goadmin.bb_admin_api_announcements_pages
+        ,url: layui.goadmin.bb_admin_api_game_pages
         ,cols: [[
           {type: 'checkbox', fixed: 'left'}
           ,{field: 'id', width: 100, title: 'ID', sort: true, align: 'center'}
-          ,{field: 'title', title: '标题', minWidth: 100, align: 'center'}
-          ,{field: 'content', title: '内容', minWidth: 100, align: 'center'}
+          ,{field: 'name', title: '名称',  align: 'center'}
+          ,{field: 'display_name', title: '显示名称',  align: 'center'}
+          ,{field: 'game_code', title: '游戏编码',  align: 'center'}
+          ,{field: 'game_type', title: '游戏类型',  align: 'center'}
+          ,{field: 'game_group', title: '游戏组',  align: 'center'}
           ,{field: 'sort_index', title: '排序', align: 'center'}
-          ,{field: 'popup', title: '弹窗', templet: popup, align: 'center'}
-          ,{field: 'hot', title: '热门', templet: hot, align: 'center'}
           ,{field: 'status', title: '状态', templet: status, align: 'center'}
-          ,{field: 'created_at', title: '创建时间', templet: created_at, align: 'center'}
           ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#table-content-list'}
         ]]
         ,page: true
@@ -89,7 +72,7 @@ layui.config({
               //执行 Ajax 后重载
               layui.goadmin.req({
                   type: "post",
-                  url: layui.goadmin.bb_admin_api_announcements_del,
+                  url: layui.goadmin.bb_admin_api_game_del,
                   data: {"id": obj.data.id},
                   done: function(res) {
                       layer.alert("删除成功")
@@ -101,8 +84,8 @@ layui.config({
         } else if(obj.event === 'edit'){
           layer.open({
             type: 2
-            ,title: '编辑管公告'
-            ,content: layui.goadmin.web_bb_announcement_form_url + '?id='+ data.id
+            ,title: '编辑管游戏'
+            ,content: layui.goadmin.web_bb_game_form_url + '?id='+ data.id
             ,maxmin: true
             ,area: ['650px', '650px']
             ,btn: ['确定', '取消']
@@ -135,8 +118,8 @@ layui.config({
         add: function(){
           layer.open({
             type: 2
-            ,title: '添加公告'
-            ,content: layui.goadmin.web_bb_announcement_add_url
+            ,title: '添加游戏'
+            ,content: layui.goadmin.web_bb_game_add_url
             ,maxmin: true
             ,area: ['650px', '650px']
             ,btn: ['确定', '取消']
