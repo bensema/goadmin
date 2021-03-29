@@ -5,18 +5,33 @@
   }).extend({
     index: 'lib/index' //主入口模块
     ,goadmin: '../../js/goadmin'
-  }).use(['index', 'form', 'goadmin', 'transfer', 'laydate'], function(){
+  }).use(['index', 'form', 'goadmin', 'transfer', 'laydate','upload'], function(){
     var $ = layui.$
     ,form = layui.form
     ,admin = layui.admin
     ,transfer = layui.transfer
     ,laydate = layui.laydate
+    ,upload = layui.upload
 
     id = getQueryVariable('id')
     params = {}
     params.id = getQueryVariable('id')
     roles = []
     role_data = []
+
+  upload.render({
+    elem: '#test8'
+//        ,url: 'https://httpbin.org/post' //改成您自己的上传接口
+    ,url: 'https://www.niupic.com/api/upload' //改成您自己的上传接口
+    ,auto: false
+    //,multiple: true
+    ,bindAction: '#test9'
+    ,done: function(res){
+      layer.msg('上传成功');
+      layui.$('#edit_img_url').val(res.data);
+      console.log(res)
+    }
+  });
 
     layui.goadmin.req({
       type: 'get'
@@ -46,6 +61,7 @@
                     layui.$('#edit_game_code').val(res.data.game_code);
                     layui.$('#edit_game_type').val(res.data.game_type);
                     layui.$('#edit_game_group').val(res.data.game_group);
+                    layui.$('#edit_img_url').val(res.data.img_url);
                     layui.$('#edit_sort_index').val(res.data.sort_index);
                     layui.$('#edit_status').val(res.data.status);
                     layui.$('#edit_remark').val(res.data.remark);
@@ -81,6 +97,7 @@
         params.game_code = layui.$('#edit_game_code').val();
         params.game_type = layui.$('#edit_game_type').val();
         params.game_group = layui.$('#edit_game_group').val();
+        params.img_url = layui.$('#edit_img_url').val();
         params.sort_index = layui.$('#edit_sort_index').val();
         params.status = layui.$('#edit_status').val();
         params.remark = layui.$('#edit_remark').val();

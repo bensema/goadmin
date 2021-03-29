@@ -24,6 +24,9 @@ layui.config({
            return '<button class="layui-btn layui-btn-primary layui-btn-xs">禁用</button>'
         }
       }
+      function img_url(d) {
+        return '<img style="display: inline-block; width: 100%; height: 100%;" src="'+d.img_url+'">'
+      }
 
       table.render({
         elem: '#LAY-app-content-list'
@@ -31,7 +34,7 @@ layui.config({
         ,cols: [[
           {type: 'checkbox', fixed: 'left'}
           ,{field: 'id', width: 100, title: 'ID', sort: true, align: 'center'}
-          ,{field: 'name', title: '名称',  align: 'center'}
+          ,{field: 'img_url', title: '图片', templet: img_url,  align: 'center'}
           ,{field: 'display_name', title: '显示名称',  align: 'center'}
           ,{field: 'game_code', title: '游戏编码',  align: 'center'}
           ,{field: 'game_type', title: '游戏类型',  align: 'center'}

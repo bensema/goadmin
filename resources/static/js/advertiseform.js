@@ -5,18 +5,33 @@
   }).extend({
     index: 'lib/index' //主入口模块
     ,goadmin: '../../js/goadmin'
-  }).use(['index', 'form', 'goadmin', 'transfer', 'laydate'], function(){
+  }).use(['index', 'form', 'goadmin', 'transfer', 'laydate','upload'], function(){
     var $ = layui.$
     ,form = layui.form
     ,admin = layui.admin
     ,transfer = layui.transfer
     ,laydate = layui.laydate
+    ,upload = layui.upload
 
     id = getQueryVariable('id')
     params = {}
     params.id = getQueryVariable('id')
     roles = []
     role_data = []
+
+      upload.render({
+        elem: '#test8'
+    //        ,url: 'https://httpbin.org/post' //改成您自己的上传接口
+        ,url: 'https://www.niupic.com/api/upload' //改成您自己的上传接口
+        ,auto: false
+        //,multiple: true
+        ,bindAction: '#test9'
+        ,done: function(res){
+          layer.msg('上传成功');
+          layui.$('#add_img_url').val(res.data);
+          console.log(res)
+        }
+      });
 
     // 获取账户信息
     layui.goadmin.req({

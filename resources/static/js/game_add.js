@@ -51,6 +51,20 @@
       }
     });
 
+      upload.render({
+        elem: '#test8'
+    //        ,url: 'https://httpbin.org/post' //改成您自己的上传接口
+        ,url: 'https://www.niupic.com/api/upload' //改成您自己的上传接口
+        ,auto: false
+        //,multiple: true
+        ,bindAction: '#test9'
+        ,done: function(res){
+          layer.msg('上传成功');
+          layui.$('#add_img_url').val(res.data);
+          console.log(res)
+        }
+      });
+
 
     //监听提交
     form.on('submit(layuiadmin-app-form-submit)', function(data){
@@ -62,6 +76,7 @@
         params.game_code = layui.$('#add_game_code').val();
         params.game_type = layui.$('#add_game_type').val();
         params.game_group = layui.$('#add_game_group').val();
+        params.img_url = layui.$('#add_img_url').val();
         params.sort_index = layui.$('#add_sort_index').val();
         params.status = layui.$('#add_status').val();
         params.remark = layui.$('#add_remark').val();
