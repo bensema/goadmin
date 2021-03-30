@@ -50,6 +50,12 @@ func (_this *ApiAuth) RegisterBBAdminRoute(g *gin.RouterGroup) {
 	g.GET("/api/v1/game_group/query", _this.gameGroupQuery)
 	g.POST("/api/v1/game_group/update", _this.gameGroupUpdate)
 
+	g.GET("/api/v1/game_result/pages", _this.gameResultPages)
+	g.POST("/api/v1/game_result/add", _this.gameResultAdd)
+	g.POST("/api/v1/game_result/del", _this.gameResultDel)
+	g.GET("/api/v1/game_result/query", _this.gameResultQuery)
+	g.POST("/api/v1/game_result/update", _this.gameResultUpdate)
+
 	g.GET("/api/v1/game_type/pages", _this.gameTypePages)
 	g.POST("/api/v1/game_type/add", _this.gameTypeAdd)
 	g.POST("/api/v1/game_type/del", _this.gameTypeDel)
@@ -61,6 +67,12 @@ func (_this *ApiAuth) RegisterBBAdminRoute(g *gin.RouterGroup) {
 	g.POST("/api/v1/grade/del", _this.gradeDel)
 	g.GET("/api/v1/grade/query", _this.gradeQuery)
 	g.POST("/api/v1/grade/update", _this.gradeUpdate)
+
+	g.GET("/api/v1/issue_factory/pages", _this.issueFactoryPages)
+	g.POST("/api/v1/issue_factory/add", _this.issueFactoryAdd)
+	g.POST("/api/v1/issue_factory/del", _this.issueFactoryDel)
+	g.GET("/api/v1/issue_factory/query", _this.issueFactoryQuery)
+	g.POST("/api/v1/issue_factory/update", _this.issueFactoryUpdate)
 
 	g.GET("/api/v1/log_operate/pages", _this.logOperatePages)
 	g.POST("/api/v1/log_operate/add", _this.logOperateAdd)
@@ -299,6 +311,31 @@ func (_this *ApiAuth) gameGroupUpdate(c *gin.Context) {
 	internal.AdminJSON(c, reply, err)
 }
 
+func (_this *ApiAuth) gameResultPages(c *gin.Context) {
+	reply, err := global.Srv.FindGameResultPage(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) gameResultAdd(c *gin.Context) {
+	reply, err := global.Srv.GameResultAdd(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) gameResultDel(c *gin.Context) {
+	reply, err := global.Srv.GameResultDel(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) gameResultQuery(c *gin.Context) {
+	reply, err := global.Srv.GameResultQuery(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) gameResultUpdate(c *gin.Context) {
+	reply, err := global.Srv.GameResultUpdate(c)
+	internal.AdminJSON(c, reply, err)
+}
+
 func (_this *ApiAuth) gameTypePages(c *gin.Context) {
 	reply, err := global.Srv.FindGameTypePage(c)
 	internal.AdminJSON(c, reply, err)
@@ -346,6 +383,31 @@ func (_this *ApiAuth) gradeQuery(c *gin.Context) {
 
 func (_this *ApiAuth) gradeUpdate(c *gin.Context) {
 	reply, err := global.Srv.GradeUpdate(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) issueFactoryPages(c *gin.Context) {
+	reply, err := global.Srv.FindIssueFactoryPage(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) issueFactoryAdd(c *gin.Context) {
+	reply, err := global.Srv.IssueFactoryAdd(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) issueFactoryDel(c *gin.Context) {
+	reply, err := global.Srv.IssueFactoryDel(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) issueFactoryQuery(c *gin.Context) {
+	reply, err := global.Srv.IssueFactoryQuery(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) issueFactoryUpdate(c *gin.Context) {
+	reply, err := global.Srv.IssueFactoryUpdate(c)
 	internal.AdminJSON(c, reply, err)
 }
 

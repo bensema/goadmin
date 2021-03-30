@@ -71,6 +71,11 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,bb_admin_api_game_group_query: '/api/v1/game_group/query'
         ,bb_admin_api_game_group_update: '/api/v1/game_group/update'
 
+        ,bb_admin_api_issue_factory_pages:'/api/v1/issue_factory/pages'
+        ,bb_admin_api_issue_factory_add:'/api/v1/issue_factory/add'
+        ,bb_admin_api_issue_factory_del:'/api/v1/issue_factory/del'
+        ,bb_admin_api_issue_factory_query: '/api/v1/issue_factory/query'
+        ,bb_admin_api_issue_factory_update: '/api/v1/issue_factory/update'
 
         ,web_admin_form_url: '/admin/form'
         ,web_admin_add_url: '/admin/add'

@@ -51,25 +51,41 @@
                    $('#edit_game_group').append(new Option(item.game_group_display_name, item.game_group));
               });
 
-              layui.goadmin.req({
-                  type: 'get'
-                  ,url: layui.goadmin.bb_admin_api_game_query
-                  ,data: params
-                  ,done: function(res){
-                    layui.$('#edit_name').val(res.data.name);
-                    layui.$('#edit_display_name').val(res.data.display_name);
-                    layui.$('#edit_game_code').val(res.data.game_code);
-                    layui.$('#edit_game_type').val(res.data.game_type);
-                    layui.$('#edit_game_group').val(res.data.game_group);
-                    layui.$('#edit_img_url').val(res.data.img_url);
-                    layui.$('#edit_sort_index').val(res.data.sort_index);
-                    layui.$('#edit_status').val(res.data.status);
-                    layui.$('#edit_remark').val(res.data.remark);
+             layui.goadmin.req({
+               type: 'get'
+               ,url: layui.goadmin.bb_admin_api_issue_factory_pages
+               ,data: {"num":1,"size":100}
+               ,done: function(res){
+                  $.each(res.data.data, function(index, item) {
+                       $('#edit_issue_factory').append(new Option(item.issue_factory_code, item.issue_factory_code));
+                  });
+
+                    layui.goadmin.req({
+                        type: 'get'
+                        ,url: layui.goadmin.bb_admin_api_game_query
+                        ,data: params
+                        ,done: function(res){
+                          layui.$('#edit_name').val(res.data.name);
+                          layui.$('#edit_display_name').val(res.data.display_name);
+                          layui.$('#edit_game_code').val(res.data.game_code);
+                          layui.$('#edit_game_type').val(res.data.game_type);
+                          layui.$('#edit_game_group').val(res.data.game_group);
+                          layui.$('#edit_issue_factory').val(res.data.issue_factory_code);
+                          layui.$('#edit_img_url').val(res.data.img_url);
+                          layui.$('#edit_sort_index').val(res.data.sort_index);
+                          layui.$('#edit_status').val(res.data.status);
+                          layui.$('#edit_remark').val(res.data.remark);
 
 
-                      layui.form.render();
-                  }
-              });
+                            layui.form.render();
+                        }
+                    });
+
+
+               }
+             });
+
+
            }
          });
       }
@@ -97,6 +113,7 @@
         params.game_code = layui.$('#edit_game_code').val();
         params.game_type = layui.$('#edit_game_type').val();
         params.game_group = layui.$('#edit_game_group').val();
+        params.issue_factory_code = layui.$('#edit_issue_factory').val();
         params.img_url = layui.$('#edit_img_url').val();
         params.sort_index = layui.$('#edit_sort_index').val();
         params.status = layui.$('#edit_status').val();

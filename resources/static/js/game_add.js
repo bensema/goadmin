@@ -44,7 +44,19 @@
               $.each(res.data.data, function(index, item) {
                    $('#add_game_group').append(new Option(item.game_group_display_name, item.game_group));
               });
-              layui.form.render();
+
+               layui.goadmin.req({
+                 type: 'get'
+                 ,url: layui.goadmin.bb_admin_api_issue_factory_pages
+                 ,data: {"num":1,"size":100}
+                 ,done: function(res){
+                    $.each(res.data.data, function(index, item) {
+                         $('#add_issue_factory').append(new Option(item.issue_factory_code, item.issue_factory_code));
+                    });
+                    layui.form.render();
+
+                 }
+               });
 
            }
          });
@@ -76,6 +88,7 @@
         params.game_code = layui.$('#add_game_code').val();
         params.game_type = layui.$('#add_game_type').val();
         params.game_group = layui.$('#add_game_group').val();
+        params.issue_factory_code = layui.$('#add_issue_factory').val();
         params.img_url = layui.$('#add_img_url').val();
         params.sort_index = layui.$('#add_sort_index').val();
         params.status = layui.$('#add_status').val();

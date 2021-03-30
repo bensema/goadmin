@@ -146,6 +146,26 @@ func (s *Service) GameGroupUpdate(c *gin.Context) (reply *model.AdminApiReply, e
 	return s.doRequest(c, biz.GameGroupUpdate)
 }
 
+func (s *Service) FindGameResultPage(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.GameResultPages)
+}
+
+func (s *Service) GameResultAdd(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.GameResultAdd)
+}
+
+func (s *Service) GameResultDel(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.GameResultDel)
+}
+
+func (s *Service) GameResultQuery(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.GameResultQuery)
+}
+
+func (s *Service) GameResultUpdate(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.GameResultUpdate)
+}
+
 func (s *Service) FindGameTypePage(c *gin.Context) (reply *model.AdminApiReply, err error) {
 	return s.doRequest(c, biz.GameTypePages)
 }
@@ -184,6 +204,26 @@ func (s *Service) GradeQuery(c *gin.Context) (reply *model.AdminApiReply, err er
 
 func (s *Service) GradeUpdate(c *gin.Context) (reply *model.AdminApiReply, err error) {
 	return s.doRequest(c, biz.GradeUpdate)
+}
+
+func (s *Service) FindIssueFactoryPage(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.IssueFactoryPages)
+}
+
+func (s *Service) IssueFactoryAdd(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.IssueFactoryAdd)
+}
+
+func (s *Service) IssueFactoryDel(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.IssueFactoryDel)
+}
+
+func (s *Service) IssueFactoryQuery(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.IssueFactoryQuery)
+}
+
+func (s *Service) IssueFactoryUpdate(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.IssueFactoryUpdate)
 }
 
 func (s *Service) FindLogOperatePage(c *gin.Context) (reply *model.AdminApiReply, err error) {
