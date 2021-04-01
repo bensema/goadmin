@@ -98,6 +98,12 @@ func (_this *ApiAuth) RegisterBBAdminRoute(g *gin.RouterGroup) {
 	g.GET("/api/v1/security_questions/query", _this.securityQuestionsQuery)
 	g.POST("/api/v1/security_questions/update", _this.securityQuestionsUpdate)
 
+	g.GET("/api/v1/tmp_seed/pages", _this.tmpSeedPages)
+	g.POST("/api/v1/tmp_seed/add", _this.tmpSeedAdd)
+	g.POST("/api/v1/tmp_seed/del", _this.tmpSeedDel)
+	g.GET("/api/v1/tmp_seed/query", _this.tmpSeedQuery)
+	g.POST("/api/v1/tmp_seed/update", _this.tmpSeedUpdate)
+
 	g.GET("/api/v1/user_info/pages", _this.userInfoPages)
 	g.POST("/api/v1/user_info/add", _this.userInfoAdd)
 	g.POST("/api/v1/user_info/del", _this.userInfoDel)
@@ -508,6 +514,31 @@ func (_this *ApiAuth) securityQuestionsQuery(c *gin.Context) {
 
 func (_this *ApiAuth) securityQuestionsUpdate(c *gin.Context) {
 	reply, err := global.Srv.SecurityQuestionsUpdate(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) tmpSeedPages(c *gin.Context) {
+	reply, err := global.Srv.FindTmpSeedPage(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) tmpSeedAdd(c *gin.Context) {
+	reply, err := global.Srv.TmpSeedAdd(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) tmpSeedDel(c *gin.Context) {
+	reply, err := global.Srv.TmpSeedDel(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) tmpSeedQuery(c *gin.Context) {
+	reply, err := global.Srv.TmpSeedQuery(c)
+	internal.AdminJSON(c, reply, err)
+}
+
+func (_this *ApiAuth) tmpSeedUpdate(c *gin.Context) {
+	reply, err := global.Srv.TmpSeedUpdate(c)
 	internal.AdminJSON(c, reply, err)
 }
 

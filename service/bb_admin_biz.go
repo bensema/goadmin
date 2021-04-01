@@ -306,6 +306,26 @@ func (s *Service) SecurityQuestionsUpdate(c *gin.Context) (reply *model.AdminApi
 	return s.doRequest(c, biz.SecurityQuestionsUpdate)
 }
 
+func (s *Service) FindTmpSeedPage(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.TmpSeedPages)
+}
+
+func (s *Service) TmpSeedAdd(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.TmpSeedAdd)
+}
+
+func (s *Service) TmpSeedDel(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.TmpSeedDel)
+}
+
+func (s *Service) TmpSeedQuery(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.TmpSeedQuery)
+}
+
+func (s *Service) TmpSeedUpdate(c *gin.Context) (reply *model.AdminApiReply, err error) {
+	return s.doRequest(c, biz.TmpSeedUpdate)
+}
+
 func (s *Service) FindUserInfoPage(c *gin.Context) (reply *model.AdminApiReply, err error) {
 	return s.doRequest(c, biz.UserInfoPages)
 }

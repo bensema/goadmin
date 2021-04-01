@@ -33,7 +33,7 @@
       ,data: {"num":1,"size":100}
       ,done: function(res){
          $.each(res.data.data, function(index, item) {
-              $('#add_game_type').append(new Option(item.game_type_display_name, item.game_type));
+              $('#add_game_type_code').append(new Option(item.game_type_display_name, item.game_type_code));
          });
 
          layui.goadmin.req({
@@ -42,7 +42,7 @@
            ,data: {"num":1,"size":100}
            ,done: function(res){
               $.each(res.data.data, function(index, item) {
-                   $('#add_game_group').append(new Option(item.game_group_display_name, item.game_group));
+                   $('#add_game_group_code').append(new Option(item.game_group_display_name, item.game_group_code));
               });
 
                layui.goadmin.req({
@@ -86,8 +86,8 @@
         params.name = layui.$('#add_name').val();
         params.display_name = layui.$('#add_display_name').val();
         params.game_code = layui.$('#add_game_code').val();
-        params.game_type = layui.$('#add_game_type').val();
-        params.game_group = layui.$('#add_game_group').val();
+        params.game_type_code = layui.$('#add_game_type_code').val();
+        params.game_group_code = layui.$('#add_game_group_code').val();
         params.issue_factory_code = layui.$('#add_issue_factory').val();
         params.img_url = layui.$('#add_img_url').val();
         params.sort_index = layui.$('#add_sort_index').val();

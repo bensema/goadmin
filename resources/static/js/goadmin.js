@@ -65,6 +65,12 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,bb_admin_api_game_type_query: '/api/v1/game_type/query'
         ,bb_admin_api_game_type_update: '/api/v1/game_type/update'
 
+        ,bb_admin_api_game_result_pages:'/api/v1/game_result/pages'
+        ,bb_admin_api_game_result_add:'/api/v1/game_result/add'
+        ,bb_admin_api_game_result_del:'/api/v1/game_result/del'
+        ,bb_admin_api_game_result_query: '/api/v1/game_result/query'
+        ,bb_admin_api_game_result_update: '/api/v1/game_result/update'
+
         ,bb_admin_api_game_group_pages:'/api/v1/game_group/pages'
         ,bb_admin_api_game_group_add:'/api/v1/game_group/add'
         ,bb_admin_api_game_group_del:'/api/v1/game_group/del'

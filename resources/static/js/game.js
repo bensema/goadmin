@@ -15,13 +15,13 @@ layui.config({
 
       function status(d) {
         if (d.status == "1"){
-            return '<button class="layui-btn layui-btn-xs">开启</button>'
+            return '<button class="layui-btn layui-btn-xs">启用</button>'
         }
         if (d.status == "2"){
-           return '<button class="layui-btn layui-btn-primary layui-btn-xs">关闭</button>'
+           return '<button class="layui-btn layui-btn-primary layui-btn-xs">禁用</button>'
         }
          if (d.status == "3"){
-           return '<button class="layui-btn layui-btn-primary layui-btn-xs">禁用</button>'
+           return '<button class="layui-btn layui-btn-warm layui-btn-xs">停售</button>'
         }
       }
       function img_url(d) {
@@ -37,8 +37,8 @@ layui.config({
           ,{field: 'img_url', title: '图片', templet: img_url,  align: 'center'}
           ,{field: 'display_name', title: '显示名称',  align: 'center'}
           ,{field: 'game_code', title: '游戏编码',  align: 'center'}
-          ,{field: 'game_type', title: '游戏类型',  align: 'center'}
-          ,{field: 'game_group', title: '游戏组',  align: 'center'}
+          ,{field: 'game_type_code', title: '游戏类型',  align: 'center'}
+          ,{field: 'game_group_code', title: '游戏组',  align: 'center'}
           ,{field: 'sort_index', title: '排序', align: 'center'}
           ,{field: 'status', title: '状态', templet: status, align: 'center'}
           ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#table-content-list'}

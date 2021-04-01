@@ -18,6 +18,7 @@ func (_this *HtmlWebAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/advertise", _this.commonV2)
 	g.GET("/announcements", _this.commonV2)
 	g.GET("/game", _this.commonV2)
+	g.GET("/game_result", _this.commonV2)
 	g.GET("/home/dashboard", _this.common)
 	g.GET("/log/login", _this.logLogin)
 	g.GET("/log/operation", _this.logOperation)
