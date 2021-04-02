@@ -99,6 +99,8 @@ layui.define(function(exports){ //提示：模块也可以依赖其它模块，�
         ,web_bb_game_add_url: '/game/add'
         ,web_bb_game_form_url: '/game/form'
 
+        ,web_bb_game_result_detail_url: '/game_result/detail'
+
         ,timestampToTime: function(timestamp) {  // 1561953956 => yyyy-MM-dd hh:mm:ss
             var d = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
             year = d.getFullYear();

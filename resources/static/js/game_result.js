@@ -3,10 +3,11 @@ layui.config({
   }).extend({
     index: 'lib/index' //主入口模块
     ,goadmin: '../../js/goadmin'
-  }).use(['index', 'table', 'form','goadmin', 'layer'], function(){
+  }).use(['index', 'table', 'form','goadmin', 'layer', 'laydate'], function(){
       var $ = layui.$
       ,table = layui.table
       ,form = layui.form
+      ,laydate = layui.laydate
       ,layer = layui.layer;
 
       function opened_at(d) {
@@ -38,12 +39,29 @@ layui.config({
            $.each(res.data.data, function(index, item) {
                 $('#game_code').append(new Option(item.display_name, item.game_code));
            });
+           laydate.render({
+               elem: '#query_begin_time'
+               ,type: 'datetime'
+               ,value: get_current_day_begin_time()
+           });
+          laydate.render({
+               elem: '#query_end_time'
+               ,type: 'datetime'
+               ,value: get_current_day_end_time()
+           });
            layui.form.render();
+
+           var params = {};
+           params.game_code = layui.$('#game_code').val();
+           params.issue = layui.$('#issue').val();
+           params.opened_at_from = parseDateTime(layui.$('#query_begin_time').val())
+           params.opened_at_to = parseDateTime(layui.$('#query_end_time').val())
+
 
            table.render({
                elem: '#LAY-app-content-list'
                ,url: layui.goadmin.bb_admin_api_game_result_pages
-               ,where: {game_code: layui.$('#game_code').val()}
+               ,where: params
                ,cols: [[
                  {field: 'id', width: 100,  title: 'ID', sort: true, align: 'center'}
                  ,{field: 'issue', width: 150, title: '局号',  align: 'center'}
@@ -98,25 +116,16 @@ layui.config({
               });
 
             })
-        } else if(obj.event === 'edit'){
+        } else if(obj.event === 'detail'){
           layer.open({
             type: 2
-            ,title: '编辑管游戏'
-            ,content: layui.goadmin.web_bb_game_form_url + '?id='+ data.id
-            ,maxmin: true
-            ,area: ['650px', '650px']
-            ,btn: ['确定', '取消']
-            ,yes: function(index, layero){
-              var iframeWindow = window['layui-layer-iframe'+ index]
-              ,submit = layero.find('iframe').contents().find("#layuiadmin-app-form-edit");
-               submit.click();
-            }
+            ,title: '详情'
+            ,shadeClose:true
+            ,content: layui.goadmin.web_bb_game_result_detail_url + '?id='+ data.id+'&game_code='+data.game_code
+            ,area: ['750px', '550px']
           });
-        } else if(obj.event === 'img_event'){
-            layer.photos({
-                photos: { "data": [{"src": data.img_url}] },
-                anim:5
-            });
+        } else if(obj.event === 'todo'){
+            layer.msg("待开发");
         }
       });
 
@@ -125,6 +134,8 @@ layui.config({
       form.on('submit(LAY-app-contlist-search)', function(data){
         var field = data.field;
         var page={};
+       field.opened_at_from = parseDateTime(layui.$('#query_begin_time').val())
+       field.opened_at_to = parseDateTime(layui.$('#query_end_time').val())
 
         if (cur_game_code !== field.game_code){
             page.curr = 1
