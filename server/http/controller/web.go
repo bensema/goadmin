@@ -32,6 +32,9 @@ func (_this *HtmlWeb) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/game_result/form", _this.gameResultForm)
 	g.GET("/game_result/detail", _this.gameResultDetail)
 
+	g.GET("/admin/info", _this.adminInfo)
+	g.GET("/admin/password", _this.adminPassword)
+
 }
 
 func (_this *HtmlWeb) login(c *gin.Context) {
@@ -111,4 +114,12 @@ func (_this *HtmlWeb) gameResultForm(c *gin.Context) {
 
 func (_this *HtmlWeb) gameResultDetail(c *gin.Context) {
 	c.HTML(http.StatusOK, "game_result/game_result_detail.html", gin.H{})
+}
+
+func (_this *HtmlWeb) adminInfo(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/info.html", gin.H{})
+}
+
+func (_this *HtmlWeb) adminPassword(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/password.html", gin.H{})
 }
