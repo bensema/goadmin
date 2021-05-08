@@ -1,9 +1,9 @@
 # GoAdmin
 
 ## 特征
-- 基于 gin + layuiadmin
+- 基于 golang+layui 构建管理后台
+- 选型http使用gin框架，layui admin 管理后台(layui对后端开发者友好)
 - 开箱即用的rbac认证系统
-- opentelemetry,jaeger实现golang链路追踪
 
 ![](https://github.com/bensema/goadmin/blob/main/run.png)
 
@@ -21,19 +21,7 @@ $ cd goadmin
 
 ```shell
 $ cd cmd
-$ go run main.go -conf=example.toml
+$ go run main.go -c goadmin.toml
 ```
 访问：[http://127.0.0.1:8890](http://127.0.0.1:8890)
-
-启动jaeger
-```
-    docker run \
-    -p 5775:5775/udp \
-    -p 16686:16686 \
-    -p 6831:6831/udp \
-    -p 6832:6832/udp \
-    -p 5778:5778 \
-    -p 14268:14268 \
-    jaegertracing/all-in-one:latest
-```
 
