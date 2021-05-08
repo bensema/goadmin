@@ -1,8 +1,8 @@
 /**
 
  @Name：layuiAdmin 用户登入和注册等
- @Author：贤心
- @Site：http://www.layui.com/admin/
+ 
+ 
  @License: LPPL
     
  */
@@ -20,13 +20,13 @@ layui.define(['index', 'layim'], function(exports){
   var autoReplay = [
     '您好，我现在有事不在，一会再和您联系。', 
     '你没发错吧？face[微笑] ',
-    '洗澡中，请勿打扰，偷窥请购票，个体四十，团体八折，订票电话：一般人我不告诉他！face[哈哈] ',
-    '你好，我是主人的美女秘书，有什么事就跟我说吧，等他回来我会转告他的。face[心] face[心] face[心] ',
+    '这是一段演示消息 face[哈哈] ',
+    '演示消息 face[心] face[心] face[心] ',
     'face[威武] face[威武] face[威武] face[威武] ',
     '<（@￣︶￣@）>',
     '你要和我说话？你真的要和我说话？你确定自己想说吗？你一定非说不可吗？那你说吧，这是自动回复。',
     'face[黑线]  你慢慢说，别急……',
-    '(*^__^*) face[嘻嘻] ，是贤心吗？'
+    '(*^__^*) face[嘻嘻]'
   ];
   
   //基础配置
@@ -385,25 +385,13 @@ layui.define(['index', 'layim'], function(exports){
       }
       var index = layer.open({
         type: 2
-        ,title: '移动版演示 （或手机扫右侧二维码预览）'
+        ,title: 'layim 移动版演示'
         ,content: mobileHome
         ,area: ['375px', '667px']
         ,shadeClose: true
         ,shade: 0.8
         ,end: function(){
           layer.close(index + 2);
-        }
-      });
-      layer.photos({
-        photos: {
-          "data": [{
-            "src": "http://cdn.layui.com/upload/2016_12/168_1481056358469_50288.png",
-          }]
-        }
-        ,anim: 0
-        ,shade: false
-        ,success: function(layero){
-          layero.css('margin-left', '350px');
         }
       });
     }

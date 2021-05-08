@@ -1,112 +1,31 @@
 package dao
 
 import (
-	"encoding/json"
-	"github.com/bensema/goadmin/model"
-	"github.com/bensema/library/cache/redis"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
+	"github.com/go-redis/redis/v8"
+	"time"
 )
 
-func (d *Dao) SetCaptchaCache(c *gin.Context, key string, code string) (err error) {
-	conn, err := d.rds.GetContext(c.Request.Context())
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	if err = conn.Send("SET", key, code); err != nil {
-		return
-	}
-	if err = conn.Send("EXPIRE", key, 60*5); err != nil {
-		return
-	}
+func (d *Dao) RDB() *redis.Client {
+	return d.rdb
+}
 
+func (d *Dao) Set(c *gin.Context, key string, value string, expiration time.Duration) (err error) {
+	err = d.rdb.Set(c, key, value, expiration).Err()
 	if err != nil {
-		return
-	}
-	err = conn.Flush()
-	if err != nil {
-		return
+		return err
 	}
 	return
 }
 
-func (d *Dao) GetCaptchaCache(c *gin.Context, key string) (code string, err error) {
-	conn, err := d.rds.GetContext(c.Request.Context())
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	code, err = redis.String(conn.Do("GET", key))
-	return
+func (d *Dao) Get(c *gin.Context, key string) (data string, err error) {
+	return d.rdb.Get(c, key).Result()
 }
 
-func (d *Dao) DelCaptchaCache(c *gin.Context, key string) (err error) {
-	conn, err := d.rds.GetContext(c.Request.Context())
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	_, err = conn.Do("DEL", key)
-	return
+func (d *Dao) Del(c *gin.Context, key string) (int64, error) {
+	return d.rdb.Del(c, key).Result()
 }
 
-func (d *Dao) SetAdminSessionCache(c *gin.Context, key string, adminSession *model.AdminSession) (err error) {
-	var (
-		bs []byte
-	)
-	conn, err := d.rds.GetContext(c.Request.Context())
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	if bs, err = json.Marshal(adminSession); err != nil {
-		return errors.WithStack(err)
-	}
-	if err = conn.Send("SET", key, bs); err != nil {
-		return
-	}
-	if err = conn.Send("EXPIRE", key, d.adminSessionExpire); err != nil {
-		return
-	}
-	if err = conn.Flush(); err != nil {
-		return
-	}
-	if _, err = conn.Receive(); err != nil {
-		return
-	}
-	return
-}
-
-func (d *Dao) DeleteAdminSessionCache(c *gin.Context, key string) (err error) {
-	conn, err := d.rds.GetContext(c.Request.Context())
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	_, err = conn.Do("DEL", key)
-	return
-}
-
-func (d *Dao) GetAdminSessionCache(c *gin.Context, key string) (adminSession *model.AdminSession, err error) {
-	var (
-		data []byte
-	)
-	conn, err := d.rds.GetContext(c.Request.Context())
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	if data, err = redis.Bytes(conn.Do("GET", key)); err != nil {
-		if err == redis.ErrNil {
-			err = nil
-		}
-		return
-	}
-	adminSession = new(model.AdminSession)
-	if err = json.Unmarshal(data, &adminSession); err != nil {
-		err = errors.WithStack(err)
-		return nil, err
-	}
-	return
+func (d *Dao) Pub(c *gin.Context, key string, value string) (err error) {
+	return d.rdb.Publish(c, key, value).Err()
 }

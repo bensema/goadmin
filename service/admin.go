@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/utils"
-	"github.com/bensema/library/ecode"
-	xtime "github.com/bensema/library/time"
 	"github.com/gin-gonic/gin"
 	"github.com/mssola/user_agent"
+	"library/ecode"
+	"library/xtime"
 	"time"
 )
 
@@ -33,7 +33,7 @@ func (s *Service) AdminLogin(c *gin.Context, arg *model.AdminLoginReq) (string, 
 		Name:    au.Name,
 		AesKey:  arg.AesKey,
 	}
-	err = s.dao.SetAdminSessionCache(c, adminSessionKey, &adminSession)
+	err = s.SetAdminSessionCache(c, adminSessionKey, &adminSession)
 	ipInfo, _ := s.Ip2Region.BtreeSearch(c.ClientIP())
 	ua := user_agent.New(c.Request.UserAgent())
 	b1, bv := ua.Browser()

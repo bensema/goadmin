@@ -4,17 +4,17 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"github.com/bensema/goadmin/global"
+	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/server/http/internal"
-	"github.com/bensema/library/cache/redis"
-	"github.com/bensema/library/crypto"
-	"github.com/bensema/library/ecode"
-	"github.com/bensema/library/log"
-	xtime "github.com/bensema/library/time"
+	"github.com/bensema/goadmin/service"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"image/gif"
 	"image/png"
+	"library/crypto"
+	"library/ecode"
+	"library/xtime"
 	"net/http"
 	"strings"
 	"time"
@@ -30,7 +30,7 @@ func (_this *Api) RegisterRoute(g *gin.RouterGroup) {
 }
 
 func (_this *Api) rsa(c *gin.Context) {
-	internal.JSON(c, string(global.PublicKey), ecode.OK)
+	internal.JSON(c, string(config.PublicKey), ecode.OK)
 	return
 }
 
@@ -43,7 +43,7 @@ func (_this *Api) login(c *gin.Context) {
 		return
 	}
 	var adminLogin model.AdminLoginV2
-	jsonStream, err := crypto.RsaDecrypt(dd, global.PrivateKey)
+	jsonStream, err := crypto.RsaDecrypt(dd, config.PrivateKey)
 	if err != nil {
 		internal.JSON(c, nil, ecode.MethodNotAllowed)
 		return
@@ -73,8 +73,8 @@ func (_this *Api) login(c *gin.Context) {
 	}
 
 	capKey, _ := c.Cookie(internal.CaptchaKey)
-	b, err := global.Srv.CaptchaVerify(c, capKey, verCode)
-	if err == redis.ErrNil {
+	b, err := service.Srv.CaptchaVerify(c, capKey, verCode)
+	if err == model.ErrNil {
 		internal.JSON(c, nil, errors.New("请刷新验证码试试"))
 		return
 	}
@@ -88,7 +88,7 @@ func (_this *Api) login(c *gin.Context) {
 		return
 	}
 
-	session, err := global.Srv.AdminLogin(c, &model.AdminLoginReq{Username: adminLogin.Username, Password: adminLogin.Password, AesKey: adminLogin.AesKey})
+	session, err := service.Srv.AdminLogin(c, &model.AdminLoginReq{Username: adminLogin.Username, Password: adminLogin.Password, AesKey: adminLogin.AesKey})
 	if err != nil {
 		internal.JSON(c, nil, err)
 		return
@@ -100,8 +100,8 @@ func (_this *Api) login(c *gin.Context) {
 }
 
 func (_this *Api) captchaImg(c *gin.Context) {
-	data, code := global.Srv.CaptchaImg(c)
-	v, err := global.Srv.SetCaptchaCache(c, code)
+	data, code := service.Srv.CaptchaImg(c)
+	v, err := service.Srv.SetCaptchaCache(c, code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
@@ -111,8 +111,8 @@ func (_this *Api) captchaImg(c *gin.Context) {
 }
 
 func (_this *Api) captchaGif(c *gin.Context) {
-	data, code := global.Srv.CaptchaGif(c)
-	v, err := global.Srv.SetCaptchaCache(c, code)
+	data, code := service.Srv.CaptchaGif(c)
+	v, err := service.Srv.SetCaptchaCache(c, code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return

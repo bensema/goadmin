@@ -1,8 +1,8 @@
 /**
 
  @Name：layuiAdmin 主页控制台
- @Author：贤心
- @Site：http://www.layui.com/admin/
+ 
+ 
  @License：GPL-2
     
  */

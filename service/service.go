@@ -4,10 +4,12 @@ import (
 	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/dao"
 	"github.com/bensema/goadmin/model"
-	"github.com/bensema/library/image/captcha"
-	xip "github.com/bensema/library/net/ip"
 	"github.com/gin-gonic/gin"
+	"library/image/captcha"
+	xip "library/net/ip"
 )
+
+var Srv *Service
 
 type Service struct {
 	conf      *config.Config
@@ -39,11 +41,13 @@ func (s *Service) getAdminFromContext(c *gin.Context) (*model.Admin, error) {
 	if err != nil {
 		return nil, err
 	}
-	as, err := s.GetAdminSessionCache(c, sid)
+	adminSession := &model.AdminSession{}
+
+	err = s.GetAdminSessionCache(c, sid, adminSession)
 	if err != nil {
 		return nil, err
 	}
-	return s.dao.GetAdminByAdminId(c, as.AdminId)
+	return s.dao.GetAdminByAdminId(c, adminSession.AdminId)
 }
 
 func (s *Service) GetAdminFromContext(c *gin.Context) (*model.Admin, error) {

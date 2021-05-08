@@ -39,8 +39,7 @@ layui.config({
         elem: '#LAY-app-content-list'
         ,url: layui.goadmin.api_admin_page_url
         ,cols: [[
-          {type: 'checkbox', fixed: 'left'}
-          ,{field: 'admin_id', width: 100, title: '账户ID', sort: true, align: 'center'}
+          {field: 'admin_id', width: 100, title: '账户ID', align: 'center'}
           ,{field: 'name', title: '账户', minWidth: 100, align: 'center'}
           ,{field: 'roles', title: '角色', templet: roles, align: 'center'}
           ,{field: 'status', title: '状态', templet: admin_status, align: 'center'}

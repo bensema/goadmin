@@ -1,8 +1,8 @@
 /**
 
  @Name：layuiAdmin
- @Author：贤心
- @Site：http://www.layui.com/admin/
+ 
+ 
  @License：LPPL
  
  */
@@ -305,6 +305,11 @@ html{background-color: #f2f2f2; color: #666;}
 .layadmin-backlog-body h3{padding-bottom: 10px; font-size: 12px;}
 .layadmin-backlog-body p cite{font-style: normal; font-size: 30px; font-weight: 300; color: #009688;}
 .layadmin-backlog-body:hover{background-color: #f2f2f2; color: #888;}
+
+/* 版本信息 */
+.layadmin-version .layui-table{padding: 6px 0;}
+.layadmin-version .layui-table td, 
+.layadmin-version .layui-table th{line-height: 25px;}
 
 /* 数据概览 */
 .layadmin-dataview{height: 332px !important;}

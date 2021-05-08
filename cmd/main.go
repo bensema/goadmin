@@ -5,25 +5,35 @@ import (
 	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/server/http"
 	"github.com/bensema/goadmin/service"
-	"github.com/bensema/library/log"
-	"github.com/bensema/library/net/trace"
+	log "github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 )
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{})
+	log.SetOutput(os.Stdout)
+	file, err := os.OpenFile(filepath.Join(".", "goadmin.log"), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	writers := []io.Writer{file, os.Stdout}
+	fileAndStdoutWriter := io.MultiWriter(writers...)
+	if err == nil {
+		log.SetOutput(fileAndStdoutWriter)
+	} else {
+		log.Info("failed to log to file.")
+	}
+}
 
 func main() {
 	flag.Parse()
 	if err := config.Init(); err != nil {
 		panic(err)
 	}
-	log.Init(config.Conf.Log)
-
-	flush := trace.Init(config.Conf.Trace)
-	defer flush()
-
 	srv := service.New(config.Conf)
+	log.Error("test")
 	http.Init(config.Conf, srv)
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)

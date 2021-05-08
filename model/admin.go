@@ -1,6 +1,6 @@
 package model
 
-import xtime "github.com/bensema/library/time"
+import "library/xtime"
 
 type AdminSession struct {
 	AdminId string

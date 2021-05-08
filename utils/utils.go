@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/bensema/library/ecode"
+	"library/ecode"
 	"math/rand"
 	"os"
 	"regexp"

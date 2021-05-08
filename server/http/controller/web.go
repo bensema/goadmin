@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/bensema/goadmin/global"
 	"github.com/bensema/goadmin/server/http/internal"
+	"github.com/bensema/goadmin/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -48,7 +48,7 @@ func (_this *HtmlWeb) logout(c *gin.Context) {
 	if err != nil {
 	} else {
 		c.SetCookie(internal.AdminSession, "", -1, "/", "", false, true)
-		global.Srv.DeleteAdminSessionCache(c, adminSession)
+		service.Srv.DeleteAdminSessionCache(c, adminSession)
 	}
 	c.Redirect(http.StatusFound, "/login")
 }

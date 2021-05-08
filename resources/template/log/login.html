@@ -47,30 +47,29 @@
                     </button>
                 </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">时间范围</label>
-                <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="query_begin_time" placeholder="yyyy-MM-dd HH:mm:ss">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间范围</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="query_begin_time" placeholder="yyyy-MM-dd HH:mm:ss">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="query_end_time" placeholder="yyyy-MM-dd HH:mm:ss">
+                    </div>
                 </div>
-                <div class="layui-form-mid">-</div>
-                <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="query_end_time" placeholder="yyyy-MM-dd HH:mm:ss">
+                <div class="layui-inline">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn layui-btn-sm" onclick="quick_select_time('today', 'query_begin_time', 'query_end_time')">今天</button>
+                        <button class="layui-btn layui-btn-sm" onclick="quick_select_time('yesterday', 'query_begin_time', 'query_end_time')">昨天</button>
+                        <button class="layui-btn layui-btn-sm" onclick="quick_select_time('this_week', 'query_begin_time', 'query_end_time')">本周</button>
+                        <button class="layui-btn layui-btn-sm" onclick="quick_select_time('last_week', 'query_begin_time', 'query_end_time')">上周</button>
+                        <button class="layui-btn layui-btn-sm" onclick="quick_select_time('this_month', 'query_begin_time', 'query_end_time')">本月</button>
+                        <button class="layui-btn layui-btn-sm" onclick="quick_select_time('last_month', 'query_begin_time', 'query_end_time')">上月</button>
+                    </div>
                 </div>
             </div>
-            <div class="layui-inline">
-                <div class="layui-btn-group">
-                    <button class="layui-btn layui-btn-sm" onclick="quick_select_time('today', 'query_begin_time', 'query_end_time')">今天</button>
-                    <button class="layui-btn layui-btn-sm" onclick="quick_select_time('yesterday', 'query_begin_time', 'query_end_time')">昨天</button>
-                    <button class="layui-btn layui-btn-sm" onclick="quick_select_time('this_week', 'query_begin_time', 'query_end_time')">本周</button>
-                    <button class="layui-btn layui-btn-sm" onclick="quick_select_time('last_week', 'query_begin_time', 'query_end_time')">上周</button>
-                    <button class="layui-btn layui-btn-sm" onclick="quick_select_time('this_month', 'query_begin_time', 'query_end_time')">本月</button>
-                    <button class="layui-btn layui-btn-sm" onclick="quick_select_time('last_month', 'query_begin_time', 'query_end_time')">上月</button>
-                </div>
-            </div>
         </div>
-
 
         <div class="layui-card-body">
             <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>

@@ -2,7 +2,7 @@
 
  @Name：layuiAdmin 内容系统
  @Author：star1029
- @Site：http://www.layui.com/admin/
+ 
  @License：LPPL
     
  */
@@ -22,7 +22,7 @@ layui.define(['table', 'form'], function(exports){
       ,{field: 'id', width: 100, title: '文章ID', sort: true}
       ,{field: 'label', title: '文章标签', minWidth: 100}
       ,{field: 'title', title: '文章标题'}
-      ,{field: 'author', title: '作者ll'}
+      ,{field: 'author', title: '作者'}
       ,{field: 'uploadtime', title: '上传时间', sort: true}
       ,{field: 'status', title: '发布状态', templet: '#buttonTpl', minWidth: 80, align: 'center'}
       ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#table-content-list'}

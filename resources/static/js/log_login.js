@@ -67,8 +67,7 @@ layui.config({
         elem: '#LAY-app-content-list'
         ,url: layui.goadmin.api_log_login_page_url
         ,cols: [[
-          {type: 'checkbox', fixed: 'left'}
-          ,{field: 'id', width: 100, title: '编号', sort: true, align: 'center'}
+          {field: 'id', width: 100, title: '编号', align: 'center'}
           ,{field: 'name', title: '账户', minWidth: 100, align: 'center'}
           ,{field: 'location', title: '位置', align: 'center'}
           ,{field: 'os', title: '系统', align: 'center'}

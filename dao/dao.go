@@ -4,27 +4,22 @@ import (
 	"context"
 	"database/sql"
 	"github.com/bensema/goadmin/config"
-	"github.com/bensema/library/cache/redis"
-	bSql "github.com/bensema/library/database/sql"
-	"time"
+	"github.com/go-redis/redis/v8"
+	xRedis "library/cache/redis"
+	xSql "library/database/sql"
 )
 
 type Dao struct {
-	c *config.Config
-
-	db *sql.DB
-
-	rds *redis.Pool
-
-	adminSessionExpire int64
+	c   *config.Config
+	db  *sql.DB
+	rdb *redis.Client
 }
 
 func New(c *config.Config) (d *Dao) {
 	d = &Dao{
-		c:                  c,
-		db:                 bSql.New(c.MySQL),
-		rds:                redis.NewPool(c.Redis.Config),
-		adminSessionExpire: int64(time.Duration(c.Redis.AdminSessionExpire) / time.Second),
+		c:   c,
+		db:  xSql.New(c.MySQL),
+		rdb: xRedis.New(c.Redis),
 	}
 	return
 }
@@ -38,5 +33,8 @@ func (d *Dao) Ping(c context.Context) (err error) {
 func (d *Dao) Close() {
 	if d.db != nil {
 		_ = d.db.Close()
+	}
+	if d.rdb != nil {
+		_ = d.rdb.Close()
 	}
 }

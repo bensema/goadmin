@@ -1,8 +1,6 @@
 /**
 
  @Name：layuiAdmin iframe版核心模块
- @Author：贤心
- @Site：http://www.layui.com/admin/
  @License：LPPL
     
  */
@@ -27,7 +25,7 @@ layui.define('view', function(exports){
 
   //通用方法
   ,admin = {
-    v: '2020.8.2 std'
+    v: '1.6.1 std'
     
     //数据的异步请求
     ,req: view.req

@@ -2,9 +2,9 @@ package service
 
 import (
 	"github.com/bensema/goadmin/model"
-	"github.com/bensema/library/ecode"
-	"github.com/bensema/library/log"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
+	"library/ecode"
 )
 
 func (s *Service) PermitAPI(c *gin.Context, adminId string) error {

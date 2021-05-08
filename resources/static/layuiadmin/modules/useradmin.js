@@ -2,7 +2,7 @@
 
  @Name：layuiAdmin 用户管理 管理员管理 角色管理
  @Author：star1029
- @Site：http://www.layui.com/admin/
+ 
  @License：LPPL
     
  */
@@ -71,7 +71,7 @@ layui.define(['table', 'form'], function(exports){
             
             //提交 Ajax 成功后，静态更新表格中的数据
             //$.ajax({});
-            table.reload('LAY-user-front-submit'); //数据刷新
+            table.reload('LAY-user-manage'); //数据刷新
             layer.close(index); //关闭弹层
           });  
           

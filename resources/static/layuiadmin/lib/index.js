@@ -1,8 +1,6 @@
 /**
 
  @Name：layuiAdmin iframe版主入口
- @Author：贤心
- @Site：http://www.layui.com/admin/
  @License：LPPL
     
  */
@@ -37,6 +35,15 @@ layui.extend({
     
     text = text || '新标签页';
     
+    //定位当前tabs
+    var setThisTab = function(){
+      element.tabChange(FILTER_TAB_TBAS, url);
+      admin.tabsBodyChange(tabsPage.index, {
+        url: url
+        ,text: text
+      });
+    };
+    
     if(setter.pageTabs){
       //如果未在选项卡中匹配到，则追加选项卡
       if(!matchTo){
@@ -47,6 +54,7 @@ layui.extend({
               ,'<iframe src="'+ url +'" frameborder="0" class="layadmin-iframe"></iframe>'
             ,'</div>'
           ].join(''));
+          setThisTab();
         }, 10);
         
         tabsPage.index = tabs.length;
@@ -61,13 +69,8 @@ layui.extend({
       var iframe = admin.tabsBody(admin.tabsPage.index).find('.layadmin-iframe');
       iframe[0].contentWindow.location.href = url;
     }
-
-    //定位当前tabs
-    element.tabChange(FILTER_TAB_TBAS, url);
-    admin.tabsBodyChange(tabsPage.index, {
-      url: url
-      ,text: text
-    });
+    
+    setThisTab();
   }
   
   ,APP_BODY = '#LAY_app_body', FILTER_TAB_TBAS = 'layadmin-layout-tabs'

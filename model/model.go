@@ -1,7 +1,7 @@
 package model
 
 import (
-	xtime "github.com/bensema/library/time"
+	"library/xtime"
 )
 
 type Admin struct {

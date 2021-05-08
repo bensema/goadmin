@@ -3,13 +3,13 @@ package controller
 import (
 	"errors"
 	"fmt"
-	"github.com/bensema/goadmin/global"
 	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/server/http/internal"
+	"github.com/bensema/goadmin/service"
 	"github.com/bensema/goadmin/utils"
-	"github.com/bensema/library/ecode"
-	xtime "github.com/bensema/library/time"
 	"github.com/gin-gonic/gin"
+	"library/ecode"
+	"library/xtime"
 	"strings"
 )
 
@@ -52,13 +52,13 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/api/v1/menu/all", _this.menuAll)             // 获取所有菜单
 	g.GET("/api/v1/operation/all", _this.operationAll)   // 获取所有操作
 
-	_this.RegisterBBAdminRoute(g)
 }
 
 func (_this *ApiAuth) menu(c *gin.Context) {
 	session, _ := c.Cookie(internal.AdminSession)
-	adminSession, _ := global.Srv.GetAdminSessionCache(c, session)
-	menus, err := global.Srv.FindAdminMenu(c, adminSession.AdminId)
+	obj := &model.AdminSession{}
+	err := service.Srv.GetAdminSessionCache(c, session, obj)
+	menus, err := service.Srv.FindAdminMenu(c, obj.AdminId)
 	internal.JSON(c, menus, err)
 }
 
@@ -77,7 +77,7 @@ func (_this *ApiAuth) adminPages(c *gin.Context) {
 	arg.Size = utils.GetInt(size)
 
 	arg.Verify()
-	reply, err := global.Srv.FindAdminPage(c, arg)
+	reply, err := service.Srv.FindAdminPage(c, arg)
 	internal.JSON(c, reply, err)
 }
 
@@ -97,18 +97,18 @@ func (_this *ApiAuth) adminPagesV1(c *gin.Context) {
 	arg.Size = utils.GetInt(size)
 
 	arg.Verify()
-	reply, err := global.Srv.FindAdminPageV1(c, arg)
+	reply, err := service.Srv.FindAdminPageV1(c, arg)
 	internal.JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) adminInfoV1(c *gin.Context) {
 	adminId, _ := c.GetQuery("admin_id")
-	reply, err := global.Srv.GetAdminV1(c, adminId)
+	reply, err := service.Srv.GetAdminV1(c, adminId)
 	internal.JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) roleAll(c *gin.Context) {
-	reply, err := global.Srv.FindAllRole(c)
+	reply, err := service.Srv.FindAllRole(c)
 	internal.JSON(c, reply, err)
 }
 
@@ -133,7 +133,7 @@ func (_this *ApiAuth) updateAdmin(c *gin.Context) {
 	arg.Status = utils.GetInt(status)
 	arg.Roles = r
 
-	internal.JSON(c, nil, global.Srv.UpdateAdmin(c, arg, filed))
+	internal.JSON(c, nil, service.Srv.UpdateAdmin(c, arg, filed))
 }
 
 func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
@@ -148,7 +148,7 @@ func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
 		return
 	}
 
-	internal.JSON(c, nil, global.Srv.DeleteAdmin(c, adminId))
+	internal.JSON(c, nil, service.Srv.DeleteAdmin(c, adminId))
 }
 
 func (_this *ApiAuth) addAdmin(c *gin.Context) {
@@ -167,7 +167,7 @@ func (_this *ApiAuth) addAdmin(c *gin.Context) {
 	arg.Password = password
 	arg.Status = utils.GetInt(status)
 	arg.Roles = r
-	internal.JSON(c, nil, global.Srv.AddAdmin(c, arg))
+	internal.JSON(c, nil, service.Srv.AddAdmin(c, arg))
 }
 
 // 角色
@@ -187,28 +187,28 @@ func (_this *ApiAuth) rolePagesV1(c *gin.Context) {
 	arg.Size = utils.GetInt(size)
 
 	arg.Verify()
-	reply, err := global.Srv.FindRolePageV1(c, arg)
+	reply, err := service.Srv.FindRolePageV1(c, arg)
 	internal.JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) roleInfoV1(c *gin.Context) {
 	id, _ := c.GetQuery("id")
-	reply, err := global.Srv.GetRoleV1(c, utils.GetInt(id))
+	reply, err := service.Srv.GetRoleV1(c, utils.GetInt(id))
 	internal.JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) permissionAll(c *gin.Context) {
-	reply, err := global.Srv.FindAllPermission(c)
+	reply, err := service.Srv.FindAllPermission(c)
 	internal.JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) menuAll(c *gin.Context) {
-	reply, err := global.Srv.FindAllMenu(c)
+	reply, err := service.Srv.FindAllMenu(c)
 	internal.JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) operationAll(c *gin.Context) {
-	reply, err := global.Srv.FindAllOperation(c)
+	reply, err := service.Srv.FindAllOperation(c)
 	internal.JSON(c, reply, err)
 }
 
@@ -233,7 +233,7 @@ func (_this *ApiAuth) updateRole(c *gin.Context) {
 	arg.Name = name
 	arg.Permissions = r
 	fmt.Println(id, name, r)
-	internal.JSON(c, nil, global.Srv.UpdateRole(c, arg, filed))
+	internal.JSON(c, nil, service.Srv.UpdateRole(c, arg, filed))
 }
 
 func (_this *ApiAuth) addRole(c *gin.Context) {
@@ -248,7 +248,7 @@ func (_this *ApiAuth) addRole(c *gin.Context) {
 	}
 	arg.Name = name
 	arg.Permissions = r
-	internal.JSON(c, nil, global.Srv.AddRole(c, arg))
+	internal.JSON(c, nil, service.Srv.AddRole(c, arg))
 }
 
 func (_this *ApiAuth) deleteRole(c *gin.Context) {
@@ -258,7 +258,7 @@ func (_this *ApiAuth) deleteRole(c *gin.Context) {
 		return
 	}
 
-	internal.JSON(c, nil, global.Srv.DeleteRole(c, utils.GetInt(id)))
+	internal.JSON(c, nil, service.Srv.DeleteRole(c, utils.GetInt(id)))
 }
 
 // 权限
@@ -278,7 +278,7 @@ func (_this *ApiAuth) permissionPages(c *gin.Context) {
 	arg.Size = utils.GetInt(size)
 
 	arg.Verify()
-	reply, err := global.Srv.FindPermissionPage(c, arg)
+	reply, err := service.Srv.FindPermissionPage(c, arg)
 	internal.JSON(c, reply, err)
 }
 
@@ -290,7 +290,7 @@ func (_this *ApiAuth) addPermission(c *gin.Context) {
 	}
 
 	arg.Name = name
-	internal.JSON(c, nil, global.Srv.AddPermission(c, arg))
+	internal.JSON(c, nil, service.Srv.AddPermission(c, arg))
 }
 
 func (_this *ApiAuth) updatePermission(c *gin.Context) {
@@ -325,7 +325,7 @@ func (_this *ApiAuth) updatePermission(c *gin.Context) {
 	arg.Name = name
 	arg.Menus = ms
 	arg.Operation = ops
-	internal.JSON(c, nil, global.Srv.UpdatePermission(c, arg, filed))
+	internal.JSON(c, nil, service.Srv.UpdatePermission(c, arg, filed))
 }
 
 func (_this *ApiAuth) deletePermission(c *gin.Context) {
@@ -335,7 +335,7 @@ func (_this *ApiAuth) deletePermission(c *gin.Context) {
 		return
 	}
 
-	internal.JSON(c, nil, global.Srv.DeletePermission(c, utils.GetInt(id)))
+	internal.JSON(c, nil, service.Srv.DeletePermission(c, utils.GetInt(id)))
 }
 
 func (_this *ApiAuth) findPermissionMenu(c *gin.Context) {
@@ -343,7 +343,7 @@ func (_this *ApiAuth) findPermissionMenu(c *gin.Context) {
 	req := &model.FindPermissionMenuReq{}
 	req.PermissionId = utils.GetInt(id)
 
-	reply, err := global.Srv.FindPermissionMenu(c, req)
+	reply, err := service.Srv.FindPermissionMenu(c, req)
 	internal.JSON(c, reply, err)
 }
 
@@ -352,7 +352,7 @@ func (_this *ApiAuth) findPermissionOperation(c *gin.Context) {
 	req := &model.FindPermissionOperationReq{}
 	req.PermissionId = utils.GetInt(id)
 
-	reply, err := global.Srv.FindPermissionOperation(c, req)
+	reply, err := service.Srv.FindPermissionOperation(c, req)
 	internal.JSON(c, reply, err)
 }
 
@@ -370,7 +370,7 @@ func (_this *ApiAuth) addMenu(c *gin.Context) {
 	arg.Url = url
 	arg.IndexSort = utils.GetInt(indexSort)
 
-	internal.JSON(c, nil, global.Srv.AddMenu(c, arg))
+	internal.JSON(c, nil, service.Srv.AddMenu(c, arg))
 }
 
 func (_this *ApiAuth) updateMenu(c *gin.Context) {
@@ -409,7 +409,7 @@ func (_this *ApiAuth) updateMenu(c *gin.Context) {
 	arg.Url = url
 	arg.IndexSort = utils.GetInt(indexSort)
 
-	internal.JSON(c, nil, global.Srv.UpdateMenu(c, arg, filed))
+	internal.JSON(c, nil, service.Srv.UpdateMenu(c, arg, filed))
 }
 
 func (_this *ApiAuth) deleteMenu(c *gin.Context) {
@@ -419,7 +419,7 @@ func (_this *ApiAuth) deleteMenu(c *gin.Context) {
 		return
 	}
 
-	internal.JSON(c, nil, global.Srv.DeleteMenu(c, utils.GetInt(id)))
+	internal.JSON(c, nil, service.Srv.DeleteMenu(c, utils.GetInt(id)))
 }
 
 func (_this *ApiAuth) addOperation(c *gin.Context) {
@@ -436,7 +436,7 @@ func (_this *ApiAuth) addOperation(c *gin.Context) {
 	arg.Url = url
 	arg.Method = method
 
-	internal.JSON(c, nil, global.Srv.AddOperation(c, arg))
+	internal.JSON(c, nil, service.Srv.AddOperation(c, arg))
 }
 
 func (_this *ApiAuth) deleteOperation(c *gin.Context) {
@@ -446,7 +446,7 @@ func (_this *ApiAuth) deleteOperation(c *gin.Context) {
 		return
 	}
 
-	internal.JSON(c, nil, global.Srv.DeleteOperation(c, utils.GetInt(id)))
+	internal.JSON(c, nil, service.Srv.DeleteOperation(c, utils.GetInt(id)))
 }
 
 func (_this *ApiAuth) updateOperation(c *gin.Context) {
@@ -485,7 +485,7 @@ func (_this *ApiAuth) updateOperation(c *gin.Context) {
 	arg.Url = url
 	arg.Method = method
 
-	internal.JSON(c, nil, global.Srv.UpdateOperation(c, arg, filed))
+	internal.JSON(c, nil, service.Srv.UpdateOperation(c, arg, filed))
 }
 
 func (_this *ApiAuth) logLogin(c *gin.Context) {
@@ -511,7 +511,7 @@ func (_this *ApiAuth) logLogin(c *gin.Context) {
 	arg.Size = utils.GetInt(size)
 
 	arg.Verify()
-	reply, err := global.Srv.FindAdminLoginPage(c, arg)
+	reply, err := service.Srv.FindAdminLoginPage(c, arg)
 	internal.JSON(c, reply, err)
 }
 
@@ -538,6 +538,6 @@ func (_this *ApiAuth) logOperation(c *gin.Context) {
 	arg.Size = utils.GetInt(size)
 
 	arg.Verify()
-	reply, err := global.Srv.PageFindLogAdminOperation(c, arg)
+	reply, err := service.Srv.PageFindLogAdminOperation(c, arg)
 	internal.JSON(c, reply, err)
 }

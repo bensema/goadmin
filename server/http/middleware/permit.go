@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"github.com/bensema/goadmin/global"
+	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/server/http/internal"
-	"github.com/bensema/library/ecode"
+	"github.com/bensema/goadmin/service"
 	"github.com/gin-gonic/gin"
+	"library/ecode"
 	"net/http"
 )
 
@@ -18,7 +19,8 @@ func PermitWeb() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		adminSession, err := global.Srv.GetAdminSessionCache(c, sid)
+		adminSession := &model.AdminSession{}
+		err = service.Srv.GetAdminSessionCache(c, sid, adminSession)
 		if err != nil {
 			err = ecode.AccessTokenExpires
 			c.Redirect(http.StatusFound, "/login")
@@ -31,7 +33,7 @@ func PermitWeb() gin.HandlerFunc {
 			return
 		}
 
-		err = global.Srv.PermitWeb(c, adminSession.AdminId)
+		err = service.Srv.PermitWeb(c, adminSession.AdminId)
 		if err != nil {
 			c.Redirect(http.StatusFound, "/403")
 			c.Abort()
@@ -51,7 +53,8 @@ func PermitApi() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		adminSession, err := global.Srv.GetAdminSessionCache(c, sid)
+		adminSession := &model.AdminSession{}
+		err = service.Srv.GetAdminSessionCache(c, sid, adminSession)
 		if err != nil {
 			err = ecode.AccessTokenExpires
 			internal.JSON(c, nil, err)
@@ -65,7 +68,7 @@ func PermitApi() gin.HandlerFunc {
 			return
 		}
 
-		err = global.Srv.PermitAPI(c, adminSession.AdminId)
+		err = service.Srv.PermitAPI(c, adminSession.AdminId)
 		if err != nil {
 			internal.JSON(c, nil, err)
 			c.Abort()

@@ -534,10 +534,10 @@ layui.config({
         var editStr = "<span class='layui-badge-rim'>" +  treeNode.id + "</span>" +"<span id='diyBtn_space_" +treeNode.id+ "' >" + treeNode.url + "</span>"
             +'<button class=" list_button button3"  id="do_delete" >删除</button>'
         if(treeNode.permission_type==="menu"){
-            editStr += '<button class=" list_button button2" id="do_edit_menu">编辑菜单</button>'
+            editStr += '<button class=" list_button button1" id="do_edit_menu">编辑菜单</button>'
         }
         if(treeNode.permission_type==="operation"){
-            editStr += '<button class=" list_button button2" id="do_edit_operation">编辑API</button>'
+            editStr += '<button class=" list_button button1" id="do_edit_operation">编辑API</button>'
         }
         aObj.append(editStr);
     };

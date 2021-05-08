@@ -28,8 +28,7 @@ layui.config({
         elem: '#LAY-app-content-list'
         ,url: layui.goadmin.api_role_page_url
         ,cols: [[
-          {type: 'checkbox', fixed: 'left'}
-          ,{field: 'id', width: 100, title: '角色ID', sort: true, align: 'center'}
+          {field: 'id', width: 100, title: '角色ID', align: 'center'}
           ,{field: 'name', title: '角色', align: 'center'}
           ,{field: 'permissions', title: '权限', templet: permissions, align: 'center'}
           ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#table-content-list'}
