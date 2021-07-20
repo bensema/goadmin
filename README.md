@@ -23,5 +23,5 @@ $ cd goadmin
 $ cd cmd
 $ go run main.go -c goadmin.toml
 ```
-访问：[http://127.0.0.1:8890](http://127.0.0.1:8890)
+访问：[http://127.0.0.1:8890](http://127.0.0.1:8890) 账户:root 密码:mozi123
 
