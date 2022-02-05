@@ -69,7 +69,7 @@ layui.config({
         ,cols: [[
           {field: 'id', width: 100, title: '编号', align: 'center'}
           ,{field: 'name', title: '账户', minWidth: 100, align: 'center'}
-          ,{field: 'operation_name', title: '操作', align: 'center'}
+          ,{field: 'operation_code', title: '操作', align: 'center'}
           ,{field: 'content', title: '内容', align: 'center'}
           ,{field: 'ip', title: 'IP', align: 'center'}
           ,{field: 'result', title: '状态', templet: result, align: 'center'}

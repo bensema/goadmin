@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bensema/gcurd"
-	"github.com/bensema/goadmin/dao"
 	"github.com/bensema/goadmin/model"
 	"github.com/bensema/goadmin/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/mssola/user_agent"
 	"library/ecode"
+	"library/xtime"
 	"time"
 )
 
@@ -26,7 +26,7 @@ func (s *Service) AdminLogin(c *gin.Context, username string, password string) (
 	}
 	adminSessionKey := utils.RandomString(40)
 	adminSession := model.AdminSession{
-		AdminId: au.AdminId,
+		AdminId: au.Id,
 		Name:    au.Name,
 	}
 	err = s.SetAdminSessionCache(c, adminSessionKey, &adminSession)
@@ -34,7 +34,7 @@ func (s *Service) AdminLogin(c *gin.Context, username string, password string) (
 	ua := user_agent.New(c.Request.UserAgent())
 	b1, bv := ua.Browser()
 	loginLog := &model.LogAdminLogin{
-		AdminId:   au.AdminId,
+		AdminId:   au.Id,
 		Name:      au.Name,
 		Location:  fmt.Sprintf("%s %s", ipInfo.Province, ipInfo.City),
 		Os:        ua.OS(),
@@ -43,16 +43,15 @@ func (s *Service) AdminLogin(c *gin.Context, username string, password string) (
 		Url:       c.FullPath(),
 		Result:    1,
 		Ip:        c.ClientIP(),
-		RecordAt:  time.Now(),
+		RecordAt:  xtime.Time(time.Now().Unix()),
 		Remark:    "",
 	}
 	_, _ = s.dao.CreateLogAdminLogin(c, loginLog)
 	return adminSessionKey, err
 }
 
-func (s *Service) FindAdminMenu(c *gin.Context, adminId string) ([]*model.Menu, error) {
+func (s *Service) FindAdminMenu(c *gin.Context, adminId int) ([]*model.Menu, error) {
 	var res []*model.Menu
-	temp := map[int]struct{}{}
 	adminRoles, err := s.dao.FindAdminRole(c, []*gcurd.WhereValue{gcurd.EQ("admin_id", adminId)})
 	if err != nil {
 		return nil, err
@@ -63,18 +62,11 @@ func (s *Service) FindAdminMenu(c *gin.Context, adminId string) ([]*model.Menu, 
 			continue
 		}
 		for _, roleMenu := range roleMenus {
-
-			obj := &model.Menu{}
-			menu, err := dao.Get(c, s.dao.DB(), obj, roleMenu.Id)
+			menu, err := s.dao.GetMenu(c, roleMenu.MenuId)
 			if err != nil {
 				continue
 			}
-			//去重
-			if _, ok := temp[menu.Id]; !ok {
-				temp[menu.Id] = struct{}{}
-				res = append(res, menu)
-			}
-
+			res = append(res, menu)
 		}
 	}
 	return res, err
@@ -96,7 +88,7 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *mo
 	}
 	for _, d := range dataTmp {
 		var rls []*model.Role
-		adminRoles, _ := s.dao.FindAdminRole(c, []*gcurd.WhereValue{gcurd.EQ("admin_id", d.AdminId)})
+		adminRoles, _ := s.dao.FindAdminRole(c, []*gcurd.WhereValue{gcurd.EQ("admin_id", d.Id)})
 
 		for _, adminRole := range adminRoles {
 			roles, _ := s.dao.FindRole(c, []*gcurd.WhereValue{gcurd.EQ("id", adminRole.RoleId)})
@@ -106,7 +98,7 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *mo
 		}
 
 		data = append(data, &model.AdminV1{
-			AdminId:   d.AdminId,
+			AdminId:   d.Id,
 			Name:      d.Name,
 			Status:    d.Status,
 			CreatedAt: d.CreatedAt,
@@ -123,7 +115,7 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *mo
 }
 
 // GetAdminV1 获取管理员信息过滤密码，添加角色
-func (s *Service) GetAdminV1(c *gin.Context, adminId string) (*model.AdminV1, error) {
+func (s *Service) GetAdminV1(c *gin.Context, adminId int) (*model.AdminV1, error) {
 	var data *model.AdminV1
 	dataTmp, err := s.dao.GetAdminByAdminId(c, adminId)
 	if err == sql.ErrNoRows {
@@ -145,7 +137,7 @@ func (s *Service) GetAdminV1(c *gin.Context, adminId string) (*model.AdminV1, er
 	}
 
 	data = &model.AdminV1{
-		AdminId:   dataTmp.AdminId,
+		AdminId:   dataTmp.Id,
 		Name:      dataTmp.Name,
 		Status:    dataTmp.Status,
 		CreatedAt: dataTmp.CreatedAt,
@@ -202,10 +194,7 @@ func (s *Service) UpdateAdminv1(c *gin.Context, info *model.UpdateAdmin, filed [
 
 }
 
-func (s *Service) DeleteAdminv1(c *gin.Context, adminId string) error {
-	if adminId == "0" || adminId == "1" || adminId == "" {
-		return errors.New("权限不足")
-	}
+func (s *Service) DeleteAdminv1(c *gin.Context, adminId int) error {
 
 	var content string
 	aInfo, err := s.dao.GetAdminByAdminId(c, adminId)
@@ -229,7 +218,7 @@ func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
 	}
 
 	user := &model.Admin{}
-	aInfo, err := s.dao.GetAdminByName(c, info.Name)
+	_, err := s.dao.GetAdminByName(c, info.Name)
 	if err != sql.ErrNoRows {
 		return errors.New("账户已存在")
 	}
@@ -239,28 +228,29 @@ func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
 		return ecode.PasswordEncodeErr
 	}
 
-	user.AdminId = utils.RandInt(7)
+	//user.AdminId = utils.RandInt(7)
 	user.Name = info.Name
 	user.Password = hashPwd
 	user.Status = info.Status
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
-	_, err = s.dao.CreateAdmin(c, user)
+	user.CreatedAt = xtime.Time(time.Now().Unix())
+	user.UpdatedAt = xtime.Time(time.Now().Unix())
+	res, err := s.dao.CreateAdmin(c, user)
 	if err != nil {
 		return err
 	}
+	id, _ := res.LastInsertId()
 	uInfo, err := s.dao.GetAdminByName(c, info.Name)
 	if err != nil {
 		return err
 	}
 	for _, role := range info.Roles {
 		_, _ = s.dao.CreateAdminRole(c, &model.AdminRole{
-			AdminId: uInfo.AdminId,
+			AdminId: uInfo.Id,
 			RoleId:  role,
 		})
 	}
 
-	cc := fmt.Sprintf("添加管理员:账户:%s;账户编号:%d;", aInfo.Name, aInfo.Id)
+	cc := fmt.Sprintf("添加管理员:账户:%s;账户编号:%d;", info.Name, id)
 	return s.logAction(c, "add_admin", cc, 1)
 }
 

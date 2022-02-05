@@ -9,7 +9,7 @@ import (
 	"library/ecode"
 )
 
-func (s *Service) PermitAPI(c *gin.Context, adminId string) error {
+func (s *Service) PermitAPI(c *gin.Context, adminId int) error {
 	url := c.FullPath()
 	api, err := s.dao.GetApiByUrl(c, url)
 	if err != nil {
@@ -42,7 +42,7 @@ func (s *Service) PermitAPI(c *gin.Context, adminId string) error {
 	return ecode.AccessDenied
 }
 
-func (s *Service) PermitWeb(c *gin.Context, adminId string) error {
+func (s *Service) PermitWeb(c *gin.Context, adminId int) error {
 	url := c.FullPath()
 	menu, err := s.dao.GetMenuByUrl(c, url)
 	if err != nil {

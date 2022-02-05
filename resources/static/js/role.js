@@ -12,17 +12,6 @@ layui.config({
       ,layer = layui.layer;
 
 
-      function permissions(d) {
-        text = '<div class="layui-btn-group">'
-        if (d.permissions !== undefined && d.permissions !== null && d.permissions.length > 0) {
-            for (const item of d.permissions) {
-                text += '<button class="layui-btn layui-btn-xs">'+item.name+'</button>'
-            }
-        }
-        text += '</div>'
-        return text
-      }
-
       //文章管理
       table.render({
         elem: '#LAY-app-content-list'
@@ -30,7 +19,6 @@ layui.config({
         ,cols: [[
           {field: 'id', width: 100, title: '角色ID', align: 'center'}
           ,{field: 'name', title: '角色', align: 'center'}
-          ,{field: 'permissions', title: '权限', templet: permissions, align: 'center'}
           ,{title: '操作', minWidth: 150, align: 'center', fixed: 'right', toolbar: '#table-content-list'}
         ]]
         ,page: true

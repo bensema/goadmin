@@ -1,8 +1,8 @@
 # This is a TOML document. Boom.
 
 [mysql]
-	dsn = "root:123456@tcp(127.0.0.1:3306)/goadmin?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
-	readDSN = ["root:123456@tcp(127.0.0.1:3306)/goadmin?timeout=2000ms&readTimeout=2000ms&writeTimeout=2000ms&parseTime=true&loc=Local&charset=utf8,utf8mb4"]
+	dsn = "root:123456@tcp(127.0.0.1:3306)/goadmin?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Asia%2FShanghai&charset=utf8,utf8mb4"
+	readDSN = ["root:123456@tcp(127.0.0.1:3306)/goadmin?timeout=2000ms&readTimeout=2000ms&writeTimeout=2000ms&parseTime=true&loc=Asia%2FShanghai&charset=utf8,utf8mb4"]
 	active = 20
 	idle = 10
 	idleTimeout = 3600

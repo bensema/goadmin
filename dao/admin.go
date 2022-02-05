@@ -20,28 +20,28 @@ func (d *Dao) GetAdminByName(c *gin.Context, name string) (*model.Admin, error) 
 	return GetWhere(c, d.db, obj, wvs)
 }
 
-func (d *Dao) GetAdminByAdminId(c *gin.Context, adminId string) (*model.Admin, error) {
+func (d *Dao) GetAdminByAdminId(c *gin.Context, adminId int) (*model.Admin, error) {
 	obj := &model.Admin{}
 	var wvs []*gcurd.WhereValue
 	wvs = append(wvs, gcurd.EQ("admin_id", adminId))
 	return GetWhere(c, d.db, obj, wvs)
 }
 
-func (d *Dao) UpdateAdminByAdminId(c *gin.Context, adminId string, key string, value interface{}) error {
+func (d *Dao) UpdateAdminByAdminId(c *gin.Context, adminId int, key string, value interface{}) error {
 	obj := &model.Admin{}
 	var wvs []*gcurd.WhereValue
 	wvs = append(wvs, gcurd.EQ("admin_id", adminId))
 	return UpdateWhere(c, d.db, obj, key, value, wvs)
 }
 
-func (d *Dao) DeleteAdminByAdminId(c *gin.Context, adminId string) error {
+func (d *Dao) DeleteAdminByAdminId(c *gin.Context, adminId int) error {
 	obj := &model.Admin{}
 	var wvs []*gcurd.WhereValue
 	wvs = append(wvs, gcurd.EQ("admin_id", adminId))
 	return gcurd.DeleteWhere(c, d.db, obj, wvs)
 }
 
-func (d *Dao) DeleteAdminRoleByAdminId(c *gin.Context, adminId string) error {
+func (d *Dao) DeleteAdminRoleByAdminId(c *gin.Context, adminId int) error {
 	obj := &model.AdminRole{}
 	var wvs []*gcurd.WhereValue
 	wvs = append(wvs, gcurd.EQ("admin_id", adminId))

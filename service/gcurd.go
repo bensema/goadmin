@@ -9,6 +9,7 @@ import (
 	"github.com/bensema/goadmin/utils"
 	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
+	"library/xtime"
 	"time"
 )
 
@@ -16,6 +17,7 @@ func gPage[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, req *gcurd.Request,
 
 	var count int
 	var objs []T
+	reply = &model.PageReply[T]{}
 
 	if count, err = dao.PageTotal(c, db, obj, req); err != nil {
 		return
@@ -29,7 +31,6 @@ func gPage[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, req *gcurd.Request,
 		return
 	}
 
-	reply = &model.PageReply[T]{}
 	reply.Data = objs
 	reply.Total = count
 	reply.Num = req.Pagination.Num
@@ -112,13 +113,13 @@ func logAction(c *gin.Context, db *sql.DB, opCode string, content string, result
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.AdminId,
+		AdminId:       operatorInfo.Id,
 		Name:          operatorInfo.Name,
 		OperationCode: opCode,
 		Content:       content,
 		Result:        result,
 		Ip:            c.ClientIP(),
-		RecordAt:      time.Now(),
+		RecordAt:      xtime.Time(time.Now().Unix()),
 	}
 	_, err = dao.Create(c, db, recordLog)
 	return err

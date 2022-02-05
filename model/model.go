@@ -1,17 +1,16 @@
 package model
 
 import (
-	"time"
+	"library/xtime"
 )
 
 type Admin struct {
-	Id        int       `json:"id"`         // 自增编号
-	AdminId   string    `json:"admin_id"`   // 管理员编号
-	Name      string    `json:"name"`       // 管理员
-	Password  string    `json:"password"`   // 密码
-	Status    int       `json:"status"`     // 1:正常;2:禁用
-	CreatedAt time.Time `json:"created_at"` // 创建时间
-	UpdatedAt time.Time `json:"updated_at"` // 修改时间
+	Id        int        `json:"id"`         // 自增编号
+	Name      string     `json:"name"`       // 管理员
+	Password  string     `json:"password"`   // 密码
+	Status    int        `json:"status"`     // 1:正常;2:禁用
+	CreatedAt xtime.Time `json:"created_at"` // 创建时间
+	UpdatedAt xtime.Time `json:"updated_at"` // 修改时间
 }
 
 func (m *Admin) Table() string {
@@ -27,11 +26,11 @@ func (m *Admin) GetID() int {
 }
 
 func (m *Admin) Columns() []string {
-	return []string{"id", "admin_id", "name", "password", "status", "created_at", "updated_at"}
+	return []string{"id", "name", "password", "status", "created_at", "updated_at"}
 }
 
 func (m *Admin) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.Password, &m.Status, &m.CreatedAt, &m.UpdatedAt}
+	return []interface{}{&m.Id, &m.Name, &m.Password, &m.Status, &m.CreatedAt, &m.UpdatedAt}
 }
 
 func (Admin) New() *Admin {
@@ -39,9 +38,9 @@ func (Admin) New() *Admin {
 }
 
 type AdminRole struct {
-	Id      int    `json:"id"`       // 编号
-	AdminId string `json:"admin_id"` // 账户编号
-	RoleId  int    `json:"role_id"`  // 角色编号
+	Id      int `json:"id"`       // 编号
+	AdminId int `json:"admin_id"` // 账户编号
+	RoleId  int `json:"role_id"`  // 角色编号
 }
 
 func (m *AdminRole) Table() string {
@@ -102,18 +101,18 @@ func (Api) New() *Api {
 }
 
 type LogAdminLogin struct {
-	Id        int       `json:"id"`         // 自增编号
-	AdminId   string    `json:"admin_id"`   // 管理员编号
-	Name      string    `json:"name"`       // 管理员名
-	Location  string    `json:"location"`   // 位置
-	Os        string    `json:"os"`         // 操作系统
-	Browser   string    `json:"browser"`    // 浏览器
-	UserAgent string    `json:"user_agent"` // 浏览器详情
-	Url       string    `json:"url"`        // url
-	Result    int       `json:"result"`     // 2:失败;1:成功
-	Ip        string    `json:"ip"`         // IP
-	RecordAt  time.Time `json:"record_at"`  // 记录时间
-	Remark    string    `json:"remark"`     // 备注
+	Id        int        `json:"id"`         // 自增编号
+	AdminId   int        `json:"admin_id"`   // 管理员编号
+	Name      string     `json:"name"`       // 管理员名
+	Location  string     `json:"location"`   // 位置
+	Os        string     `json:"os"`         // 操作系统
+	Browser   string     `json:"browser"`    // 浏览器
+	UserAgent string     `json:"user_agent"` // 浏览器详情
+	Url       string     `json:"url"`        // url
+	Result    int        `json:"result"`     // 2:失败;1:成功
+	Ip        string     `json:"ip"`         // IP
+	RecordAt  xtime.Time `json:"record_at"`  // 记录时间
+	Remark    string     `json:"remark"`     // 备注
 }
 
 func (m *LogAdminLogin) Table() string {
@@ -141,16 +140,16 @@ func (LogAdminLogin) New() *LogAdminLogin {
 }
 
 type LogAdminOperation struct {
-	Id            int       `json:"id"`             // 操作编号
-	AdminId       string    `json:"admin_id"`       // 管理员编号
-	Name          string    `json:"name"`           // 账户
-	OperationCode string    `json:"operation_code"` // 行为编号
-	OperationName string    `json:"operation_name"` // 行为
-	Content       string    `json:"content"`        // 操作内容
-	Result        int       `json:"result"`         // 操作结果1:成功；2:失败
-	Message       string    `json:"message"`        // 操作消息
-	Ip            string    `json:"ip"`             // 操作IP
-	RecordAt      time.Time `json:"record_at"`      // 操作时间
+	Id            int        `json:"id"`             // 操作编号
+	AdminId       int        `json:"admin_id"`       // 管理员编号
+	Name          string     `json:"name"`           // 账户
+	OperationCode string     `json:"operation_code"` // 行为编号
+	OperationName string     `json:"operation_name"` // 行为
+	Content       string     `json:"content"`        // 操作内容
+	Result        int        `json:"result"`         // 操作结果1:成功；2:失败
+	Message       string     `json:"message"`        // 操作消息
+	Ip            string     `json:"ip"`             // 操作IP
+	RecordAt      xtime.Time `json:"record_at"`      // 操作时间
 }
 
 func (m *LogAdminOperation) Table() string {

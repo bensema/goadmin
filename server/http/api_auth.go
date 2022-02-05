@@ -8,6 +8,7 @@ import (
 	"github.com/bensema/goadmin/utils"
 	"github.com/gin-gonic/gin"
 	"library/ecode"
+	"library/xtime"
 	"strings"
 )
 
@@ -85,7 +86,7 @@ func (_this *ApiAuth) adminPagesV1(c *gin.Context) {
 
 func (_this *ApiAuth) adminInfoV1(c *gin.Context) {
 	adminId, _ := c.GetQuery("admin_id")
-	reply, err := srv.GetAdminV1(c, adminId)
+	reply, err := srv.GetAdminV1(c, utils.GetInt(adminId))
 	JSON(c, reply, err)
 }
 
@@ -111,7 +112,7 @@ func (_this *ApiAuth) updateAdmin(c *gin.Context) {
 		JSON(c, nil, err)
 		return
 	}
-	arg.AdminId = adminId
+	arg.AdminId = utils.GetInt(adminId)
 	arg.Status = utils.GetInt(status)
 	arg.Roles = r
 
@@ -130,7 +131,7 @@ func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
 		return
 	}
 
-	JSON(c, nil, srv.DeleteAdminv1(c, adminId))
+	JSON(c, nil, srv.DeleteAdminv1(c, utils.GetInt(adminId)))
 }
 
 func (_this *ApiAuth) addAdmin(c *gin.Context) {
@@ -367,20 +368,20 @@ func (_this *ApiAuth) logLogin(c *gin.Context) {
 	req := &gcurd.Request{}
 	req = prepareReq(c, req)
 
-	if name, b := c.GetQuery("name"); b {
+	if name, b := c.GetQuery("name"); b && name != "" {
 		req.Where = append(req.Where, gcurd.EQ("name", name))
 	}
-	if ip, b := c.GetQuery("ip"); b {
+	if ip, b := c.GetQuery("ip"); b && ip != "" {
 		req.Where = append(req.Where, gcurd.EQ("ip", ip))
 	}
-	if result, b := c.GetQuery("result"); b {
+	if result, b := c.GetQuery("result"); b && result != "" {
 		req.Where = append(req.Where, gcurd.EQ("result", result))
 	}
-	if recordAtFrom, b := c.GetQuery("record_at_from"); b {
-		req.Where = append(req.Where, gcurd.GTE("record_at", recordAtFrom))
+	if recordAtFrom, b := c.GetQuery("record_at_from"); b && recordAtFrom != "" {
+		req.Where = append(req.Where, gcurd.GTE("record_at", xtime.Time(utils.GetInt64(recordAtFrom))))
 	}
-	if recordAtTo, b := c.GetQuery("record_at_from"); b {
-		req.Where = append(req.Where, gcurd.LT("record_at", recordAtTo))
+	if recordAtTo, b := c.GetQuery("record_at_to"); b && recordAtTo != "" {
+		req.Where = append(req.Where, gcurd.LT("record_at", xtime.Time(utils.GetInt64(recordAtTo))))
 	}
 
 	reply, err := srv.PageLogAdminLogin(c, req)
@@ -391,20 +392,20 @@ func (_this *ApiAuth) logAdminOperation(c *gin.Context) {
 	req := &gcurd.Request{}
 	req = prepareReq(c, req)
 
-	if name, b := c.GetQuery("name"); b {
+	if name, b := c.GetQuery("name"); b && name != "" {
 		req.Where = append(req.Where, gcurd.EQ("name", name))
 	}
-	if ip, b := c.GetQuery("ip"); b {
+	if ip, b := c.GetQuery("ip"); b && ip != "" {
 		req.Where = append(req.Where, gcurd.EQ("ip", ip))
 	}
-	if result, b := c.GetQuery("result"); b {
+	if result, b := c.GetQuery("result"); b && result != "" {
 		req.Where = append(req.Where, gcurd.EQ("result", result))
 	}
-	if recordAtFrom, b := c.GetQuery("record_at_from"); b {
-		req.Where = append(req.Where, gcurd.GTE("record_at", recordAtFrom))
+	if recordAtFrom, b := c.GetQuery("record_at_from"); b && recordAtFrom != "" {
+		req.Where = append(req.Where, gcurd.GTE("record_at", xtime.Time(utils.GetInt64(recordAtFrom))))
 	}
-	if recordAtTo, b := c.GetQuery("record_at_from"); b {
-		req.Where = append(req.Where, gcurd.LT("record_at", recordAtTo))
+	if recordAtTo, b := c.GetQuery("record_at_to"); b && recordAtTo != "" {
+		req.Where = append(req.Where, gcurd.LT("record_at", xtime.Time(utils.GetInt64(recordAtTo))))
 	}
 
 	reply, err := srv.PageLogAdminOperation(c, req)
