@@ -33,20 +33,14 @@ layui.config({
 
     //提交
     form.on('submit(LAY-user-login-submit)', function(obj){
-      cc = layui.data('crypto')
-      rsa =  cc.rsa
-      aes = cc.aes
-      var encrypt = new JSEncrypt();
-      encrypt.setPublicKey(rsa);
 
       var params = {}
       var data = {}
       data.Username = obj.field.username
       data.Password = obj.field.password
-      data.AesKey = aes
-      data.t = new Date().getTime()
       params.vercode = obj.field.vercode
-      params.data = encrypt.encrypt(JSON.stringify(data));
+      params.username = obj.field.username;
+      params.password = obj.field.password;
 
       //请求登入接口
       layui.goadmin.req({

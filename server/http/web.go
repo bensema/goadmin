@@ -1,8 +1,6 @@
-package controller
+package http
 
 import (
-	"github.com/bensema/goadmin/server/http/internal"
-	"github.com/bensema/goadmin/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -38,7 +36,7 @@ func (_this *HtmlWeb) RegisterRoute(g *gin.RouterGroup) {
 }
 
 func (_this *HtmlWeb) login(c *gin.Context) {
-	_, err := c.Cookie(internal.AdminSession)
+	_, err := c.Cookie(AdminSession)
 	if err != nil {
 		c.HTML(http.StatusOK, "base/login.html", gin.H{})
 	} else {
@@ -47,11 +45,11 @@ func (_this *HtmlWeb) login(c *gin.Context) {
 }
 
 func (_this *HtmlWeb) logout(c *gin.Context) {
-	adminSession, err := c.Cookie(internal.AdminSession)
+	adminSession, err := c.Cookie(AdminSession)
 	if err != nil {
 	} else {
-		c.SetCookie(internal.AdminSession, "", -1, "/", "", false, true)
-		service.Srv.DeleteAdminSessionCache(c, adminSession)
+		c.SetCookie(AdminSession, "", -1, "/", "", false, true)
+		srv.DeleteAdminSessionCache(c, adminSession)
 	}
 	c.Redirect(http.StatusFound, "/login")
 }

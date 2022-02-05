@@ -1,8 +1,7 @@
-package controller
+package http
 
 import (
 	"fmt"
-	"github.com/bensema/goadmin/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,8 +24,9 @@ func (_this *HtmlWebAuth) RegisterRoute(g *gin.RouterGroup) {
 }
 
 func (_this *HtmlWebAuth) index(c *gin.Context) {
-	operatorInfo, _ := service.Srv.GetAdminFromContext(c)
-	c.HTML(http.StatusOK, "base/index.html", gin.H{"name": operatorInfo.Name})
+	//operatorInfo, _ := service.GetAdminFromContext(c)
+	//c.HTML(http.StatusOK, "base/index.html", gin.H{"name": operatorInfo.Name})
+	c.HTML(http.StatusOK, "base/index.html", gin.H{"name": "todo"})
 }
 
 func (_this *HtmlWebAuth) logLogin(c *gin.Context) {

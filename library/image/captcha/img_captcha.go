@@ -156,7 +156,8 @@ func (c *imgCaptcha) drawNoises(img *Image) {
 func (c *imgCaptcha) drawString(img *Image, str string) {
 
 	if c.fonts == nil {
-		panic("没有设置任何字体")
+		return
+		//panic("没有设置任何字体")
 	}
 	tmp := NewImage(c.size.X, c.size.Y)
 

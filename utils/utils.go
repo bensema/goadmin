@@ -43,16 +43,7 @@ func CheckPasswordLegal(password string) (err error) {
 	return
 }
 
-func CheckInStr(dis []string, k string) bool {
-	for i, _ := range dis {
-		if dis[i] == k {
-			return true
-		}
-	}
-	return false
-}
-
-func CheckInInt(dis []int, k int) bool {
+func CheckIn[T comparable](dis []T, k T) bool {
 	for i, _ := range dis {
 		if dis[i] == k {
 			return true

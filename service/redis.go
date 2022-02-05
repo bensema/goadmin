@@ -17,11 +17,11 @@ func (s *Service) SetCacheObj(c *gin.Context, key string, obj interface{}, expir
 	if err != nil {
 		return err
 	}
-	return s.dao.Set(c, key, val, expiration)
+	return s.dao.RSet(c, key, val, expiration)
 }
 
 func (s *Service) GetCacheObj(c *gin.Context, key string, obj interface{}) error {
-	objStr, err := s.dao.Get(c, key)
+	objStr, err := s.dao.RGet(c, key)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (s *Service) GetCacheObj(c *gin.Context, key string, obj interface{}) error
 }
 
 func (s *Service) DelCache(c *gin.Context, key string) error {
-	_, err := s.dao.Del(c, key)
+	_, err := s.dao.RDelete(c, key)
 	return err
 }
 

@@ -1,9 +1,7 @@
-package middleware
+package http
 
 import (
 	"github.com/bensema/goadmin/model"
-	"github.com/bensema/goadmin/server/http/internal"
-	"github.com/bensema/goadmin/service"
 	"github.com/gin-gonic/gin"
 	"library/ecode"
 	"net/http"
@@ -12,7 +10,7 @@ import (
 // 登陆
 func PermitWeb() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		sid, err := c.Cookie(internal.AdminSession)
+		sid, err := c.Cookie(AdminSession)
 		if err != nil {
 			err = ecode.NoLogin
 			c.Redirect(http.StatusFound, "/login")
@@ -20,7 +18,7 @@ func PermitWeb() gin.HandlerFunc {
 			return
 		}
 		adminSession := &model.AdminSession{}
-		err = service.Srv.GetAdminSessionCache(c, sid, adminSession)
+		err = srv.GetAdminSessionCache(c, sid, adminSession)
 		if err != nil {
 			err = ecode.AccessTokenExpires
 			c.Redirect(http.StatusFound, "/login")
@@ -28,12 +26,12 @@ func PermitWeb() gin.HandlerFunc {
 			return
 		}
 		// root无任何限制
-		if adminSession.Name == internal.Root {
+		if adminSession.Name == Root {
 			c.Next()
 			return
 		}
 
-		err = service.Srv.PermitWeb(c, adminSession.AdminId)
+		err = srv.PermitWeb(c, adminSession.AdminId)
 		if err != nil {
 			c.Redirect(http.StatusFound, "/403")
 			c.Abort()
@@ -46,31 +44,33 @@ func PermitWeb() gin.HandlerFunc {
 
 func PermitApi() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		sid, err := c.Cookie(internal.AdminSession)
+		sid, err := c.Cookie(AdminSession)
 		if err != nil {
 			err = ecode.NoLogin
-			internal.JSON(c, nil, err)
+			JSON(c, nil, err)
 			c.Abort()
 			return
 		}
 		adminSession := &model.AdminSession{}
-		err = service.Srv.GetAdminSessionCache(c, sid, adminSession)
+		err = srv.GetAdminSessionCache(c, sid, adminSession)
 		if err != nil {
 			err = ecode.AccessTokenExpires
-			internal.JSON(c, nil, err)
+			JSON(c, nil, err)
 			c.Abort()
 			return
 		}
+		c.Set("admin_id", adminSession.AdminId)
+		c.Set("admin_name", adminSession.Name)
 
 		// root无任何限制
-		if adminSession.Name == internal.Root {
+		if adminSession.Name == Root {
 			c.Next()
 			return
 		}
 
-		err = service.Srv.PermitAPI(c, adminSession.AdminId)
+		err = srv.PermitAPI(c, adminSession.AdminId)
 		if err != nil {
-			internal.JSON(c, nil, err)
+			JSON(c, nil, err)
 			c.Abort()
 			return
 		}

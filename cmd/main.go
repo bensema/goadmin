@@ -14,6 +14,10 @@ import (
 	"time"
 )
 
+var (
+	srv *service.Service
+)
+
 func init() {
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetOutput(os.Stdout)
@@ -32,7 +36,7 @@ func main() {
 	if err := config.Init(); err != nil {
 		panic(err)
 	}
-	srv := service.New(config.Conf)
+	srv = service.New(config.Conf)
 	log.Error("test")
 	http.Init(config.Conf, srv)
 	c := make(chan os.Signal, 1)

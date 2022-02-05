@@ -24,6 +24,10 @@ func New(c *config.Config) (d *Dao) {
 	return
 }
 
+func (d *Dao) DB() *sql.DB {
+	return d.db
+}
+
 func (d *Dao) Ping(c context.Context) (err error) {
 	err = d.db.Ping()
 	return

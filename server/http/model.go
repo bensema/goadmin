@@ -1,4 +1,4 @@
-package internal
+package http
 
 const (
 	AdminSession = "admin-session"

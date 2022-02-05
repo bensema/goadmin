@@ -9,8 +9,6 @@ import (
 	xip "library/net/ip"
 )
 
-var Srv *Service
-
 type Service struct {
 	conf      *config.Config
 	dao       *dao.Dao
@@ -36,20 +34,11 @@ func (s *Service) Close() {
 	// log.Info("Service Closed!")
 }
 
-func (s *Service) getAdminFromContext(c *gin.Context) (*model.Admin, error) {
-	sid, err := c.Cookie("admin-session")
-	if err != nil {
-		return nil, err
-	}
-	adminSession := &model.AdminSession{}
-
-	err = s.GetAdminSessionCache(c, sid, adminSession)
-	if err != nil {
-		return nil, err
-	}
-	return s.dao.GetAdminByAdminId(c, adminSession.AdminId)
-}
-
-func (s *Service) GetAdminFromContext(c *gin.Context) (*model.Admin, error) {
-	return s.getAdminFromContext(c)
+func GetAdminFromContext(c *gin.Context) (*model.Admin, error) {
+	id, _ := c.Get("admin_id")
+	name, _ := c.Get("admin_name")
+	var a = model.Admin{}
+	a.Id = id.(int)
+	a.Name = name.(string)
+	return &a, nil
 }

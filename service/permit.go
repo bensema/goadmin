@@ -1,6 +1,8 @@
 package service
 
 import (
+	"github.com/bensema/gcurd"
+	"github.com/bensema/goadmin/dao"
 	"github.com/bensema/goadmin/model"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -9,37 +11,31 @@ import (
 
 func (s *Service) PermitAPI(c *gin.Context, adminId string) error {
 	url := c.FullPath()
-	operation, err := s.dao.GetOperationByUrl(c, url)
+	api, err := s.dao.GetApiByUrl(c, url)
 	if err != nil {
 		log.Errorf(err.Error())
 		return ecode.AccessDenied
 	}
-	farr := &model.FindAdminRoleReq{}
-	farr.AdminId = adminId
-	admRoles, err := s.dao.FindAdminRole(c, farr)
+	var wvs []*gcurd.WhereValue
+	wvs = append(wvs, gcurd.EQ("admin_id", adminId))
+	obj := &model.AdminRole{}
+	admRoles, err := dao.Find(c, s.dao.DB(), obj, wvs, obj.New)
 	if err != nil {
-		log.Errorf(err.Error())
 		return ecode.AccessDenied
 	}
 
 	for _, admRole := range admRoles {
-		frpr := &model.FindRolePermissionReq{}
-		frpr.RoleId = admRole.RoleId
-		rolePermissions, err := s.dao.FindRolePermission(c, frpr)
+		var wvs []*gcurd.WhereValue
+		wvs = append(wvs, gcurd.EQ("role_id", admRole.RoleId))
+		wvs = append(wvs, gcurd.EQ("api_id", api.Id))
+		obj := &model.RoleApi{}
+		var roleApis []*model.RoleApi
+		roleApis, err = dao.Find(c, s.dao.DB(), obj, wvs, obj.New)
 		if err != nil {
 			continue
 		}
-		for _, rolePermission := range rolePermissions {
-			fpor := &model.FindPermissionOperationReq{}
-			fpor.PermissionId = rolePermission.PermissionId
-			fpor.OperationId = operation.Id
-			po, err := s.dao.FindPermissionOperation(c, fpor)
-			if err != nil {
-				continue
-			}
-			if len(po) > 0 {
-				return nil
-			}
+		if len(roleApis) > 0 {
+			return nil
 		}
 	}
 
@@ -53,32 +49,28 @@ func (s *Service) PermitWeb(c *gin.Context, adminId string) error {
 		log.Errorf(err.Error())
 		return ecode.AccessDenied
 	}
-	farr := &model.FindAdminRoleReq{}
-	farr.AdminId = adminId
-	admRoles, err := s.dao.FindAdminRole(c, farr)
+
+	var farr []*gcurd.WhereValue
+	farr = append(farr, gcurd.EQ("admin_id", adminId))
+
+	obj := &model.AdminRole{}
+	admRoles, err := dao.Find(c, s.dao.DB(), obj, farr, obj.New)
 	if err != nil {
 		log.Errorf(err.Error())
 		return ecode.AccessDenied
 	}
-
 	for _, admRole := range admRoles {
-		frpr := &model.FindRolePermissionReq{}
-		frpr.RoleId = admRole.RoleId
-		rolePermissions, err := s.dao.FindRolePermission(c, frpr)
+		var wvs []*gcurd.WhereValue
+		wvs = append(wvs, gcurd.EQ("role_id", admRole.RoleId))
+		wvs = append(wvs, gcurd.EQ("menu_id", menu.Id))
+		obj := &model.RoleMenu{}
+		var roleMenus []*model.RoleMenu
+		roleMenus, err = dao.Find(c, s.dao.DB(), obj, wvs, obj.New)
 		if err != nil {
 			continue
 		}
-		for _, rolePermission := range rolePermissions {
-			fpor := &model.FindPermissionMenuReq{}
-			fpor.PermissionId = rolePermission.PermissionId
-			fpor.MenuId = menu.Id
-			po, err := s.dao.FindPermissionMenu(c, fpor)
-			if err != nil {
-				continue
-			}
-			if len(po) > 0 {
-				return nil
-			}
+		if len(roleMenus) > 0 {
+			return nil
 		}
 	}
 
