@@ -1,7 +1,6 @@
 package http
 
 import (
-	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/model"
 	"github.com/gin-gonic/gin"
 	"image/gif"
@@ -13,18 +12,12 @@ import (
 type Api struct{}
 
 func (_this *Api) RegisterRoute(g *gin.RouterGroup) {
-	g.GET("/api/rsa", _this.rsa)
-	g.POST("/api/login", _this.login)
+	g.POST("/api/sign-in", _this.signIn)
 	g.GET("/api/captcha/img", _this.captchaImg)
 	g.GET("/api/captcha/gif", _this.captchaGif)
 }
 
-func (_this *Api) rsa(c *gin.Context) {
-	JSON(c, string(config.PublicKey), ecode.OK)
-	return
-}
-
-func (_this *Api) login(c *gin.Context) {
+func (_this *Api) signIn(c *gin.Context) {
 	//verCode := c.PostForm("vercode")
 	username := c.PostForm("username")
 	password := c.PostForm("password")

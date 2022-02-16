@@ -99,7 +99,6 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *mo
 			Roles:     rls,
 		})
 	}
-	reply = &model.PageReply[*model.AdminV1]{}
 	reply.Data = data
 	reply.Total = count
 	reply.Num = req.Pagination.Num
@@ -283,7 +282,6 @@ func (s *Service) FindRolePageV1(c *gin.Context, req *gcurd.Request) (reply *mod
 			Apis:  as,
 		})
 	}
-	reply = &model.PageReply[*model.RoleInfo]{}
 	reply.Data = data
 	reply.Total = count
 	reply.Num = req.Pagination.Num

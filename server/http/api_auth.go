@@ -15,36 +15,36 @@ import (
 type ApiAuth struct{}
 
 func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
-	g.GET("/api/v1/menu", _this.menu)                 // 获取菜单
-	g.GET("/api/v1/admin/pages", _this.adminPagesV1)  // 分页查询管理员
-	g.GET("/api/v1/admin/info", _this.adminInfoV1)    // 管理员信息
-	g.POST("/api/v1/admin/update", _this.updateAdmin) // 更新管理员 （管理员，角色）
-	g.POST("/api/v1/admin/delete", _this.deleteAdmin) // 删除管理员
-	g.POST("/api/v1/admin/add", _this.addAdmin)       // 添加管理员
+	g.GET("/api/menus", _this.menu)                // 获取菜单
+	g.GET("/api/admin/pages", _this.adminPagesV1)  // 分页查询管理员
+	g.GET("/api/admin/info", _this.adminInfoV1)    // 管理员信息
+	g.POST("/api/admin/update", _this.updateAdmin) // 更新管理员 （管理员，角色）
+	g.POST("/api/admin/delete", _this.deleteAdmin) // 删除管理员
+	g.POST("/api/admin/add", _this.addAdmin)       // 添加管理员
 
-	g.GET("/api/v1/role/pages", _this.rolePagesV1)  // 分页查询角色
-	g.GET("/api/v1/role/info", _this.roleInfoV1)    // 角色信息
-	g.POST("/api/v1/role/update", _this.updateRole) // 更新角色（角色，权限）
-	g.POST("/api/v1/role/add", _this.addRole)       // 添加角色
-	g.POST("/api/v1/role/delete", _this.deleteRole) // 删除角色
+	g.GET("/api/role/pages", _this.rolePagesV1)  // 分页查询角色
+	g.GET("/api/role/info", _this.roleInfoV1)    // 角色信息
+	g.POST("/api/role/update", _this.updateRole) // 更新角色（角色，权限）
+	g.POST("/api/role/add", _this.addRole)       // 添加角色
+	g.POST("/api/role/delete", _this.deleteRole) // 删除角色
 
-	g.GET("/api/v1/role_menu/find", _this.findRoleMenu) // 查询指定权限菜单
-	g.GET("/api/v1/role_api/find", _this.findRoleApi)   // 查询指定权限操作
+	g.GET("/api/role_menu/find", _this.findRoleMenu) // 查询指定权限菜单
+	g.GET("/api/role_api/find", _this.findRoleApi)   // 查询指定权限操作
 
-	g.POST("/api/v1/menu/add", _this.addMenu)       // 添加菜单
-	g.POST("/api/v1/menu/delete", _this.deleteMenu) // 删除菜单
-	g.POST("/api/v1/menu/update", _this.updateMenu) // 更新菜单
+	g.POST("/api/menu/add", _this.addMenu)       // 添加菜单
+	g.POST("/api/menu/delete", _this.deleteMenu) // 删除菜单
+	g.POST("/api/menu/update", _this.updateMenu) // 更新菜单
 
-	g.POST("/api/v1/api/add", _this.addApi)       // 添加操作功能
-	g.POST("/api/v1/api/delete", _this.deleteApi) // 删除操作功能
-	g.POST("/api/v1/api/update", _this.updateApi) // 更新操作功能
+	g.POST("/api/api/add", _this.addApi)       // 添加操作功能
+	g.POST("/api/api/delete", _this.deleteApi) // 删除操作功能
+	g.POST("/api/api/update", _this.updateApi) // 更新操作功能
 
-	g.GET("/api/v1/log_login/pages", _this.logLogin)              // 分页查询登录信息
-	g.GET("/api/v1/log_operation/pages", _this.logAdminOperation) // 分页查询操作记录
+	g.GET("/api/log_login/pages", _this.logLogin)              // 分页查询登录信息
+	g.GET("/api/log_operation/pages", _this.logAdminOperation) // 分页查询操作记录
 
-	g.GET("/api/v1/role/all", _this.roleAll)           // 获取所有角色
-	g.GET("/api/v1/menu/all", _this.menuAll)           // 获取所有菜单
-	g.GET("/api/v1/operation/all", _this.operationAll) // 获取所有操作
+	g.GET("/api/role/all", _this.roleAll)           // 获取所有角色
+	g.GET("/api/menu/all", _this.menuAll)           // 获取所有菜单
+	g.GET("/api/operation/all", _this.operationAll) // 获取所有操作
 
 }
 
