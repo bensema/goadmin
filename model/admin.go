@@ -4,13 +4,6 @@ import (
 	"library/xtime"
 )
 
-type AdminSession struct {
-	AdminId int
-	Name    string
-	Role    string
-	AesKey  string
-}
-
 // admin 数据v1
 type AdminV1 struct {
 	AdminId   int        `json:"admin_id"`   // 自增编号

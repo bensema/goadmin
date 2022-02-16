@@ -18,7 +18,7 @@ func init() {
 }
 
 type Config struct {
-	Web       *Web
+	Port      int
 	MySQL     *sql.Config
 	Redis     *redis.Config
 	Captcha   *captcha.Config
@@ -36,10 +36,4 @@ func Init() error {
 
 type Ip2Region struct {
 	Path string
-}
-
-type Web struct {
-	Port     int
-	Template string
-	Static   string
 }

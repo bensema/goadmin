@@ -7,7 +7,7 @@ replace library => ./library
 require (
 	entgo.io/ent v0.10.0 // indirect
 	github.com/BurntSushi/toml v0.3.1
-	github.com/gin-gonic/gin v1.6.3
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-redis/redis/v8 v8.8.2
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -21,7 +21,7 @@ require (
 )
 
 require (
-	github.com/bensema/gcurd v0.0.0-20220130030431-4470ec5081f1
+	github.com/bensema/gcurd v0.0.0-20220211023749-f3b026e09ea7
 	github.com/fatih/structs v1.1.0
 )
 
@@ -31,7 +31,7 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/go-playground/validator/v10 v10.2.0 // indirect
+	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.1 // indirect

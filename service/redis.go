@@ -1,10 +1,8 @@
 package service
 
 import (
-	"github.com/bensema/goadmin/model"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
-	"strings"
 	"time"
 )
 
@@ -31,19 +29,4 @@ func (s *Service) GetCacheObj(c *gin.Context, key string, obj interface{}) error
 func (s *Service) DelCache(c *gin.Context, key string) error {
 	_, err := s.dao.RDelete(c, key)
 	return err
-}
-
-func (s *Service) GetAdminSessionCache(c *gin.Context, key string, obj interface{}) error {
-	_key := strings.Join([]string{model.RedisPrefixAdminSession, key}, ":")
-	return s.GetCacheObj(c, _key, obj)
-}
-
-func (s *Service) DeleteAdminSessionCache(c *gin.Context, key string) error {
-	_key := strings.Join([]string{model.RedisPrefixAdminSession, key}, ":")
-	return s.DelCache(c, _key)
-}
-
-func (s *Service) SetAdminSessionCache(c *gin.Context, key string, adminSession *model.AdminSession) (err error) {
-	_key := strings.Join([]string{model.RedisPrefixAdminSession, key}, ":")
-	return s.SetCacheObj(c, _key, adminSession, 60*60*24*time.Second)
 }

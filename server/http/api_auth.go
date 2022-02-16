@@ -49,9 +49,8 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 }
 
 func (_this *ApiAuth) menu(c *gin.Context) {
-	session, _ := c.Cookie(AdminSession)
-	obj := &model.AdminSession{}
-	err := srv.GetAdminSessionCache(c, session, obj)
+	obj := &model.GinSession{}
+	err := sessionSrv.GinLoadSession(c, obj)
 	menus, err := srv.FindAdminMenu(c, obj.AdminId)
 	fmt.Println(menus, err)
 	JSON(c, menus, err)
@@ -92,6 +91,10 @@ func (_this *ApiAuth) adminInfoV1(c *gin.Context) {
 
 func (_this *ApiAuth) roleAll(c *gin.Context) {
 	reply, err := srv.FindAllRole(c)
+	err = sessionSrv.GinRefreshSession(c)
+	if err != nil {
+		fmt.Println(err)
+	}
 	JSON(c, reply, err)
 }
 

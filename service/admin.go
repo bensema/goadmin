@@ -14,22 +14,15 @@ import (
 	"time"
 )
 
-func (s *Service) AdminLogin(c *gin.Context, username string, password string) (string, error) {
+func (s *Service) AdminLogin(c *gin.Context, username string, password string) error {
 	au, err := s.dao.GetAdminByName(c, username)
 	if err != nil {
-		fmt.Println(err)
-		return "", ecode.UsernameOrPasswordErr
+		return ecode.UsernameOrPasswordErr
 	}
 	b := utils.ComparePasswords(au.Password, password)
 	if !b {
-		return "", ecode.UsernameOrPasswordErr
+		return ecode.UsernameOrPasswordErr
 	}
-	adminSessionKey := utils.RandomString(40)
-	adminSession := model.AdminSession{
-		AdminId: au.Id,
-		Name:    au.Name,
-	}
-	err = s.SetAdminSessionCache(c, adminSessionKey, &adminSession)
 	ipInfo, _ := s.Ip2Region.BtreeSearch(c.ClientIP())
 	ua := user_agent.New(c.Request.UserAgent())
 	b1, bv := ua.Browser()
@@ -47,7 +40,7 @@ func (s *Service) AdminLogin(c *gin.Context, username string, password string) (
 		Remark:    "",
 	}
 	_, _ = s.dao.CreateLogAdminLogin(c, loginLog)
-	return adminSessionKey, err
+	return err
 }
 
 func (s *Service) FindAdminMenu(c *gin.Context, adminId int) ([]*model.Menu, error) {
@@ -386,4 +379,8 @@ func (s *Service) DeleteRoleV1(c *gin.Context, id int) error {
 
 func (s *Service) logAction(c *gin.Context, opCode string, content string, result int) error {
 	return logAction(c, s.dao.DB(), opCode, content, result)
+}
+
+func (s *Service) GetAdminByName(c *gin.Context, name string) (*model.Admin, error) {
+	return s.dao.GetAdminByName(c, name)
 }

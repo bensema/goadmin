@@ -1,11 +1,9 @@
 package http
 
 import (
-	"errors"
 	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/model"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 	"image/gif"
 	"image/png"
 	"library/ecode"
@@ -15,10 +13,10 @@ import (
 type Api struct{}
 
 func (_this *Api) RegisterRoute(g *gin.RouterGroup) {
-	g.GET("/api/v1/rsa", _this.rsa)
-	g.POST("/api/v1/login", _this.login)
-	g.GET("/api/v1/captcha/img", _this.captchaImg)
-	g.GET("/api/v1/captcha/gif", _this.captchaGif)
+	g.GET("/api/rsa", _this.rsa)
+	g.POST("/api/login", _this.login)
+	g.GET("/api/captcha/img", _this.captchaImg)
+	g.GET("/api/captcha/gif", _this.captchaGif)
 }
 
 func (_this *Api) rsa(c *gin.Context) {
@@ -27,7 +25,7 @@ func (_this *Api) rsa(c *gin.Context) {
 }
 
 func (_this *Api) login(c *gin.Context) {
-	verCode := c.PostForm("vercode")
+	//verCode := c.PostForm("vercode")
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 
@@ -41,31 +39,31 @@ func (_this *Api) login(c *gin.Context) {
 		return
 	}
 
-	capKey, _ := c.Cookie(CaptchaKey)
-	b, err := srv.CaptchaVerify(c, capKey, verCode)
-	if err == model.ErrNil {
-		JSON(c, nil, errors.New("请刷新验证码试试"))
-		return
-	}
-	if err != nil {
-		log.Errorf(err.Error())
-		JSON(c, nil, err)
-		return
-	}
-	if !b {
-		JSON(c, nil, errors.New("验证码错误"))
-		return
-	}
+	//capKey, _ := c.Cookie(CaptchaKey)
+	//b, err := srv.CaptchaVerify(c, capKey, verCode)
+	//if err == model.ErrNil {
+	//	JSON(c, nil, errors.New("请刷新验证码试试"))
+	//	return
+	//}
+	//if err != nil {
+	//	log.Errorf(err.Error())
+	//	JSON(c, nil, err)
+	//	return
+	//}
+	//if !b {
+	//	JSON(c, nil, errors.New("验证码错误"))
+	//	return
+	//}
 
-	session, err := srv.AdminLogin(c, username, password)
+	err := srv.AdminLogin(c, username, password)
 	if err != nil {
 		JSON(c, nil, err)
 		return
 	}
-	c.SetCookie(AdminSession, session, 60*60*8, "/", "", false, true)
+	u, _ := srv.GetAdminByName(c, username)
+	_ = sessionSrv.GinSetSession(c, &model.GinSession{AdminId: u.Id, Name: u.Name})
 	JSON(c, nil, ecode.OK)
 	return
-
 }
 
 func (_this *Api) captchaImg(c *gin.Context) {
