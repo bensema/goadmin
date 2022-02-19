@@ -8,7 +8,7 @@ type Admin struct {
 	Id        int        `json:"id"`         // 自增编号
 	Name      string     `json:"name"`       // 管理员
 	Password  string     `json:"password"`   // 密码
-	Status    int        `json:"status"`     // 1:正常;2:禁用
+	Status    string     `json:"status"`     // Enable/Disable
 	CreatedAt xtime.Time `json:"created_at"` // 创建时间
 	UpdatedAt xtime.Time `json:"updated_at"` // 修改时间
 }
@@ -208,6 +208,34 @@ func (m *Menu) Fields() []interface{} {
 
 func (Menu) New() *Menu {
 	return &Menu{}
+}
+
+type Permission struct {
+	Id int `json:"id"`
+}
+
+func (m *Permission) Table() string {
+	return "permission"
+}
+
+func (m *Permission) SetID(id int) {
+	m.Id = id
+}
+
+func (m *Permission) GetID() int {
+	return m.Id
+}
+
+func (m *Permission) Columns() []string {
+	return []string{"id"}
+}
+
+func (m *Permission) Fields() []interface{} {
+	return []interface{}{&m.Id}
+}
+
+func (Permission) New() *Permission {
+	return &Permission{}
 }
 
 type Role struct {

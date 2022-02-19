@@ -13,11 +13,11 @@ func prepareReq(c *gin.Context, req *gcurd.Request) *gcurd.Request {
 	if orderByDirection, b := c.GetQuery("order_by_direction"); b {
 		req.OrderBy.Direction = orderByDirection
 	}
-	if num, b := c.GetQuery("num"); b {
-		req.Pagination.Num = utils.GetInt(num)
+	if page, b := c.GetQuery("page"); b {
+		req.Pagination.Page = utils.GetInt(page)
 	}
-	if size, b := c.GetQuery("size"); b {
-		req.Pagination.Size = utils.GetInt(size)
+	if pageSize, b := c.GetQuery("page_size"); b {
+		req.Pagination.PageSize = utils.GetInt(pageSize)
 	}
 	req.Pagination.Verify()
 	return req

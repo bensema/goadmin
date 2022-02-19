@@ -65,7 +65,7 @@ func (s *Service) FindAdminMenu(c *gin.Context, adminId int) ([]*model.Menu, err
 	return res, err
 }
 
-func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.AdminV1], err error) {
+func (s *Service) FindAdminPageV2(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.AdminV1], err error) {
 	var count int
 	var dataTmp []*model.Admin
 	var data []*model.AdminV1
@@ -76,7 +76,7 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *mo
 	if count <= 0 {
 		return
 	}
-	if dataTmp, err = s.dao.FindAdmin(c, req.Where); err != nil {
+	if dataTmp, err = s.dao.PageFindAdmin(c, req); err != nil {
 		return
 	}
 	for _, d := range dataTmp {
@@ -91,7 +91,7 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *mo
 		}
 
 		data = append(data, &model.AdminV1{
-			AdminId:   d.Id,
+			Id:        d.Id,
 			Name:      d.Name,
 			Status:    d.Status,
 			CreatedAt: d.CreatedAt,
@@ -99,10 +99,11 @@ func (s *Service) FindAdminPageV1(c *gin.Context, req *gcurd.Request) (reply *mo
 			Roles:     rls,
 		})
 	}
-	reply.Data = data
-	reply.Total = count
-	reply.Num = req.Pagination.Num
-	reply.Size = req.Pagination.Size
+	reply = &model.PageReply[*model.AdminV1]{}
+	reply.Rows = data
+	reply.RowsTotal = count
+	reply.Page = req.Pagination.Page
+	reply.PageSize = req.Pagination.PageSize
 	return
 }
 
@@ -129,7 +130,7 @@ func (s *Service) GetAdminV1(c *gin.Context, adminId int) (*model.AdminV1, error
 	}
 
 	data = &model.AdminV1{
-		AdminId:   dataTmp.Id,
+		Id:        dataTmp.Id,
 		Name:      dataTmp.Name,
 		Status:    dataTmp.Status,
 		CreatedAt: dataTmp.CreatedAt,
@@ -282,10 +283,10 @@ func (s *Service) FindRolePageV1(c *gin.Context, req *gcurd.Request) (reply *mod
 			Apis:  as,
 		})
 	}
-	reply.Data = data
-	reply.Total = count
-	reply.Num = req.Pagination.Num
-	reply.Size = req.Pagination.Size
+	reply.Rows = data
+	reply.RowsTotal = count
+	reply.Page = req.Pagination.Page
+	reply.PageSize = req.Pagination.PageSize
 	return
 }
 

@@ -6,9 +6,9 @@ import (
 
 // admin 数据v1
 type AdminV1 struct {
-	AdminId   int        `json:"admin_id"`   // 自增编号
+	Id        int        `json:"id"`         // 自增编号
 	Name      string     `json:"name"`       // 账户
-	Status    int        `json:"status"`     // 1:正常;2:禁用
+	Status    string     `json:"status"`     // 1:正常;2:禁用
 	CreatedAt xtime.Time `json:"created_at"` // 创建时间
 	UpdatedAt xtime.Time `json:"updated_at"` // 修改时间
 	Roles     []*Role    `json:"roles"`      // 角色
@@ -23,7 +23,7 @@ type UpdateAdmin struct {
 type AddAdmin struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
-	Status   int    `json:"status"`
+	Status   string `json:"status"`
 	Roles    []int  `json:"roles"`
 }
 

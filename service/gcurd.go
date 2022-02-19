@@ -31,10 +31,10 @@ func gPage[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, req *gcurd.Request,
 		return
 	}
 
-	reply.Data = objs
-	reply.Total = count
-	reply.Num = req.Pagination.Num
-	reply.Size = req.Pagination.Size
+	reply.Rows = objs
+	reply.RowsTotal = count
+	reply.Page = req.Pagination.Page
+	reply.PageSize = req.Pagination.PageSize
 	return
 }
 

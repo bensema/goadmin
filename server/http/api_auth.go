@@ -16,7 +16,7 @@ type ApiAuth struct{}
 
 func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/api/menus", _this.menu)                // 获取菜单
-	g.GET("/api/admin/pages", _this.adminPagesV1)  // 分页查询管理员
+	g.GET("/api/admin/pages", _this.pageAdminV2)   // 分页查询管理员
 	g.GET("/api/admin/info", _this.adminInfoV1)    // 管理员信息
 	g.POST("/api/admin/update", _this.updateAdmin) // 更新管理员 （管理员，角色）
 	g.POST("/api/admin/delete", _this.deleteAdmin) // 删除管理员
@@ -52,7 +52,6 @@ func (_this *ApiAuth) menu(c *gin.Context) {
 	obj := &model.GinSession{}
 	err := sessionSrv.GinLoadSession(c, obj)
 	menus, err := srv.FindAdminMenu(c, obj.AdminId)
-	fmt.Println(menus, err)
 	JSON(c, menus, err)
 }
 
@@ -65,21 +64,21 @@ func (_this *ApiAuth) pageAdmin(c *gin.Context) {
 	}
 
 	reply, err := srv.PageAdmin(c, req)
-	for _, d := range reply.Data {
+	for _, d := range reply.Rows {
 		d.Password = "***"
 	}
 	JSON(c, reply, err)
 }
 
 // 返回
-func (_this *ApiAuth) adminPagesV1(c *gin.Context) {
+func (_this *ApiAuth) pageAdminV2(c *gin.Context) {
 	req := &gcurd.Request{}
 	req = prepareReq(c, req)
 
 	if name, b := c.GetQuery("name"); b {
 		req.Where = append(req.Where, gcurd.EQ("name", name))
 	}
-	reply, err := srv.FindAdminPageV1(c, req)
+	reply, err := srv.FindAdminPageV2(c, req)
 	JSON(c, reply, err)
 }
 
@@ -151,7 +150,7 @@ func (_this *ApiAuth) addAdmin(c *gin.Context) {
 	}
 	arg.Name = name
 	arg.Password = password
-	arg.Status = utils.GetInt(status)
+	arg.Status = status
 	arg.Roles = r
 	JSON(c, nil, srv.AddAdmin(c, arg))
 }
