@@ -11,6 +11,7 @@ type Admin struct {
 	Status    string     `json:"status"`     // Enable/Disable
 	CreatedAt xtime.Time `json:"created_at"` // 创建时间
 	UpdatedAt xtime.Time `json:"updated_at"` // 修改时间
+	Remark    string     `json:"remark"`     // remark
 }
 
 func (m *Admin) Table() string {
@@ -26,11 +27,11 @@ func (m *Admin) GetID() int {
 }
 
 func (m *Admin) Columns() []string {
-	return []string{"id", "name", "password", "status", "created_at", "updated_at"}
+	return []string{"id", "name", "password", "status", "created_at", "updated_at", "remark"}
 }
 
 func (m *Admin) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.Name, &m.Password, &m.Status, &m.CreatedAt, &m.UpdatedAt}
+	return []interface{}{&m.Id, &m.Name, &m.Password, &m.Status, &m.CreatedAt, &m.UpdatedAt, &m.Remark}
 }
 
 func (Admin) New() *Admin {

@@ -11,13 +11,15 @@ type AdminV1 struct {
 	Status    string     `json:"status"`     // 1:正常;2:禁用
 	CreatedAt xtime.Time `json:"created_at"` // 创建时间
 	UpdatedAt xtime.Time `json:"updated_at"` // 修改时间
-	Roles     []*Role    `json:"roles"`      // 角色
+	Remark    string     `json:"remark"`
+	Roles     []*Role    `json:"roles"` // 角色
 }
 
 type UpdateAdmin struct {
-	AdminId int   `json:"admin_id"`
-	Status  int   `json:"status"`
-	Roles   []int `json:"roles"`
+	AdminId int    `json:"admin_id"`
+	Status  string `json:"status"`
+	Remark  string `json:"remark"`
+	Roles   []int  `json:"roles"`
 }
 
 type AddAdmin struct {

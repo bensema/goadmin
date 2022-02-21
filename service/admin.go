@@ -80,7 +80,7 @@ func (s *Service) FindAdminPageV2(c *gin.Context, req *gcurd.Request) (reply *mo
 		return
 	}
 	for _, d := range dataTmp {
-		var rls []*model.Role
+		rls := make([]*model.Role, 0)
 		adminRoles, _ := s.dao.FindAdminRole(c, []*gcurd.WhereValue{gcurd.EQ("admin_id", d.Id)})
 
 		for _, adminRole := range adminRoles {
@@ -110,7 +110,10 @@ func (s *Service) FindAdminPageV2(c *gin.Context, req *gcurd.Request) (reply *mo
 // GetAdminV1 获取管理员信息过滤密码，添加角色
 func (s *Service) GetAdminV1(c *gin.Context, adminId int) (*model.AdminV1, error) {
 	var data *model.AdminV1
-	dataTmp, err := s.dao.GetAdminByAdminId(c, adminId)
+	dataTmp, err := s.dao.GetAdmin(c, adminId)
+	if err != nil {
+		fmt.Println(err)
+	}
 	if err == sql.ErrNoRows {
 		return nil, errors.New("账户不存在")
 	}
@@ -119,7 +122,7 @@ func (s *Service) GetAdminV1(c *gin.Context, adminId int) (*model.AdminV1, error
 		return nil, err
 	}
 
-	var rls []*model.Role
+	rls := make([]*model.Role, 0)
 	adminRoles, _ := s.dao.FindAdminRole(c, []*gcurd.WhereValue{gcurd.EQ("admin_id", adminId)})
 
 	for _, adminRole := range adminRoles {
@@ -135,6 +138,7 @@ func (s *Service) GetAdminV1(c *gin.Context, adminId int) (*model.AdminV1, error
 		Status:    dataTmp.Status,
 		CreatedAt: dataTmp.CreatedAt,
 		UpdatedAt: dataTmp.UpdatedAt,
+		Remark:    dataTmp.Remark,
 		Roles:     rls,
 	}
 
@@ -145,17 +149,21 @@ func (s *Service) FindAllRole(c *gin.Context) (reply []*model.Role, err error) {
 	return s.dao.FindRole(c, nil)
 }
 
-func (s *Service) UpdateAdminv1(c *gin.Context, info *model.UpdateAdmin, filed []string) error {
+func (s *Service) UpdateAdminV2(c *gin.Context, info *model.UpdateAdmin, filed []string) error {
 	var content string
-	aInfo, err := s.dao.GetAdminByAdminId(c, info.AdminId)
+	aInfo, err := s.dao.GetAdmin(c, info.AdminId)
 	if err != nil {
-		return err
+		fmt.Println(err)
+		return errors.New("Not found admin")
 	}
 	for _, v := range filed {
 		switch v {
 		case "status":
-			content += fmt.Sprintf("状态:%d;", info.Status)
-			_ = s.dao.UpdateAdminByAdminId(c, info.AdminId, "status", info.Status)
+			content += fmt.Sprintf("状态:%s;", info.Status)
+			_ = s.dao.UpdateAdmin(c, info.AdminId, "status", info.Status)
+		case "remark":
+			content += fmt.Sprintf("备注:%s;", info.Remark)
+			_ = s.dao.UpdateAdmin(c, info.AdminId, "remark", info.Remark)
 		case "roles":
 			for _, role := range info.Roles {
 				_, err := s.dao.GetRoleById(c, role)
@@ -187,15 +195,15 @@ func (s *Service) UpdateAdminv1(c *gin.Context, info *model.UpdateAdmin, filed [
 
 }
 
-func (s *Service) DeleteAdminv1(c *gin.Context, adminId int) error {
+func (s *Service) DeleteAdminV2(c *gin.Context, adminId int) error {
 
 	var content string
-	aInfo, err := s.dao.GetAdminByAdminId(c, adminId)
+	aInfo, err := s.dao.GetAdmin(c, adminId)
 	if err != nil {
 		return errors.New("账户不存在")
 	}
 
-	err = s.dao.DeleteAdminByAdminId(c, adminId)
+	err = s.dao.DeleteAdmin(c, adminId)
 	err = s.dao.DeleteAdminRoleByAdminId(c, adminId)
 
 	cc := fmt.Sprintf("删除管理员:账户:%s;账户编号:%d;%s", aInfo.Name, aInfo.Id, content)

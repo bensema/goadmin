@@ -83,48 +83,56 @@ func (_this *ApiAuth) pageAdminV2(c *gin.Context) {
 }
 
 func (_this *ApiAuth) adminInfoV1(c *gin.Context) {
-	adminId, _ := c.GetQuery("admin_id")
+	adminId, _ := c.GetQuery("id")
 	reply, err := srv.GetAdminV1(c, utils.GetInt(adminId))
 	JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) roleAll(c *gin.Context) {
 	reply, err := srv.FindAllRole(c)
-	err = sessionSrv.GinRefreshSession(c)
-	if err != nil {
-		fmt.Println(err)
-	}
 	JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) updateAdmin(c *gin.Context) {
 	var filed []string
 	arg := &model.UpdateAdmin{}
-	adminId, _ := c.GetPostForm("admin_id")
+	adminId, _ := c.GetPostForm("id")
 	status, b := c.GetPostForm("status")
 	if b {
 		filed = append(filed, "status")
+	}
+	remark, b := c.GetPostForm("remark")
+	if b {
+		filed = append(filed, "remark")
 	}
 	roles, b := c.GetPostForm("roles")
 	if b {
 		filed = append(filed, "roles")
 	}
-	r, err := utils.S2IList(strings.Split(roles, ","))
-	if err != nil {
-		JSON(c, nil, err)
-		return
+	var r []int
+	var err error
+	if roles == "" {
+		r = []int{}
+	} else {
+		r, err = utils.S2IList(strings.Split(roles, ","))
+		if err != nil {
+			fmt.Println(err)
+			JSON(c, nil, err)
+			return
+		}
 	}
 	arg.AdminId = utils.GetInt(adminId)
-	arg.Status = utils.GetInt(status)
+	arg.Status = status
+	arg.Remark = remark
 	arg.Roles = r
 
-	JSON(c, nil, srv.UpdateAdminv1(c, arg, filed))
+	JSON(c, nil, srv.UpdateAdminV2(c, arg, filed))
 }
 
 func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
-	adminId, b := c.GetPostForm("admin_id")
+	adminId, b := c.GetPostForm("id")
 	if !b {
-		JSON(c, nil, errors.New("admin_id 不能空"))
+		JSON(c, nil, errors.New("id 不能空"))
 		return
 	}
 
@@ -133,12 +141,12 @@ func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
 		return
 	}
 
-	JSON(c, nil, srv.DeleteAdminv1(c, utils.GetInt(adminId)))
+	JSON(c, nil, srv.DeleteAdminV2(c, utils.GetInt(adminId)))
 }
 
 func (_this *ApiAuth) addAdmin(c *gin.Context) {
 	arg := &model.AddAdmin{}
-	name, _ := c.GetPostForm("name")
+	name, _ := c.GetPostForm("username")
 	password, _ := c.GetPostForm("password")
 	status, _ := c.GetPostForm("status")
 	roles, _ := c.GetPostForm("roles")

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/bensema/goadmin/config"
 	"github.com/bensema/goadmin/dao"
 	"github.com/bensema/goadmin/model"
@@ -36,9 +35,8 @@ func (s *Service) Close() {
 }
 
 func GetAdminFromContext(c *gin.Context) (*model.Admin, error) {
-	id, _ := c.Get("admin_id")
-	name, _ := c.Get("admin_name")
-	fmt.Println(id, name)
+	id, _ := c.Get("id")
+	name, _ := c.Get("name")
 	var a = model.Admin{}
 	a.Id = id.(int)
 	a.Name = name.(string)
