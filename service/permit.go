@@ -27,16 +27,28 @@ func (s *Service) PermitAPI(c *gin.Context, adminId int) error {
 	for _, admRole := range admRoles {
 		var wvs []*gcurd.WhereValue
 		wvs = append(wvs, gcurd.EQ("role_id", admRole.RoleId))
-		wvs = append(wvs, gcurd.EQ("api_id", api.Id))
-		obj := &model.RoleApi{}
-		var roleApis []*model.RoleApi
-		roleApis, err = dao.Find(c, s.dao.DB(), obj, wvs, obj.New)
+		obj := &model.RolePermission{}
+		var rolePermissions []*model.RolePermission
+		rolePermissions, err = dao.Find(c, s.dao.DB(), obj, wvs, obj.New)
 		if err != nil {
 			continue
 		}
-		if len(roleApis) > 0 {
-			return nil
+		for _, rolePermission := range rolePermissions {
+			var wvs []*gcurd.WhereValue
+			wvs = append(wvs, gcurd.EQ("permission_id", rolePermission.PermissionId))
+			wvs = append(wvs, gcurd.EQ("api_id", api.Id))
+			obj := &model.PermissionApi{}
+			var permissionApis []*model.PermissionApi
+			permissionApis, err = dao.Find(c, s.dao.DB(), obj, wvs, obj.New)
+			if err != nil {
+				continue
+			}
+			if len(permissionApis) > 0 {
+				return nil
+			}
+
 		}
+
 	}
 
 	return ecode.AccessDenied

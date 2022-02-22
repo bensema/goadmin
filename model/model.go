@@ -212,7 +212,10 @@ func (Menu) New() *Menu {
 }
 
 type Permission struct {
-	Id int `json:"id"`
+	Id              int    `json:"id"`
+	Name            string `json:"name"`
+	PermissionGroup string `json:"permission_group"`
+	Remark          string `json:"remark"`
 }
 
 func (m *Permission) Table() string {
@@ -228,15 +231,75 @@ func (m *Permission) GetID() int {
 }
 
 func (m *Permission) Columns() []string {
-	return []string{"id"}
+	return []string{"id", "name", "permission_group", "remark"}
 }
 
 func (m *Permission) Fields() []interface{} {
-	return []interface{}{&m.Id}
+	return []interface{}{&m.Id, &m.Name, &m.PermissionGroup, &m.Remark}
 }
 
 func (Permission) New() *Permission {
 	return &Permission{}
+}
+
+type PermissionApi struct {
+	Id           int `json:"id"`
+	PermissionId int `json:"permission_id"`
+	ApiId        int `json:"api_id"`
+}
+
+func (m *PermissionApi) Table() string {
+	return "permission_api"
+}
+
+func (m *PermissionApi) SetID(id int) {
+	m.Id = id
+}
+
+func (m *PermissionApi) GetID() int {
+	return m.Id
+}
+
+func (m *PermissionApi) Columns() []string {
+	return []string{"id", "permission_id", "api_id"}
+}
+
+func (m *PermissionApi) Fields() []interface{} {
+	return []interface{}{&m.Id, &m.PermissionId, &m.ApiId}
+}
+
+func (PermissionApi) New() *PermissionApi {
+	return &PermissionApi{}
+}
+
+type PermissionMenu struct {
+	Id           int `json:"id"`
+	PermissionId int `json:"permission_id"`
+	MenuId       int `json:"menu_id"`
+}
+
+func (m *PermissionMenu) Table() string {
+	return "permission_menu"
+}
+
+func (m *PermissionMenu) SetID(id int) {
+	m.Id = id
+}
+
+func (m *PermissionMenu) GetID() int {
+	return m.Id
+}
+
+func (m *PermissionMenu) Columns() []string {
+	return []string{"id", "permission_id", "menu_id"}
+}
+
+func (m *PermissionMenu) Fields() []interface{} {
+	return []interface{}{&m.Id, &m.PermissionId, &m.MenuId}
+}
+
+func (PermissionMenu) New() *PermissionMenu {
+	return &PermissionMenu{}
 }
 
 type Role struct {
@@ -269,36 +332,6 @@ func (Role) New() *Role {
 	return &Role{}
 }
 
-type RoleApi struct {
-	Id     int `json:"id"`
-	RoleId int `json:"role_id"`
-	ApiId  int `json:"api_id"`
-}
-
-func (m *RoleApi) Table() string {
-	return "role_api"
-}
-
-func (m *RoleApi) SetID(id int) {
-	m.Id = id
-}
-
-func (m *RoleApi) GetID() int {
-	return m.Id
-}
-
-func (m *RoleApi) Columns() []string {
-	return []string{"id", "role_id", "api_id"}
-}
-
-func (m *RoleApi) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.RoleId, &m.ApiId}
-}
-
-func (RoleApi) New() *RoleApi {
-	return &RoleApi{}
-}
-
 type RoleMenu struct {
 	Id     int `json:"id"`
 	RoleId int `json:"role_id"`
@@ -327,4 +360,34 @@ func (m *RoleMenu) Fields() []interface{} {
 
 func (RoleMenu) New() *RoleMenu {
 	return &RoleMenu{}
+}
+
+type RolePermission struct {
+	Id           int `json:"id"`
+	RoleId       int `json:"role_id"`
+	PermissionId int `json:"permission_id"`
+}
+
+func (m *RolePermission) Table() string {
+	return "role_permission"
+}
+
+func (m *RolePermission) SetID(id int) {
+	m.Id = id
+}
+
+func (m *RolePermission) GetID() int {
+	return m.Id
+}
+
+func (m *RolePermission) Columns() []string {
+	return []string{"id", "role_id", "permission_id"}
+}
+
+func (m *RolePermission) Fields() []interface{} {
+	return []interface{}{&m.Id, &m.RoleId, &m.PermissionId}
+}
+
+func (RolePermission) New() *RolePermission {
+	return &RolePermission{}
 }

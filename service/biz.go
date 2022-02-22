@@ -174,6 +174,90 @@ func (s *Service) UpdateMenu(c *gin.Context, obj *model.Menu, id int, ignoreColu
 	return gUpdate(c, s.dao.DB(), obj, id, model.OpMenuDel, ignoreColumns, mosaicsColumns)
 }
 
+func (s *Service) PagePermission(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.Permission], err error) {
+	obj := &model.Permission{}
+	return gPage(c, s.dao.DB(), obj, req, obj.New)
+}
+
+func (s *Service) CreatePermission(c *gin.Context, obj *model.Permission) error {
+	return gCreate(c, s.dao.DB(), obj, model.OpPermissionAdd, []string{})
+}
+
+func (s *Service) DeletePermission(c *gin.Context, id int) error {
+	obj := &model.Permission{}
+	return gDelete(c, s.dao.DB(), obj, id, model.OpPermissionDel, []string{})
+}
+
+func (s *Service) GetPermission(c *gin.Context, id int) (*model.Permission, error) {
+	obj := &model.Permission{}
+	return gGet(c, s.dao.DB(), obj, id)
+}
+
+func (s *Service) FindPermission(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.Permission, error) {
+	obj := &model.Permission{}
+	return gFind(c, s.dao.DB(), obj, wvs, obj.New)
+}
+
+func (s *Service) UpdatePermission(c *gin.Context, obj *model.Permission, id int, ignoreColumns []string, mosaicsColumns []string) error {
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionDel, ignoreColumns, mosaicsColumns)
+}
+
+func (s *Service) PagePermissionApi(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.PermissionApi], err error) {
+	obj := &model.PermissionApi{}
+	return gPage(c, s.dao.DB(), obj, req, obj.New)
+}
+
+func (s *Service) CreatePermissionApi(c *gin.Context, obj *model.PermissionApi) error {
+	return gCreate(c, s.dao.DB(), obj, model.OpPermissionApiAdd, []string{})
+}
+
+func (s *Service) DeletePermissionApi(c *gin.Context, id int) error {
+	obj := &model.PermissionApi{}
+	return gDelete(c, s.dao.DB(), obj, id, model.OpPermissionApiDel, []string{})
+}
+
+func (s *Service) GetPermissionApi(c *gin.Context, id int) (*model.PermissionApi, error) {
+	obj := &model.PermissionApi{}
+	return gGet(c, s.dao.DB(), obj, id)
+}
+
+func (s *Service) FindPermissionApi(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.PermissionApi, error) {
+	obj := &model.PermissionApi{}
+	return gFind(c, s.dao.DB(), obj, wvs, obj.New)
+}
+
+func (s *Service) UpdatePermissionApi(c *gin.Context, obj *model.PermissionApi, id int, ignoreColumns []string, mosaicsColumns []string) error {
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionApiDel, ignoreColumns, mosaicsColumns)
+}
+
+func (s *Service) PagePermissionMenu(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.PermissionMenu], err error) {
+	obj := &model.PermissionMenu{}
+	return gPage(c, s.dao.DB(), obj, req, obj.New)
+}
+
+func (s *Service) CreatePermissionMenu(c *gin.Context, obj *model.PermissionMenu) error {
+	return gCreate(c, s.dao.DB(), obj, model.OpPermissionMenuAdd, []string{})
+}
+
+func (s *Service) DeletePermissionMenu(c *gin.Context, id int) error {
+	obj := &model.PermissionMenu{}
+	return gDelete(c, s.dao.DB(), obj, id, model.OpPermissionMenuDel, []string{})
+}
+
+func (s *Service) GetPermissionMenu(c *gin.Context, id int) (*model.PermissionMenu, error) {
+	obj := &model.PermissionMenu{}
+	return gGet(c, s.dao.DB(), obj, id)
+}
+
+func (s *Service) FindPermissionMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.PermissionMenu, error) {
+	obj := &model.PermissionMenu{}
+	return gFind(c, s.dao.DB(), obj, wvs, obj.New)
+}
+
+func (s *Service) UpdatePermissionMenu(c *gin.Context, obj *model.PermissionMenu, id int, ignoreColumns []string, mosaicsColumns []string) error {
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionMenuDel, ignoreColumns, mosaicsColumns)
+}
+
 func (s *Service) PageRole(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.Role], err error) {
 	obj := &model.Role{}
 	return gPage(c, s.dao.DB(), obj, req, obj.New)
@@ -202,34 +286,6 @@ func (s *Service) UpdateRole(c *gin.Context, obj *model.Role, id int, ignoreColu
 	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleDel, ignoreColumns, mosaicsColumns)
 }
 
-func (s *Service) PageRoleApi(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RoleApi], err error) {
-	obj := &model.RoleApi{}
-	return gPage(c, s.dao.DB(), obj, req, obj.New)
-}
-
-func (s *Service) CreateRoleApi(c *gin.Context, obj *model.RoleApi) error {
-	return gCreate(c, s.dao.DB(), obj, model.OpRoleApiAdd, []string{})
-}
-
-func (s *Service) DeleteRoleApi(c *gin.Context, id int) error {
-	obj := &model.RoleApi{}
-	return gDelete(c, s.dao.DB(), obj, id, model.OpRoleApiDel, []string{})
-}
-
-func (s *Service) GetRoleApi(c *gin.Context, id int) (*model.RoleApi, error) {
-	obj := &model.RoleApi{}
-	return gGet(c, s.dao.DB(), obj, id)
-}
-
-func (s *Service) FindRoleApi(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.RoleApi, error) {
-	obj := &model.RoleApi{}
-	return gFind(c, s.dao.DB(), obj, wvs, obj.New)
-}
-
-func (s *Service) UpdateRoleApi(c *gin.Context, obj *model.RoleApi, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleApiDel, ignoreColumns, mosaicsColumns)
-}
-
 func (s *Service) PageRoleMenu(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RoleMenu], err error) {
 	obj := &model.RoleMenu{}
 	return gPage(c, s.dao.DB(), obj, req, obj.New)
@@ -256,4 +312,32 @@ func (s *Service) FindRoleMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([]*mode
 
 func (s *Service) UpdateRoleMenu(c *gin.Context, obj *model.RoleMenu, id int, ignoreColumns []string, mosaicsColumns []string) error {
 	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleMenuDel, ignoreColumns, mosaicsColumns)
+}
+
+func (s *Service) PageRolePermission(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RolePermission], err error) {
+	obj := &model.RolePermission{}
+	return gPage(c, s.dao.DB(), obj, req, obj.New)
+}
+
+func (s *Service) CreateRolePermission(c *gin.Context, obj *model.RolePermission) error {
+	return gCreate(c, s.dao.DB(), obj, model.OpRolePermissionAdd, []string{})
+}
+
+func (s *Service) DeleteRolePermission(c *gin.Context, id int) error {
+	obj := &model.RolePermission{}
+	return gDelete(c, s.dao.DB(), obj, id, model.OpRolePermissionDel, []string{})
+}
+
+func (s *Service) GetRolePermission(c *gin.Context, id int) (*model.RolePermission, error) {
+	obj := &model.RolePermission{}
+	return gGet(c, s.dao.DB(), obj, id)
+}
+
+func (s *Service) FindRolePermission(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.RolePermission, error) {
+	obj := &model.RolePermission{}
+	return gFind(c, s.dao.DB(), obj, wvs, obj.New)
+}
+
+func (s *Service) UpdateRolePermission(c *gin.Context, obj *model.RolePermission, id int, ignoreColumns []string, mosaicsColumns []string) error {
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpRolePermissionDel, ignoreColumns, mosaicsColumns)
 }

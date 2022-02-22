@@ -29,9 +29,22 @@ type AddAdmin struct {
 	Roles    []int  `json:"roles"`
 }
 
+type AddRole struct {
+	Name        string `json:"name"`
+	Remark      string `json:"remark"`
+	Permissions []int  `json:"permissions"`
+}
+
 type RoleInfo struct {
-	Id    int     `json:"id"`
-	Name  string  `json:"name"`
-	Menus []*Menu `json:"menus"`
-	Apis  []*Api  `json:"apis"`
+	Id          int           `json:"id"`
+	Name        string        `json:"name"`
+	Remark      string        `json:"remark"`
+	Permissions []*Permission `json:"permissions"`
+}
+
+type UpdateRole struct {
+	RoleId      int    `json:"role_id"`
+	Name        string `json:"name"`
+	Remark      string `json:"remark"`
+	Permissions []int  `json:"permissions"`
 }

@@ -19,17 +19,17 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/api/admin/pages", _this.pageAdminV2)   // 分页查询管理员
 	g.GET("/api/admin/info", _this.adminInfoV1)    // 管理员信息
 	g.POST("/api/admin/update", _this.updateAdmin) // 更新管理员 （管理员，角色）
+	g.POST("/api/admin/add", _this.addAdminV2)     // 添加管理员
 	g.POST("/api/admin/delete", _this.deleteAdmin) // 删除管理员
-	g.POST("/api/admin/add", _this.addAdmin)       // 添加管理员
 
-	g.GET("/api/role/pages", _this.rolePagesV1)  // 分页查询角色
-	g.GET("/api/role/info", _this.roleInfoV1)    // 角色信息
-	g.POST("/api/role/update", _this.updateRole) // 更新角色（角色，权限）
-	g.POST("/api/role/add", _this.addRole)       // 添加角色
-	g.POST("/api/role/delete", _this.deleteRole) // 删除角色
+	g.GET("/api/role/pages", _this.rolePagesV1)    // 分页查询角色
+	g.GET("/api/role/info", _this.roleInfoV1)      // 角色信息
+	g.POST("/api/role/update", _this.updateRoleV2) // 更新角色（角色，权限）
+	g.POST("/api/role/add", _this.addRole)         // 添加角色
+	g.POST("/api/role/delete", _this.deleteRole)   // 删除角色
 
-	g.GET("/api/role_menu/find", _this.findRoleMenu) // 查询指定权限菜单
-	g.GET("/api/role_api/find", _this.findRoleApi)   // 查询指定权限操作
+	g.GET("/api/role_menu/find", _this.findRoleMenu)      // 查询指定权限菜单
+	g.GET("/api/role_api/find", _this.findRolePermission) // 查询指定权限操作
 
 	g.POST("/api/menu/add", _this.addMenu)       // 添加菜单
 	g.POST("/api/menu/delete", _this.deleteMenu) // 删除菜单
@@ -42,9 +42,10 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.GET("/api/log_login/pages", _this.logLogin)              // 分页查询登录信息
 	g.GET("/api/log_operation/pages", _this.logAdminOperation) // 分页查询操作记录
 
-	g.GET("/api/role/all", _this.roleAll)           // 获取所有角色
-	g.GET("/api/menu/all", _this.menuAll)           // 获取所有菜单
-	g.GET("/api/operation/all", _this.operationAll) // 获取所有操作
+	g.GET("/api/role/all", _this.roleAll)             // 获取所有角色
+	g.GET("/api/permission/all", _this.permissionAll) // 获取所有权限
+	g.GET("/api/menu/all", _this.menuAll)             // 获取所有菜单
+	g.GET("/api/api/all", _this.apiAll)               // 获取所有操作
 
 }
 
@@ -144,7 +145,7 @@ func (_this *ApiAuth) deleteAdmin(c *gin.Context) {
 	JSON(c, nil, srv.DeleteAdminV2(c, utils.GetInt(adminId)))
 }
 
-func (_this *ApiAuth) addAdmin(c *gin.Context) {
+func (_this *ApiAuth) addAdminV2(c *gin.Context) {
 	arg := &model.AddAdmin{}
 	name, _ := c.GetPostForm("username")
 	password, _ := c.GetPostForm("password")
@@ -160,7 +161,7 @@ func (_this *ApiAuth) addAdmin(c *gin.Context) {
 	arg.Password = password
 	arg.Status = status
 	arg.Roles = r
-	JSON(c, nil, srv.AddAdmin(c, arg))
+	JSON(c, nil, srv.AddAdminV2(c, arg))
 }
 
 // 角色
@@ -171,13 +172,11 @@ func (_this *ApiAuth) rolePagesV1(c *gin.Context) {
 	if name, b := c.GetQuery("name"); b {
 		req.Where = append(req.Where, gcurd.EQ("name", name))
 	}
-	reply, err := srv.FindRolePageV1(c, req)
+	reply, err := srv.FindRolePageV2(c, req)
 	JSON(c, reply, err)
 }
-
-func (_this *ApiAuth) roleInfoV1(c *gin.Context) {
-	id, _ := c.GetQuery("id")
-	reply, err := srv.GetRoleInfo(c, utils.GetInt(id))
+func (_this *ApiAuth) permissionAll(c *gin.Context) {
+	reply, err := srv.FindAllPermission(c)
 	JSON(c, reply, err)
 }
 
@@ -186,41 +185,69 @@ func (_this *ApiAuth) menuAll(c *gin.Context) {
 	JSON(c, reply, err)
 }
 
-func (_this *ApiAuth) operationAll(c *gin.Context) {
+func (_this *ApiAuth) apiAll(c *gin.Context) {
 	reply, err := srv.FindAllApi(c)
 	JSON(c, reply, err)
 }
 
-func (_this *ApiAuth) updateRole(c *gin.Context) {
+func (_this *ApiAuth) roleInfoV1(c *gin.Context) {
+	id, _ := c.GetQuery("id")
+	reply, err := srv.GetRoleInfoV1(c, utils.GetInt(id))
+	JSON(c, reply, err)
+}
 
-	obj := &model.Role{}
-	var (
-		Id  int
-		err error
-	)
-	if id, b := c.GetPostForm("id"); !b {
-		JSON(c, nil, errors.New("id不能空"))
-		return
+func (_this *ApiAuth) updateRoleV2(c *gin.Context) {
+	var filed []string
+	arg := &model.UpdateRole{}
+	roleId, _ := c.GetPostForm("id")
+	name, b := c.GetPostForm("name")
+	if b {
+		filed = append(filed, "name")
+	}
+	remark, b := c.GetPostForm("remark")
+	if b {
+		filed = append(filed, "remark")
+	}
+	permissions, b := c.GetPostForm("permissions")
+	if b {
+		filed = append(filed, "permissions")
+	}
+	var r []int
+	var err error
+	if permissions == "" {
+		r = []int{}
 	} else {
-		Id = utils.GetInt(id)
+		r, err = utils.S2IList(strings.Split(permissions, ","))
+		if err != nil {
+			fmt.Println(err)
+			JSON(c, nil, err)
+			return
+		}
 	}
-	obj, err = srv.GetRole(c, Id)
-	if err != nil {
-		JSON(c, nil, errors.New("role 不存在"))
-		return
-	}
+	arg.RoleId = utils.GetInt(roleId)
+	arg.Name = name
+	arg.Remark = remark
+	arg.Permissions = r
 
-	JSON(c, nil, srv.UpdateRole(c, obj, Id, []string{}, []string{}))
+	JSON(c, nil, srv.UpdateRoleV2(c, arg, filed))
 }
 
 func (_this *ApiAuth) addRole(c *gin.Context) {
-	obj := &model.Role{}
+	obj := &model.AddRole{}
 	name, _ := c.GetPostForm("name")
 	remark, _ := c.GetPostForm("remark")
+	permissions, _ := c.GetPostForm("permissions")
+
+	r, err := utils.S2IList(strings.Split(permissions, ","))
+	if err != nil {
+		JSON(c, nil, errors.New("选择适当的权限"))
+		return
+	}
 
 	obj.Name = name
 	obj.Remark = remark
-	JSON(c, nil, srv.AddRole(c, obj))
+	obj.Permissions = r
+	JSON(c, nil, srv.AddRoleV2(c, obj))
 }
 
 func (_this *ApiAuth) deleteRole(c *gin.Context) {
@@ -242,12 +269,13 @@ func (_this *ApiAuth) findRoleMenu(c *gin.Context) {
 	JSON(c, reply, err)
 }
 
-func (_this *ApiAuth) findRoleApi(c *gin.Context) {
+func (_this *ApiAuth) findRolePermission(c *gin.Context) {
 	var wvs []*gcurd.WhereValue
 	id, _ := c.GetQuery("id")
 	wvs = append(wvs, gcurd.EQ("role_id", utils.GetInt(id)))
-	reply, err := srv.FindRoleApi(c, wvs)
-	JSON(c, reply, err)
+	// todo
+	//reply, err := srv.FindRolePermission(c, wvs)
+	//JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) addMenu(c *gin.Context) {

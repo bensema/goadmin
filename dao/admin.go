@@ -27,6 +27,13 @@ func (d *Dao) DeleteAdminRoleByAdminId(c *gin.Context, adminId int) error {
 	return gcurd.DeleteWhere(c, d.db, obj, wvs)
 }
 
+func (d *Dao) DeleteRolePermissionByRoleId(c *gin.Context, roleId int) error {
+	obj := &model.RolePermission{}
+	var wvs []*gcurd.WhereValue
+	wvs = append(wvs, gcurd.EQ("role_id", roleId))
+	return gcurd.DeleteWhere(c, d.db, obj, wvs)
+}
+
 func (d *Dao) GetRoleByName(c *gin.Context, name string) (*model.Role, error) {
 	obj := &model.Role{}
 	var wvs []*gcurd.WhereValue
@@ -36,13 +43,6 @@ func (d *Dao) GetRoleByName(c *gin.Context, name string) (*model.Role, error) {
 
 func (d *Dao) DeleteRoleMenuByRoleId(c *gin.Context, roleId int) error {
 	obj := &model.RoleMenu{}
-	var wvs []*gcurd.WhereValue
-	wvs = append(wvs, gcurd.EQ("role_id", roleId))
-	return gcurd.DeleteWhere(c, d.db, obj, wvs)
-}
-
-func (d *Dao) DeleteRoleApiByRoleId(c *gin.Context, roleId int) error {
-	obj := &model.RoleApi{}
 	var wvs []*gcurd.WhereValue
 	wvs = append(wvs, gcurd.EQ("role_id", roleId))
 	return gcurd.DeleteWhere(c, d.db, obj, wvs)
@@ -73,12 +73,5 @@ func (d *Dao) GetMenuByUrl(c *gin.Context, url string) (*model.Menu, error) {
 	obj := &model.Menu{}
 	var wvs []*gcurd.WhereValue
 	wvs = append(wvs, gcurd.EQ("url", url))
-	return GetWhere(c, d.db, obj, wvs)
-}
-
-func (d *Dao) GetRoleById(c *gin.Context, id int) (*model.Role, error) {
-	obj := &model.Role{}
-	var wvs []*gcurd.WhereValue
-	wvs = append(wvs, gcurd.EQ("id", id))
 	return GetWhere(c, d.db, obj, wvs)
 }

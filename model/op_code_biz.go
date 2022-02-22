@@ -27,15 +27,27 @@ const (
 	OpMenuDel    OpCode = "menu_del"
 	OpMenuUpdate OpCode = "menu_update"
 
+	OpPermissionAdd    OpCode = "permission_add"
+	OpPermissionDel    OpCode = "permission_del"
+	OpPermissionUpdate OpCode = "permission_update"
+
+	OpPermissionApiAdd    OpCode = "permission_api_add"
+	OpPermissionApiDel    OpCode = "permission_api_del"
+	OpPermissionApiUpdate OpCode = "permission_api_update"
+
+	OpPermissionMenuAdd    OpCode = "permission_menu_add"
+	OpPermissionMenuDel    OpCode = "permission_menu_del"
+	OpPermissionMenuUpdate OpCode = "permission_menu_update"
+
 	OpRoleAdd    OpCode = "role_add"
 	OpRoleDel    OpCode = "role_del"
 	OpRoleUpdate OpCode = "role_update"
 
-	OpRoleApiAdd    OpCode = "role_api_add"
-	OpRoleApiDel    OpCode = "role_api_del"
-	OpRoleApiUpdate OpCode = "role_api_update"
-
 	OpRoleMenuAdd    OpCode = "role_menu_add"
 	OpRoleMenuDel    OpCode = "role_menu_del"
 	OpRoleMenuUpdate OpCode = "role_menu_update"
+
+	OpRolePermissionAdd    OpCode = "role_permission_add"
+	OpRolePermissionDel    OpCode = "role_permission_del"
+	OpRolePermissionUpdate OpCode = "role_permission_update"
 )

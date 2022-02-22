@@ -301,6 +301,153 @@ func (d *Dao) PageFindMenu(c *gin.Context, req *gcurd.Request) ([]*model.Menu, e
 	return PageFind(c, d.db, obj, req, obj.New)
 }
 
+func (d *Dao) CreatePermission(c *gin.Context, obj *model.Permission) (sql.Result, error) {
+	return Create(c, d.db, obj)
+}
+
+func (d *Dao) DeletePermission(c *gin.Context, id int) error {
+	obj := &model.Permission{}
+	return Delete(c, d.db, obj, id)
+}
+
+func (d *Dao) UpdatePermission(c *gin.Context, id int, key string, value interface{}) error {
+	obj := &model.Permission{}
+	return Update(c, d.db, obj, id, key, value)
+}
+
+func (d *Dao) UpdateWherePermission(c *gin.Context, key string, value interface{}, wvs []*gcurd.WhereValue) error {
+	obj := &model.Permission{}
+	return UpdateWhere(c, d.db, obj, key, value, wvs)
+}
+
+func (d *Dao) UpdateWhereKVPermission(c *gin.Context, kvs []gcurd.KeyValue, wvs []*gcurd.WhereValue) error {
+	obj := &model.Permission{}
+	return UpdateWhereKV(c, d.db, obj, kvs, wvs)
+}
+
+func (d *Dao) GetPermission(c *gin.Context, id int) (*model.Permission, error) {
+	obj := &model.Permission{}
+	return Get(c, d.db, obj, id)
+}
+
+func (d *Dao) GetWherePermission(c *gin.Context, wvs []*gcurd.WhereValue) (*model.Permission, error) {
+	obj := &model.Permission{}
+	return GetWhere(c, d.db, obj, wvs)
+}
+
+func (d *Dao) FindPermission(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.Permission, error) {
+	obj := &model.Permission{}
+	return Find(c, d.db, obj, wvs, obj.New)
+}
+
+func (d *Dao) PageTotalPermission(c *gin.Context, req *gcurd.Request) (int, error) {
+	obj := &model.Permission{}
+	return PageTotal(c, d.db, obj, req)
+}
+
+func (d *Dao) PageFindPermission(c *gin.Context, req *gcurd.Request) ([]*model.Permission, error) {
+	obj := &model.Permission{}
+	return PageFind(c, d.db, obj, req, obj.New)
+}
+
+func (d *Dao) CreatePermissionApi(c *gin.Context, obj *model.PermissionApi) (sql.Result, error) {
+	return Create(c, d.db, obj)
+}
+
+func (d *Dao) DeletePermissionApi(c *gin.Context, id int) error {
+	obj := &model.PermissionApi{}
+	return Delete(c, d.db, obj, id)
+}
+
+func (d *Dao) UpdatePermissionApi(c *gin.Context, id int, key string, value interface{}) error {
+	obj := &model.PermissionApi{}
+	return Update(c, d.db, obj, id, key, value)
+}
+
+func (d *Dao) UpdateWherePermissionApi(c *gin.Context, key string, value interface{}, wvs []*gcurd.WhereValue) error {
+	obj := &model.PermissionApi{}
+	return UpdateWhere(c, d.db, obj, key, value, wvs)
+}
+
+func (d *Dao) UpdateWhereKVPermissionApi(c *gin.Context, kvs []gcurd.KeyValue, wvs []*gcurd.WhereValue) error {
+	obj := &model.PermissionApi{}
+	return UpdateWhereKV(c, d.db, obj, kvs, wvs)
+}
+
+func (d *Dao) GetPermissionApi(c *gin.Context, id int) (*model.PermissionApi, error) {
+	obj := &model.PermissionApi{}
+	return Get(c, d.db, obj, id)
+}
+
+func (d *Dao) GetWherePermissionApi(c *gin.Context, wvs []*gcurd.WhereValue) (*model.PermissionApi, error) {
+	obj := &model.PermissionApi{}
+	return GetWhere(c, d.db, obj, wvs)
+}
+
+func (d *Dao) FindPermissionApi(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.PermissionApi, error) {
+	obj := &model.PermissionApi{}
+	return Find(c, d.db, obj, wvs, obj.New)
+}
+
+func (d *Dao) PageTotalPermissionApi(c *gin.Context, req *gcurd.Request) (int, error) {
+	obj := &model.PermissionApi{}
+	return PageTotal(c, d.db, obj, req)
+}
+
+func (d *Dao) PageFindPermissionApi(c *gin.Context, req *gcurd.Request) ([]*model.PermissionApi, error) {
+	obj := &model.PermissionApi{}
+	return PageFind(c, d.db, obj, req, obj.New)
+}
+
+func (d *Dao) CreatePermissionMenu(c *gin.Context, obj *model.PermissionMenu) (sql.Result, error) {
+	return Create(c, d.db, obj)
+}
+
+func (d *Dao) DeletePermissionMenu(c *gin.Context, id int) error {
+	obj := &model.PermissionMenu{}
+	return Delete(c, d.db, obj, id)
+}
+
+func (d *Dao) UpdatePermissionMenu(c *gin.Context, id int, key string, value interface{}) error {
+	obj := &model.PermissionMenu{}
+	return Update(c, d.db, obj, id, key, value)
+}
+
+func (d *Dao) UpdateWherePermissionMenu(c *gin.Context, key string, value interface{}, wvs []*gcurd.WhereValue) error {
+	obj := &model.PermissionMenu{}
+	return UpdateWhere(c, d.db, obj, key, value, wvs)
+}
+
+func (d *Dao) UpdateWhereKVPermissionMenu(c *gin.Context, kvs []gcurd.KeyValue, wvs []*gcurd.WhereValue) error {
+	obj := &model.PermissionMenu{}
+	return UpdateWhereKV(c, d.db, obj, kvs, wvs)
+}
+
+func (d *Dao) GetPermissionMenu(c *gin.Context, id int) (*model.PermissionMenu, error) {
+	obj := &model.PermissionMenu{}
+	return Get(c, d.db, obj, id)
+}
+
+func (d *Dao) GetWherePermissionMenu(c *gin.Context, wvs []*gcurd.WhereValue) (*model.PermissionMenu, error) {
+	obj := &model.PermissionMenu{}
+	return GetWhere(c, d.db, obj, wvs)
+}
+
+func (d *Dao) FindPermissionMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.PermissionMenu, error) {
+	obj := &model.PermissionMenu{}
+	return Find(c, d.db, obj, wvs, obj.New)
+}
+
+func (d *Dao) PageTotalPermissionMenu(c *gin.Context, req *gcurd.Request) (int, error) {
+	obj := &model.PermissionMenu{}
+	return PageTotal(c, d.db, obj, req)
+}
+
+func (d *Dao) PageFindPermissionMenu(c *gin.Context, req *gcurd.Request) ([]*model.PermissionMenu, error) {
+	obj := &model.PermissionMenu{}
+	return PageFind(c, d.db, obj, req, obj.New)
+}
+
 func (d *Dao) CreateRole(c *gin.Context, obj *model.Role) (sql.Result, error) {
 	return Create(c, d.db, obj)
 }
@@ -350,55 +497,6 @@ func (d *Dao) PageFindRole(c *gin.Context, req *gcurd.Request) ([]*model.Role, e
 	return PageFind(c, d.db, obj, req, obj.New)
 }
 
-func (d *Dao) CreateRoleApi(c *gin.Context, obj *model.RoleApi) (sql.Result, error) {
-	return Create(c, d.db, obj)
-}
-
-func (d *Dao) DeleteRoleApi(c *gin.Context, id int) error {
-	obj := &model.RoleApi{}
-	return Delete(c, d.db, obj, id)
-}
-
-func (d *Dao) UpdateRoleApi(c *gin.Context, id int, key string, value interface{}) error {
-	obj := &model.RoleApi{}
-	return Update(c, d.db, obj, id, key, value)
-}
-
-func (d *Dao) UpdateWhereRoleApi(c *gin.Context, key string, value interface{}, wvs []*gcurd.WhereValue) error {
-	obj := &model.RoleApi{}
-	return UpdateWhere(c, d.db, obj, key, value, wvs)
-}
-
-func (d *Dao) UpdateWhereKVRoleApi(c *gin.Context, kvs []gcurd.KeyValue, wvs []*gcurd.WhereValue) error {
-	obj := &model.RoleApi{}
-	return UpdateWhereKV(c, d.db, obj, kvs, wvs)
-}
-
-func (d *Dao) GetRoleApi(c *gin.Context, id int) (*model.RoleApi, error) {
-	obj := &model.RoleApi{}
-	return Get(c, d.db, obj, id)
-}
-
-func (d *Dao) GetWhereRoleApi(c *gin.Context, wvs []*gcurd.WhereValue) (*model.RoleApi, error) {
-	obj := &model.RoleApi{}
-	return GetWhere(c, d.db, obj, wvs)
-}
-
-func (d *Dao) FindRoleApi(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.RoleApi, error) {
-	obj := &model.RoleApi{}
-	return Find(c, d.db, obj, wvs, obj.New)
-}
-
-func (d *Dao) PageTotalRoleApi(c *gin.Context, req *gcurd.Request) (int, error) {
-	obj := &model.RoleApi{}
-	return PageTotal(c, d.db, obj, req)
-}
-
-func (d *Dao) PageFindRoleApi(c *gin.Context, req *gcurd.Request) ([]*model.RoleApi, error) {
-	obj := &model.RoleApi{}
-	return PageFind(c, d.db, obj, req, obj.New)
-}
-
 func (d *Dao) CreateRoleMenu(c *gin.Context, obj *model.RoleMenu) (sql.Result, error) {
 	return Create(c, d.db, obj)
 }
@@ -445,5 +543,54 @@ func (d *Dao) PageTotalRoleMenu(c *gin.Context, req *gcurd.Request) (int, error)
 
 func (d *Dao) PageFindRoleMenu(c *gin.Context, req *gcurd.Request) ([]*model.RoleMenu, error) {
 	obj := &model.RoleMenu{}
+	return PageFind(c, d.db, obj, req, obj.New)
+}
+
+func (d *Dao) CreateRolePermission(c *gin.Context, obj *model.RolePermission) (sql.Result, error) {
+	return Create(c, d.db, obj)
+}
+
+func (d *Dao) DeleteRolePermission(c *gin.Context, id int) error {
+	obj := &model.RolePermission{}
+	return Delete(c, d.db, obj, id)
+}
+
+func (d *Dao) UpdateRolePermission(c *gin.Context, id int, key string, value interface{}) error {
+	obj := &model.RolePermission{}
+	return Update(c, d.db, obj, id, key, value)
+}
+
+func (d *Dao) UpdateWhereRolePermission(c *gin.Context, key string, value interface{}, wvs []*gcurd.WhereValue) error {
+	obj := &model.RolePermission{}
+	return UpdateWhere(c, d.db, obj, key, value, wvs)
+}
+
+func (d *Dao) UpdateWhereKVRolePermission(c *gin.Context, kvs []gcurd.KeyValue, wvs []*gcurd.WhereValue) error {
+	obj := &model.RolePermission{}
+	return UpdateWhereKV(c, d.db, obj, kvs, wvs)
+}
+
+func (d *Dao) GetRolePermission(c *gin.Context, id int) (*model.RolePermission, error) {
+	obj := &model.RolePermission{}
+	return Get(c, d.db, obj, id)
+}
+
+func (d *Dao) GetWhereRolePermission(c *gin.Context, wvs []*gcurd.WhereValue) (*model.RolePermission, error) {
+	obj := &model.RolePermission{}
+	return GetWhere(c, d.db, obj, wvs)
+}
+
+func (d *Dao) FindRolePermission(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.RolePermission, error) {
+	obj := &model.RolePermission{}
+	return Find(c, d.db, obj, wvs, obj.New)
+}
+
+func (d *Dao) PageTotalRolePermission(c *gin.Context, req *gcurd.Request) (int, error) {
+	obj := &model.RolePermission{}
+	return PageTotal(c, d.db, obj, req)
+}
+
+func (d *Dao) PageFindRolePermission(c *gin.Context, req *gcurd.Request) ([]*model.RolePermission, error) {
+	obj := &model.RolePermission{}
 	return PageFind(c, d.db, obj, req, obj.New)
 }

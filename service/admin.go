@@ -149,6 +149,52 @@ func (s *Service) FindAllRole(c *gin.Context) (reply []*model.Role, err error) {
 	return s.dao.FindRole(c, nil)
 }
 
+func (s *Service) UpdateRoleV2(c *gin.Context, info *model.UpdateRole, filed []string) error {
+	var content string
+	aInfo, err := s.dao.GetRole(c, info.RoleId)
+	if err != nil {
+		fmt.Println(err)
+		return errors.New("not found role")
+	}
+	for _, v := range filed {
+		switch v {
+		case "name":
+			content += fmt.Sprintf("name:%s;", info.Name)
+			_ = s.dao.UpdateRole(c, info.RoleId, "name", info.Name)
+		case "remark":
+			content += fmt.Sprintf("remark:%s;", info.Remark)
+			_ = s.dao.UpdateRole(c, info.RoleId, "remark", info.Remark)
+		case "permissions":
+			for _, permission := range info.Permissions {
+				_, err := s.dao.GetPermission(c, permission)
+				if err != nil {
+					return errors.New("permission not exist")
+				}
+			}
+			err = s.dao.DeleteRolePermissionByRoleId(c, info.RoleId)
+			if err != nil {
+				return err
+			}
+			for _, permission := range info.Permissions {
+				rInfo, err := s.dao.GetPermission(c, permission)
+				if err != nil {
+					return errors.New("permission not exist")
+				}
+
+				content += fmt.Sprintf("permission id:%d;permission:%s;", rInfo.Id, rInfo.Name)
+				_, _ = s.dao.CreateRolePermission(c, &model.RolePermission{
+					RoleId:       info.RoleId,
+					PermissionId: rInfo.Id,
+				})
+			}
+		}
+	}
+
+	cc := fmt.Sprintf("修改管理员:账户:%s;账户编号:%d;%s", aInfo.Name, aInfo.Id, content)
+	return s.logAction(c, "update_admin", cc, 1)
+
+}
+
 func (s *Service) UpdateAdminV2(c *gin.Context, info *model.UpdateAdmin, filed []string) error {
 	var content string
 	aInfo, err := s.dao.GetAdmin(c, info.AdminId)
@@ -166,7 +212,7 @@ func (s *Service) UpdateAdminV2(c *gin.Context, info *model.UpdateAdmin, filed [
 			_ = s.dao.UpdateAdmin(c, info.AdminId, "remark", info.Remark)
 		case "roles":
 			for _, role := range info.Roles {
-				_, err := s.dao.GetRoleById(c, role)
+				_, err := s.dao.GetRole(c, role)
 				if err != nil {
 					return errors.New("角色不存在")
 				}
@@ -176,7 +222,7 @@ func (s *Service) UpdateAdminV2(c *gin.Context, info *model.UpdateAdmin, filed [
 				return err
 			}
 			for _, role := range info.Roles {
-				rInfo, err := s.dao.GetRoleById(c, role)
+				rInfo, err := s.dao.GetRole(c, role)
 				if err != nil {
 					return errors.New("角色不存在")
 				}
@@ -210,7 +256,7 @@ func (s *Service) DeleteAdminV2(c *gin.Context, adminId int) error {
 	return s.logAction(c, "delete_admin", cc, 1)
 }
 
-func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
+func (s *Service) AddAdminV2(c *gin.Context, info *model.AddAdmin) error {
 	if err := utils.CheckNameLegal(info.Name); err != nil {
 		return err
 	}
@@ -257,7 +303,7 @@ func (s *Service) AddAdmin(c *gin.Context, info *model.AddAdmin) error {
 
 // 角色
 
-func (s *Service) FindRolePageV1(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RoleInfo], err error) {
+func (s *Service) FindRolePageV2(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RoleInfo], err error) {
 	var count int
 	var dataTmp []*model.Role
 	var data []*model.RoleInfo
@@ -271,26 +317,22 @@ func (s *Service) FindRolePageV1(c *gin.Context, req *gcurd.Request) (reply *mod
 		return
 	}
 	for _, d := range dataTmp {
-		var ms []*model.Menu
-		var as []*model.Api
-		roleMenus, _ := s.dao.FindRoleMenu(c, []*gcurd.WhereValue{gcurd.EQ("role_id", d.Id)})
-		for _, roleMenu := range roleMenus {
-			menus, _ := s.dao.FindMenu(c, []*gcurd.WhereValue{gcurd.EQ("id", roleMenu.MenuId)})
-			ms = append(ms, menus...)
-		}
-		roleApis, _ := s.dao.FindRoleApi(c, []*gcurd.WhereValue{gcurd.EQ("role_id", d.Id)})
-		for _, roleApi := range roleApis {
-			apis, _ := s.dao.FindApi(c, []*gcurd.WhereValue{gcurd.EQ("id", roleApi.ApiId)})
-			as = append(as, apis...)
+		ps := make([]*model.Permission, 0)
+
+		rolePermissions, _ := s.dao.FindRolePermission(c, []*gcurd.WhereValue{gcurd.EQ("role_id", d.Id)})
+		for _, rolePermission := range rolePermissions {
+			menus, _ := s.dao.FindPermission(c, []*gcurd.WhereValue{gcurd.EQ("id", rolePermission.PermissionId)})
+			ps = append(ps, menus...)
 		}
 
 		data = append(data, &model.RoleInfo{
-			Id:    d.Id,
-			Name:  d.Name,
-			Menus: ms,
-			Apis:  as,
+			Id:          d.Id,
+			Name:        d.Name,
+			Permissions: ps,
 		})
 	}
+	reply = &model.PageReply[*model.RoleInfo]{}
+
 	reply.Rows = data
 	reply.RowsTotal = count
 	reply.Page = req.Pagination.Page
@@ -298,9 +340,9 @@ func (s *Service) FindRolePageV1(c *gin.Context, req *gcurd.Request) (reply *mod
 	return
 }
 
-func (s *Service) GetRoleInfo(c *gin.Context, roleId int) (*model.RoleInfo, error) {
+func (s *Service) GetRoleInfoV1(c *gin.Context, roleId int) (*model.RoleInfo, error) {
 	var data *model.RoleInfo
-	dataTmp, err := s.dao.GetRoleById(c, roleId)
+	dataTmp, err := s.dao.GetRole(c, roleId)
 	if err == sql.ErrNoRows {
 		return nil, errors.New("角色不存在")
 	}
@@ -309,27 +351,26 @@ func (s *Service) GetRoleInfo(c *gin.Context, roleId int) (*model.RoleInfo, erro
 		return nil, err
 	}
 
-	var ms []*model.Menu
-	var as []*model.Api
-	roleMenus, _ := s.dao.FindRoleMenu(c, []*gcurd.WhereValue{gcurd.EQ("role_id", roleId)})
-	for _, roleMenu := range roleMenus {
-		menus, _ := s.dao.FindMenu(c, []*gcurd.WhereValue{gcurd.EQ("id", roleMenu.MenuId)})
-		ms = append(ms, menus...)
-	}
-	roleApis, _ := s.dao.FindRoleApi(c, []*gcurd.WhereValue{gcurd.EQ("role_id", roleId)})
-	for _, roleApi := range roleApis {
-		apis, _ := s.dao.FindApi(c, []*gcurd.WhereValue{gcurd.EQ("id", roleApi.ApiId)})
-		as = append(as, apis...)
+	ps := make([]*model.Permission, 0)
+
+	rolePermissions, _ := s.dao.FindRolePermission(c, []*gcurd.WhereValue{gcurd.EQ("role_id", dataTmp.Id)})
+	for _, rolePermission := range rolePermissions {
+		menus, _ := s.dao.FindPermission(c, []*gcurd.WhereValue{gcurd.EQ("id", rolePermission.PermissionId)})
+		ps = append(ps, menus...)
 	}
 
 	data = &model.RoleInfo{
-		Id:    dataTmp.Id,
-		Name:  dataTmp.Name,
-		Menus: ms,
-		Apis:  as,
+		Id:          dataTmp.Id,
+		Name:        dataTmp.Name,
+		Remark:      dataTmp.Remark,
+		Permissions: ps,
 	}
 
 	return data, err
+}
+
+func (s *Service) FindAllPermission(c *gin.Context) (reply []*model.Permission, err error) {
+	return s.dao.FindPermission(c, nil)
 }
 
 func (s *Service) FindAllMenu(c *gin.Context) (reply []*model.Menu, err error) {
@@ -340,17 +381,27 @@ func (s *Service) FindAllApi(c *gin.Context) (reply []*model.Api, err error) {
 	return s.dao.FindApi(c, nil)
 }
 
-func (s *Service) AddRole(c *gin.Context, role *model.Role) error {
+func (s *Service) AddRoleV2(c *gin.Context, role *model.AddRole) error {
 
 	aInfo, err := s.dao.GetRoleByName(c, role.Name)
 	if err != sql.ErrNoRows {
-		return errors.New("角色名已存在")
+		return errors.New("name exist")
 	}
-	res, err := s.dao.CreateRole(c, role)
+	res, err := s.dao.CreateRole(c, &model.Role{
+		Name:   role.Name,
+		Remark: role.Remark,
+	})
 	if err != nil {
 		return err
 	}
 	id, _ := res.LastInsertId()
+
+	for _, permission := range role.Permissions {
+		_, _ = s.dao.CreateRolePermission(c, &model.RolePermission{
+			RoleId:       int(id),
+			PermissionId: permission,
+		})
+	}
 
 	content := fmt.Sprintf("添加角色:角色:%s;角色编号:%d;备注：%s", aInfo.Name, id, aInfo.Remark)
 	return s.logAction(c, "add_role", content, 1)
@@ -359,7 +410,7 @@ func (s *Service) AddRole(c *gin.Context, role *model.Role) error {
 func (s *Service) DeleteRoleV1(c *gin.Context, id int) error {
 
 	var content string
-	roleInfo, err := s.dao.GetRoleById(c, id)
+	roleInfo, err := s.dao.GetRole(c, id)
 	if err != nil {
 		return errors.New("角色不存在")
 	}
@@ -379,7 +430,7 @@ func (s *Service) DeleteRoleV1(c *gin.Context, id int) error {
 
 	err = s.dao.DeleteRole(c, id)
 	err = s.dao.DeleteRoleMenuByRoleId(c, id)
-	err = s.dao.DeleteRoleApiByRoleId(c, id)
+	err = s.dao.DeleteRolePermission(c, id)
 
 	return s.logAction(c, "delete_role", fmt.Sprintf("删除角色:角色:%s;角色编号:%d;%s", roleInfo.Name, roleInfo.Id, content), 1)
 }
