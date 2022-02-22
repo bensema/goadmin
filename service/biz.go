@@ -31,7 +31,7 @@ func (s *Service) FindAdmin(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.A
 }
 
 func (s *Service) UpdateAdmin(c *gin.Context, obj *model.Admin, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpAdminDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpAdminUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageAdminRole(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.AdminRole], err error) {
@@ -59,7 +59,7 @@ func (s *Service) FindAdminRole(c *gin.Context, wvs []*gcurd.WhereValue) ([]*mod
 }
 
 func (s *Service) UpdateAdminRole(c *gin.Context, obj *model.AdminRole, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpAdminRoleDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpAdminRoleUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageApi(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.Api], err error) {
@@ -87,7 +87,7 @@ func (s *Service) FindApi(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.Api
 }
 
 func (s *Service) UpdateApi(c *gin.Context, obj *model.Api, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpApiDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpApiUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageLogAdminLogin(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.LogAdminLogin], err error) {
@@ -115,7 +115,7 @@ func (s *Service) FindLogAdminLogin(c *gin.Context, wvs []*gcurd.WhereValue) ([]
 }
 
 func (s *Service) UpdateLogAdminLogin(c *gin.Context, obj *model.LogAdminLogin, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpLogAdminLoginDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpLogAdminLoginUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageLogAdminOperation(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.LogAdminOperation], err error) {
@@ -143,7 +143,7 @@ func (s *Service) FindLogAdminOperation(c *gin.Context, wvs []*gcurd.WhereValue)
 }
 
 func (s *Service) UpdateLogAdminOperation(c *gin.Context, obj *model.LogAdminOperation, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpLogAdminOperationDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpLogAdminOperationUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageMenu(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.Menu], err error) {
@@ -171,7 +171,7 @@ func (s *Service) FindMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.Me
 }
 
 func (s *Service) UpdateMenu(c *gin.Context, obj *model.Menu, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpMenuDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpMenuUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PagePermission(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.Permission], err error) {
@@ -199,7 +199,7 @@ func (s *Service) FindPermission(c *gin.Context, wvs []*gcurd.WhereValue) ([]*mo
 }
 
 func (s *Service) UpdatePermission(c *gin.Context, obj *model.Permission, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PagePermissionApi(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.PermissionApi], err error) {
@@ -227,7 +227,7 @@ func (s *Service) FindPermissionApi(c *gin.Context, wvs []*gcurd.WhereValue) ([]
 }
 
 func (s *Service) UpdatePermissionApi(c *gin.Context, obj *model.PermissionApi, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionApiDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionApiUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PagePermissionMenu(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.PermissionMenu], err error) {
@@ -255,7 +255,7 @@ func (s *Service) FindPermissionMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([
 }
 
 func (s *Service) UpdatePermissionMenu(c *gin.Context, obj *model.PermissionMenu, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionMenuDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpPermissionMenuUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageRole(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.Role], err error) {
@@ -283,7 +283,7 @@ func (s *Service) FindRole(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.Ro
 }
 
 func (s *Service) UpdateRole(c *gin.Context, obj *model.Role, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageRoleMenu(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RoleMenu], err error) {
@@ -311,7 +311,7 @@ func (s *Service) FindRoleMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([]*mode
 }
 
 func (s *Service) UpdateRoleMenu(c *gin.Context, obj *model.RoleMenu, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleMenuDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleMenuUpdate, ignoreColumns, mosaicsColumns)
 }
 
 func (s *Service) PageRolePermission(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RolePermission], err error) {
@@ -339,5 +339,5 @@ func (s *Service) FindRolePermission(c *gin.Context, wvs []*gcurd.WhereValue) ([
 }
 
 func (s *Service) UpdateRolePermission(c *gin.Context, obj *model.RolePermission, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpRolePermissionDel, ignoreColumns, mosaicsColumns)
+	return gUpdate(c, s.dao.DB(), obj, id, model.OpRolePermissionUpdate, ignoreColumns, mosaicsColumns)
 }

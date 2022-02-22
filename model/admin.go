@@ -48,3 +48,29 @@ type UpdateRole struct {
 	Remark      string `json:"remark"`
 	Permissions []int  `json:"permissions"`
 }
+
+type PermissionInfo struct {
+	Id              int     `json:"id"`
+	Name            string  `json:"name"`
+	PermissionGroup string  `json:"Permission_group"`
+	Remark          string  `json:"remark"`
+	Menus           []*Menu `json:"menus"`
+	Apis            []*Api  `json:"apis"`
+}
+
+type UpdatePermission struct {
+	Id              int    `json:"id"`
+	Name            string `json:"name"`
+	PermissionGroup string `json:"Permission_group"`
+	Remark          string `json:"remark"`
+	Menus           []int  `json:"menus"`
+	Apis            []int  `json:"apis"`
+}
+
+type AddPermission struct {
+	Name            string `json:"name"`
+	PermissionGroup string `json:"Permission_group"`
+	Remark          string `json:"remark"`
+	Menus           []int  `json:"menus"`
+	Apis            []int  `json:"apis"`
+}

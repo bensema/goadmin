@@ -21,7 +21,7 @@ require (
 )
 
 require (
-	github.com/bensema/gcurd v0.0.0-20220219102342-eaebd5a64700
+	github.com/bensema/gcurd v0.0.0-20220222151328-d2c06249ccaa
 	github.com/fatih/structs v1.1.0
 )
 

@@ -28,13 +28,23 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.POST("/api/role/add", _this.addRole)         // 添加角色
 	g.POST("/api/role/delete", _this.deleteRole)   // 删除角色
 
+	g.GET("/api/permission/pages", _this.permissionPages)
+	g.GET("/api/permission/info", _this.permissionInfoV1)
+	g.POST("/api/permission/update", _this.updatePermissionV1) // 更新权限（menu，api）
+	g.POST("/api/permission/add", _this.addPermissionV1)
+	g.POST("/api/permission/delete", _this.deletePermissionV1)
+
 	g.GET("/api/role_menu/find", _this.findRoleMenu)      // 查询指定权限菜单
 	g.GET("/api/role_api/find", _this.findRolePermission) // 查询指定权限操作
 
+	g.GET("/api/menu/pages", _this.menuPages)
+	g.GET("/api/menu/info", _this.menuInfo)
 	g.POST("/api/menu/add", _this.addMenu)       // 添加菜单
 	g.POST("/api/menu/delete", _this.deleteMenu) // 删除菜单
 	g.POST("/api/menu/update", _this.updateMenu) // 更新菜单
 
+	g.GET("/api/api/pages", _this.apiPages)
+	g.GET("/api/api/info", _this.apiInfo)
 	g.POST("/api/api/add", _this.addApi)       // 添加操作功能
 	g.POST("/api/api/delete", _this.deleteApi) // 删除操作功能
 	g.POST("/api/api/update", _this.updateApi) // 更新操作功能
@@ -260,6 +270,126 @@ func (_this *ApiAuth) deleteRole(c *gin.Context) {
 	JSON(c, nil, srv.DeleteRoleV1(c, utils.GetInt(id)))
 }
 
+// permission
+
+func (_this *ApiAuth) permissionPages(c *gin.Context) {
+	req := &gcurd.Request{}
+	req = prepareReq(c, req)
+	if name, b := c.GetQuery("name"); b {
+		req.Where = append(req.Where, gcurd.EQ("name", name))
+	}
+	reply, err := srv.PagePermission(c, req)
+	JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) permissionInfoV1(c *gin.Context) {
+	id, _ := c.GetQuery("id")
+	reply, err := srv.GetPermissionInfoV1(c, utils.GetInt(id))
+	JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) updatePermissionV1(c *gin.Context) {
+	var filed []string
+	arg := &model.UpdatePermission{}
+	permissionId, _ := c.GetPostForm("id")
+	name, b := c.GetPostForm("name")
+	if b {
+		filed = append(filed, "name")
+	}
+	permissionGroup, b := c.GetPostForm("permission_group")
+	if b {
+		filed = append(filed, "permission_group")
+	}
+	remark, b := c.GetPostForm("remark")
+	if b {
+		filed = append(filed, "remark")
+	}
+
+	menus, b := c.GetPostForm("menus")
+	if b {
+		filed = append(filed, "menus")
+	}
+	apis, b := c.GetPostForm("apis")
+	if b {
+		filed = append(filed, "apis")
+	}
+
+	var ms []int
+	var err error
+	if menus == "" {
+		ms = []int{}
+	} else {
+		ms, err = utils.S2IList(strings.Split(menus, ","))
+		if err != nil {
+			JSON(c, nil, err)
+			return
+		}
+	}
+	var as []int
+	if apis == "" {
+		as = []int{}
+	} else {
+		as, err = utils.S2IList(strings.Split(apis, ","))
+		if err != nil {
+			JSON(c, nil, err)
+			return
+		}
+	}
+
+	arg.Id = utils.GetInt(permissionId)
+	arg.Name = name
+	arg.PermissionGroup = permissionGroup
+	arg.Remark = remark
+	arg.Menus = ms
+	arg.Apis = as
+
+	JSON(c, nil, srv.UpdatePermissionV1(c, arg, filed))
+}
+
+func (_this *ApiAuth) addPermissionV1(c *gin.Context) {
+	obj := &model.AddPermission{}
+	name, _ := c.GetPostForm("name")
+	permissionGroup, _ := c.GetPostForm("permission_group")
+	remark, _ := c.GetPostForm("remark")
+	menus, _ := c.GetPostForm("menus")
+	apis, _ := c.GetPostForm("apis")
+
+	ms, err := utils.S2IList(strings.Split(menus, ","))
+	if err != nil {
+		JSON(c, nil, errors.New("select menu"))
+		return
+	}
+
+	as, err := utils.S2IList(strings.Split(apis, ","))
+	if err != nil {
+		JSON(c, nil, errors.New("select api"))
+		return
+	}
+
+	obj.Name = name
+	obj.PermissionGroup = permissionGroup
+	obj.Remark = remark
+	obj.Menus = ms
+	obj.Apis = as
+	JSON(c, nil, srv.AddPermissionV1(c, obj))
+}
+
+func (_this *ApiAuth) deletePermissionV1(c *gin.Context) {
+	permissionId, b := c.GetPostForm("id")
+	if !b {
+		JSON(c, nil, errors.New("id is null"))
+		return
+	}
+
+	JSON(c, nil, srv.DeletePermissionV1(c, utils.GetInt(permissionId)))
+}
+
+func (_this *ApiAuth) menuInfo(c *gin.Context) {
+	id, _ := c.GetQuery("id")
+	reply, err := srv.GetMenu(c, utils.GetInt(id))
+	JSON(c, reply, err)
+}
+
 func (_this *ApiAuth) findRoleMenu(c *gin.Context) {
 	var wvs []*gcurd.WhereValue
 	id, _ := c.GetQuery("id")
@@ -276,6 +406,17 @@ func (_this *ApiAuth) findRolePermission(c *gin.Context) {
 	// todo
 	//reply, err := srv.FindRolePermission(c, wvs)
 	//JSON(c, reply, err)
+}
+
+// menus
+func (_this *ApiAuth) menuPages(c *gin.Context) {
+	req := &gcurd.Request{}
+	req = prepareReq(c, req)
+	if name, b := c.GetQuery("name"); b {
+		req.Where = append(req.Where, gcurd.EQ("name", name))
+	}
+	reply, err := srv.PageMenu(c, req)
+	JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) addMenu(c *gin.Context) {
@@ -328,7 +469,7 @@ func (_this *ApiAuth) updateMenu(c *gin.Context) {
 	if indexSort, b := c.GetPostForm("index_sort"); b {
 		obj.IndexSort = utils.GetInt(indexSort)
 	}
-
+	fmt.Println(obj, obj.Url)
 	JSON(c, nil, srv.UpdateMenu(c, obj, Id, []string{}, []string{}))
 
 }
@@ -341,6 +482,24 @@ func (_this *ApiAuth) deleteMenu(c *gin.Context) {
 	}
 
 	JSON(c, nil, srv.DeleteMenu(c, utils.GetInt(id)))
+}
+
+// api
+
+func (_this *ApiAuth) apiPages(c *gin.Context) {
+	req := &gcurd.Request{}
+	req = prepareReq(c, req)
+	if name, b := c.GetQuery("name"); b {
+		req.Where = append(req.Where, gcurd.EQ("name", name))
+	}
+	reply, err := srv.PageApi(c, req)
+	JSON(c, reply, err)
+}
+
+func (_this *ApiAuth) apiInfo(c *gin.Context) {
+	id, _ := c.GetQuery("id")
+	reply, err := srv.GetApi(c, utils.GetInt(id))
+	JSON(c, reply, err)
 }
 
 func (_this *ApiAuth) addApi(c *gin.Context) {

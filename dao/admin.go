@@ -75,3 +75,24 @@ func (d *Dao) GetMenuByUrl(c *gin.Context, url string) (*model.Menu, error) {
 	wvs = append(wvs, gcurd.EQ("url", url))
 	return GetWhere(c, d.db, obj, wvs)
 }
+
+func (d *Dao) DeletePermissionMenuByPermissionId(c *gin.Context, permissionId int) error {
+	obj := &model.PermissionMenu{}
+	var wvs []*gcurd.WhereValue
+	wvs = append(wvs, gcurd.EQ("permission_id", permissionId))
+	return gcurd.DeleteWhere(c, d.db, obj, wvs)
+}
+
+func (d *Dao) DeletePermissionApiByPermissionId(c *gin.Context, permissionId int) error {
+	obj := &model.PermissionApi{}
+	var wvs []*gcurd.WhereValue
+	wvs = append(wvs, gcurd.EQ("permission_id", permissionId))
+	return gcurd.DeleteWhere(c, d.db, obj, wvs)
+}
+
+func (d *Dao) GetPermissionByName(c *gin.Context, name string) (*model.Permission, error) {
+	obj := &model.Permission{}
+	var wvs []*gcurd.WhereValue
+	wvs = append(wvs, gcurd.EQ("name", name))
+	return GetWhere(c, d.db, obj, wvs)
+}

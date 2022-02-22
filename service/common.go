@@ -30,9 +30,12 @@ func logFieldChange[T gcurd.Model](newObj T, oldObj T, isNew bool, mosaicsColumn
 	n.TagName = "json"
 	_new := n.Map()
 
-	o := structs.New(oldObj)
-	o.TagName = "json"
-	_old := o.Map()
+	var _old map[string]interface{}
+	if !isNew {
+		o := structs.New(oldObj)
+		o.TagName = "json"
+		_old = o.Map()
+	}
 
 	for _, col := range newObj.Columns() {
 		if isNew {

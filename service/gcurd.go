@@ -16,7 +16,7 @@ import (
 func gPage[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, req *gcurd.Request, f func() T) (reply *model.PageReply[T], err error) {
 
 	var count int
-	var objs []T
+	objs := make([]T, 0)
 	reply = &model.PageReply[T]{}
 
 	if count, err = dao.PageTotal(c, db, obj, req); err != nil {
@@ -30,7 +30,7 @@ func gPage[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, req *gcurd.Request,
 	if objs, err = dao.PageFind(c, db, obj, req, f); err != nil {
 		return
 	}
-
+	reply.Rows = make([]T, 0)
 	reply.Rows = objs
 	reply.RowsTotal = count
 	reply.Page = req.Pagination.Page
@@ -61,8 +61,7 @@ func gDelete[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, id int, op model.
 	if err != nil {
 		return err
 	}
-	var tmp T
-	content := ContentDiff(tmp, old, mosaicsColumns)
+	content := ContentNew(old, mosaicsColumns)
 	result := 1
 	return logAction(c, db, string(op), content, result)
 }
@@ -76,14 +75,14 @@ func gFind[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, wvs []*gcurd.WhereV
 }
 
 func gUpdate[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, id int, op model.OpCode, ignoreColumns []string, mosaicsColumns []string) error {
-	old, err := dao.Get(c, db, obj, id)
-	if err != nil {
-		return errors.New("ID不存在[-2]")
-	}
-
 	n := structs.New(obj)
 	n.TagName = "json"
 	_new := n.Map()
+
+	old, err := dao.Get(c, db, obj, id)
+	if err != nil {
+		return errors.New("id not exist")
+	}
 
 	o := structs.New(old)
 	o.TagName = "json"
@@ -99,8 +98,17 @@ func gUpdate[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, id int, op model.
 			kvs = append(kvs, gcurd.KeyValue{Key: col, Value: _new[col]})
 		}
 	}
+
+	if kvs == nil {
+		return errors.New("nothing has change")
+	}
+
 	wvs = append(wvs, gcurd.EQ("id", id))
-	dao.UpdateWhereKV(c, db, obj, kvs, wvs)
+	err = dao.UpdateWhereKV(c, db, obj, kvs, wvs)
+
+	if err != nil {
+		return err
+	}
 
 	content := logFieldTemp("id", id, nil, true, false) + ";" + ContentDiff(obj, old, mosaicsColumns)
 	result := 1

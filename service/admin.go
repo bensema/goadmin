@@ -442,3 +442,158 @@ func (s *Service) logAction(c *gin.Context, opCode string, content string, resul
 func (s *Service) GetAdminByName(c *gin.Context, name string) (*model.Admin, error) {
 	return s.dao.GetAdminByName(c, name)
 }
+
+func (s *Service) GetPermissionInfoV1(c *gin.Context, permissionId int) (*model.PermissionInfo, error) {
+	var data *model.PermissionInfo
+	dataTmp, err := s.dao.GetPermission(c, permissionId)
+	if err == sql.ErrNoRows {
+		return nil, errors.New("permission not exist")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	ms := make([]*model.Menu, 0)
+	permissionMenus, _ := s.dao.FindPermissionMenu(c, []*gcurd.WhereValue{gcurd.EQ("permission_id", dataTmp.Id)})
+	for _, permissionMenu := range permissionMenus {
+		menus, _ := s.dao.FindMenu(c, []*gcurd.WhereValue{gcurd.EQ("id", permissionMenu.MenuId)})
+		ms = append(ms, menus...)
+	}
+	as := make([]*model.Api, 0)
+	permissionApis, _ := s.dao.FindPermissionApi(c, []*gcurd.WhereValue{gcurd.EQ("permission_id", dataTmp.Id)})
+	for _, permissionApi := range permissionApis {
+		apis, _ := s.dao.FindApi(c, []*gcurd.WhereValue{gcurd.EQ("id", permissionApi.ApiId)})
+		as = append(as, apis...)
+	}
+
+	data = &model.PermissionInfo{
+		Id:     dataTmp.Id,
+		Name:   dataTmp.Name,
+		Remark: dataTmp.Remark,
+		Menus:  ms,
+		Apis:   as,
+	}
+
+	return data, err
+}
+
+func (s *Service) UpdatePermissionV1(c *gin.Context, info *model.UpdatePermission, filed []string) error {
+	var content string
+	pInfo, err := s.dao.GetPermission(c, info.Id)
+	if err != nil {
+		return errors.New("permission not exit")
+	}
+	for _, v := range filed {
+		switch v {
+		case "name":
+			content += fmt.Sprintf("name:%s;", info.Name)
+			_ = s.dao.UpdatePermission(c, info.Id, "name", info.Name)
+		case "permission_group":
+			content += fmt.Sprintf("permission_group:%s;", info.PermissionGroup)
+			_ = s.dao.UpdatePermission(c, info.Id, "permission_group", info.PermissionGroup)
+		case "remark":
+			content += fmt.Sprintf("remark:%s;", info.Remark)
+			_ = s.dao.UpdatePermission(c, info.Id, "remark", info.Remark)
+		case "menus":
+			for _, menu := range info.Menus {
+				_, err := s.dao.GetMenu(c, menu)
+				if err != nil {
+					return errors.New("menu not exist")
+				}
+			}
+			err = s.dao.DeletePermissionMenuByPermissionId(c, info.Id)
+			if err != nil {
+				return err
+			}
+			for _, menu := range info.Menus {
+				mInfo, err := s.dao.GetMenu(c, menu)
+				if err != nil {
+					return errors.New("menu not exist")
+				}
+
+				content += fmt.Sprintf("menu id:%d;menu:%s;", mInfo.Id, mInfo.Name)
+				_, _ = s.dao.CreatePermissionMenu(c, &model.PermissionMenu{
+					PermissionId: pInfo.Id,
+					MenuId:       mInfo.Id,
+				})
+			}
+		case "apis":
+			for _, api := range info.Apis {
+				_, err := s.dao.GetApi(c, api)
+				if err != nil {
+					return errors.New("api not exist")
+				}
+			}
+			err = s.dao.DeletePermissionApiByPermissionId(c, info.Id)
+			if err != nil {
+				return err
+			}
+			for _, api := range info.Apis {
+				aInfo, err := s.dao.GetApi(c, api)
+				if err != nil {
+					return errors.New("api not exist")
+				}
+
+				content += fmt.Sprintf("api id:%d;api:%s;", aInfo.Id, aInfo.Name)
+				_, _ = s.dao.CreatePermissionApi(c, &model.PermissionApi{
+					PermissionId: pInfo.Id,
+					ApiId:        aInfo.Id,
+				})
+			}
+		}
+	}
+
+	cc := fmt.Sprintf("set permission:permission:%s;permission id:%d;%s", pInfo.Name, pInfo.Id, content)
+	return s.logAction(c, "update_permission", cc, 1)
+
+}
+
+func (s *Service) AddPermissionV1(c *gin.Context, permission *model.AddPermission) error {
+
+	aInfo, err := s.dao.GetPermissionByName(c, permission.Name)
+	if err != sql.ErrNoRows {
+		return errors.New("name exist")
+	}
+	res, err := s.dao.CreatePermission(c, &model.Permission{
+		Name:            permission.Name,
+		PermissionGroup: permission.PermissionGroup,
+		Remark:          permission.Remark,
+	})
+	if err != nil {
+		return err
+	}
+	id, _ := res.LastInsertId()
+
+	for _, menuId := range permission.Menus {
+		_, _ = s.dao.CreatePermissionMenu(c, &model.PermissionMenu{
+			PermissionId: int(id),
+			MenuId:       menuId,
+		})
+	}
+
+	for _, apiId := range permission.Apis {
+		_, _ = s.dao.CreatePermissionApi(c, &model.PermissionApi{
+			PermissionId: int(id),
+			ApiId:        apiId,
+		})
+	}
+
+	content := fmt.Sprintf("add permission:permission:%s;permission id:%d;permission group:%s;remark：%s", aInfo.Name, id, aInfo.PermissionGroup, aInfo.Remark)
+	return s.logAction(c, "add_permission", content, 1)
+}
+
+func (s *Service) DeletePermissionV1(c *gin.Context, permissionId int) error {
+
+	var content string
+	permission, err := s.dao.GetPermission(c, permissionId)
+	if err != nil {
+		return errors.New("permission not exist")
+	}
+
+	err = s.dao.DeletePermission(c, permissionId)
+	err = s.dao.DeletePermissionMenuByPermissionId(c, permissionId)
+	err = s.dao.DeletePermissionApiByPermissionId(c, permissionId)
+
+	return s.logAction(c, "delete_permission", fmt.Sprintf("delete permission:permission:%s;permission id:%d;%s", permission.Name, permission.Id, content), 1)
+}
