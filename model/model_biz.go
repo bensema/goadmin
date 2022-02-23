@@ -71,7 +71,6 @@ func (AdminRole) New() *AdminRole {
 type Api struct {
 	Id       int    `json:"id"`        // 编号
 	Name     string `json:"name"`      // 名称
-	Code     string `json:"code"`      // 编码
 	ApiGroup string `json:"api_group"` // 分组
 	Method   string `json:"method"`    // 方法
 	Url      string `json:"url"`       // url
@@ -90,11 +89,11 @@ func (m *Api) GetID() int {
 }
 
 func (m *Api) Columns() []string {
-	return []string{"id", "name", "code", "api_group", "method", "url"}
+	return []string{"id", "name", "api_group", "method", "url"}
 }
 
 func (m *Api) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.Name, &m.Code, &m.ApiGroup, &m.Method, &m.Url}
+	return []interface{}{&m.Id, &m.Name, &m.ApiGroup, &m.Method, &m.Url}
 }
 
 func (Api) New() *Api {
@@ -110,10 +109,10 @@ type LogAdminLogin struct {
 	Browser   string     `json:"browser"`    // 浏览器
 	UserAgent string     `json:"user_agent"` // 浏览器详情
 	Url       string     `json:"url"`        // url
-	Result    int        `json:"result"`     // 2:失败;1:成功
 	Ip        string     `json:"ip"`         // IP
-	RecordAt  xtime.Time `json:"record_at"`  // 记录时间
-	Remark    string     `json:"remark"`     // 备注
+	Result    string     `json:"result"`
+	RecordAt  xtime.Time `json:"record_at"` // 记录时间
+	Remark    string     `json:"remark"`    // 备注
 }
 
 func (m *LogAdminLogin) Table() string {
@@ -129,11 +128,11 @@ func (m *LogAdminLogin) GetID() int {
 }
 
 func (m *LogAdminLogin) Columns() []string {
-	return []string{"id", "admin_id", "name", "location", "os", "browser", "user_agent", "url", "result", "ip", "record_at", "remark"}
+	return []string{"id", "admin_id", "name", "location", "os", "browser", "user_agent", "url", "ip", "result", "record_at", "remark"}
 }
 
 func (m *LogAdminLogin) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.Location, &m.Os, &m.Browser, &m.UserAgent, &m.Url, &m.Result, &m.Ip, &m.RecordAt, &m.Remark}
+	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.Location, &m.Os, &m.Browser, &m.UserAgent, &m.Url, &m.Ip, &m.Result, &m.RecordAt, &m.Remark}
 }
 
 func (LogAdminLogin) New() *LogAdminLogin {
@@ -141,16 +140,16 @@ func (LogAdminLogin) New() *LogAdminLogin {
 }
 
 type LogAdminOperation struct {
-	Id            int        `json:"id"`             // 操作编号
-	AdminId       int        `json:"admin_id"`       // 管理员编号
-	Name          string     `json:"name"`           // 账户
-	OperationCode string     `json:"operation_code"` // 行为编号
-	OperationName string     `json:"operation_name"` // 行为
-	Content       string     `json:"content"`        // 操作内容
-	Result        int        `json:"result"`         // 操作结果1:成功；2:失败
-	Message       string     `json:"message"`        // 操作消息
-	Ip            string     `json:"ip"`             // 操作IP
-	RecordAt      xtime.Time `json:"record_at"`      // 操作时间
+	Id       int        `json:"id"`       // 操作编号
+	AdminId  int        `json:"admin_id"` // 管理员编号
+	Name     string     `json:"name"`     // 账户
+	Module   string     `json:"module"`   // 模块
+	Action   string     `json:"action"`   // 行为
+	Content  string     `json:"content"`  // 操作内容
+	Result   string     `json:"result"`
+	Message  string     `json:"message"`   // 操作消息
+	Ip       string     `json:"ip"`        // 操作IP
+	RecordAt xtime.Time `json:"record_at"` // 操作时间
 }
 
 func (m *LogAdminOperation) Table() string {
@@ -166,11 +165,11 @@ func (m *LogAdminOperation) GetID() int {
 }
 
 func (m *LogAdminOperation) Columns() []string {
-	return []string{"id", "admin_id", "name", "operation_code", "operation_name", "content", "result", "message", "ip", "record_at"}
+	return []string{"id", "admin_id", "name", "module", "action", "content", "result", "message", "ip", "record_at"}
 }
 
 func (m *LogAdminOperation) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.OperationCode, &m.OperationName, &m.Content, &m.Result, &m.Message, &m.Ip, &m.RecordAt}
+	return []interface{}{&m.Id, &m.AdminId, &m.Name, &m.Module, &m.Action, &m.Content, &m.Result, &m.Message, &m.Ip, &m.RecordAt}
 }
 
 func (LogAdminOperation) New() *LogAdminOperation {
@@ -180,7 +179,6 @@ func (LogAdminOperation) New() *LogAdminOperation {
 type Menu struct {
 	Id        int    `json:"id"`         // 编号
 	Name      string `json:"name"`       // 菜单名
-	Code      string `json:"code"`       // 编码
 	Pid       int    `json:"pid"`        // 上级菜单
 	Icon      string `json:"icon"`       // icon
 	Url       string `json:"url"`        // url
@@ -200,11 +198,11 @@ func (m *Menu) GetID() int {
 }
 
 func (m *Menu) Columns() []string {
-	return []string{"id", "name", "code", "pid", "icon", "url", "index_sort"}
+	return []string{"id", "name", "pid", "icon", "url", "index_sort"}
 }
 
 func (m *Menu) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.Name, &m.Code, &m.Pid, &m.Icon, &m.Url, &m.IndexSort}
+	return []interface{}{&m.Id, &m.Name, &m.Pid, &m.Icon, &m.Url, &m.IndexSort}
 }
 
 func (Menu) New() *Menu {
@@ -330,36 +328,6 @@ func (m *Role) Fields() []interface{} {
 
 func (Role) New() *Role {
 	return &Role{}
-}
-
-type RoleMenu struct {
-	Id     int `json:"id"`
-	RoleId int `json:"role_id"`
-	MenuId int `json:"menu_id"`
-}
-
-func (m *RoleMenu) Table() string {
-	return "role_menu"
-}
-
-func (m *RoleMenu) SetID(id int) {
-	m.Id = id
-}
-
-func (m *RoleMenu) GetID() int {
-	return m.Id
-}
-
-func (m *RoleMenu) Columns() []string {
-	return []string{"id", "role_id", "menu_id"}
-}
-
-func (m *RoleMenu) Fields() []interface{} {
-	return []interface{}{&m.Id, &m.RoleId, &m.MenuId}
-}
-
-func (RoleMenu) New() *RoleMenu {
-	return &RoleMenu{}
 }
 
 type RolePermission struct {

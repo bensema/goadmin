@@ -4,7 +4,6 @@ import (
 	"library/xtime"
 )
 
-// admin 数据v1
 type AdminV1 struct {
 	Id        int        `json:"id"`         // 自增编号
 	Name      string     `json:"name"`       // 账户

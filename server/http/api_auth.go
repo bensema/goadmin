@@ -34,7 +34,6 @@ func (_this *ApiAuth) RegisterRoute(g *gin.RouterGroup) {
 	g.POST("/api/permission/add", _this.addPermissionV1)
 	g.POST("/api/permission/delete", _this.deletePermissionV1)
 
-	g.GET("/api/role_menu/find", _this.findRoleMenu)      // 查询指定权限菜单
 	g.GET("/api/role_api/find", _this.findRolePermission) // 查询指定权限操作
 
 	g.GET("/api/menu/pages", _this.menuPages)
@@ -390,15 +389,6 @@ func (_this *ApiAuth) menuInfo(c *gin.Context) {
 	JSON(c, reply, err)
 }
 
-func (_this *ApiAuth) findRoleMenu(c *gin.Context) {
-	var wvs []*gcurd.WhereValue
-	id, _ := c.GetQuery("id")
-	wvs = append(wvs, gcurd.EQ("role_id", utils.GetInt(id)))
-
-	reply, err := srv.FindRoleMenu(c, wvs)
-	JSON(c, reply, err)
-}
-
 func (_this *ApiAuth) findRolePermission(c *gin.Context) {
 	var wvs []*gcurd.WhereValue
 	id, _ := c.GetQuery("id")
@@ -505,12 +495,10 @@ func (_this *ApiAuth) apiInfo(c *gin.Context) {
 func (_this *ApiAuth) addApi(c *gin.Context) {
 	obj := &model.Api{}
 	name, _ := c.GetPostForm("name")
-	code, _ := c.GetPostForm("code")
 	method, _ := c.GetPostForm("method")
 	url, _ := c.GetPostForm("url")
 
 	obj.Name = name
-	obj.Code = code
 	obj.Url = url
 	obj.Method = method
 
@@ -547,9 +535,6 @@ func (_this *ApiAuth) updateApi(c *gin.Context) {
 
 	if name, b := c.GetPostForm("name"); b {
 		obj.Name = name
-	}
-	if code, b := c.GetPostForm("code"); b {
-		obj.Code = code
 	}
 	if url, b := c.GetPostForm("url"); b {
 		obj.Url = url
@@ -597,6 +582,12 @@ func (_this *ApiAuth) logAdminOperation(c *gin.Context) {
 	}
 	if result, b := c.GetQuery("result"); b && result != "" {
 		req.Where = append(req.Where, gcurd.EQ("result", result))
+	}
+	if action, b := c.GetQuery("action"); b && action != "" {
+		req.Where = append(req.Where, gcurd.EQ("action", action))
+	}
+	if module, b := c.GetQuery("module"); b && module != "" {
+		req.Where = append(req.Where, gcurd.EQ("module", module))
 	}
 	if recordAtFrom, b := c.GetQuery("record_at_from"); b && recordAtFrom != "" {
 		req.Where = append(req.Where, gcurd.GTE("record_at", xtime.Time(utils.GetInt64(recordAtFrom))))

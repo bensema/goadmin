@@ -41,13 +41,6 @@ func (d *Dao) GetRoleByName(c *gin.Context, name string) (*model.Role, error) {
 	return GetWhere(c, d.db, obj, wvs)
 }
 
-func (d *Dao) DeleteRoleMenuByRoleId(c *gin.Context, roleId int) error {
-	obj := &model.RoleMenu{}
-	var wvs []*gcurd.WhereValue
-	wvs = append(wvs, gcurd.EQ("role_id", roleId))
-	return gcurd.DeleteWhere(c, d.db, obj, wvs)
-}
-
 func (d *Dao) GetMenuByName(c *gin.Context, name string) (*model.Menu, error) {
 	obj := &model.Menu{}
 	var wvs []*gcurd.WhereValue

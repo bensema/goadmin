@@ -53,38 +53,3 @@ func (s *Service) PermitAPI(c *gin.Context, adminId int) error {
 
 	return ecode.AccessDenied
 }
-
-func (s *Service) PermitWeb(c *gin.Context, adminId int) error {
-	url := c.FullPath()
-	menu, err := s.dao.GetMenuByUrl(c, url)
-	if err != nil {
-		log.Errorf(err.Error())
-		return ecode.AccessDenied
-	}
-
-	var farr []*gcurd.WhereValue
-	farr = append(farr, gcurd.EQ("admin_id", adminId))
-
-	obj := &model.AdminRole{}
-	admRoles, err := dao.Find(c, s.dao.DB(), obj, farr, obj.New)
-	if err != nil {
-		log.Errorf(err.Error())
-		return ecode.AccessDenied
-	}
-	for _, admRole := range admRoles {
-		var wvs []*gcurd.WhereValue
-		wvs = append(wvs, gcurd.EQ("role_id", admRole.RoleId))
-		wvs = append(wvs, gcurd.EQ("menu_id", menu.Id))
-		obj := &model.RoleMenu{}
-		var roleMenus []*model.RoleMenu
-		roleMenus, err = dao.Find(c, s.dao.DB(), obj, wvs, obj.New)
-		if err != nil {
-			continue
-		}
-		if len(roleMenus) > 0 {
-			return nil
-		}
-	}
-
-	return ecode.AccessDenied
-}

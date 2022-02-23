@@ -6,6 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func init() {
+	gcurd.Level = gcurd.Debug
+}
+
 func Create[T gcurd.Model](c *gin.Context, db *sql.DB, obj T) (sql.Result, error) {
 	return gcurd.Create(c, db, obj)
 }

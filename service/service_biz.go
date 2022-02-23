@@ -286,34 +286,6 @@ func (s *Service) UpdateRole(c *gin.Context, obj *model.Role, id int, ignoreColu
 	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleUpdate, ignoreColumns, mosaicsColumns)
 }
 
-func (s *Service) PageRoleMenu(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RoleMenu], err error) {
-	obj := &model.RoleMenu{}
-	return gPage(c, s.dao.DB(), obj, req, obj.New)
-}
-
-func (s *Service) CreateRoleMenu(c *gin.Context, obj *model.RoleMenu) error {
-	return gCreate(c, s.dao.DB(), obj, model.OpRoleMenuAdd, []string{})
-}
-
-func (s *Service) DeleteRoleMenu(c *gin.Context, id int) error {
-	obj := &model.RoleMenu{}
-	return gDelete(c, s.dao.DB(), obj, id, model.OpRoleMenuDel, []string{})
-}
-
-func (s *Service) GetRoleMenu(c *gin.Context, id int) (*model.RoleMenu, error) {
-	obj := &model.RoleMenu{}
-	return gGet(c, s.dao.DB(), obj, id)
-}
-
-func (s *Service) FindRoleMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.RoleMenu, error) {
-	obj := &model.RoleMenu{}
-	return gFind(c, s.dao.DB(), obj, wvs, obj.New)
-}
-
-func (s *Service) UpdateRoleMenu(c *gin.Context, obj *model.RoleMenu, id int, ignoreColumns []string, mosaicsColumns []string) error {
-	return gUpdate(c, s.dao.DB(), obj, id, model.OpRoleMenuUpdate, ignoreColumns, mosaicsColumns)
-}
-
 func (s *Service) PageRolePermission(c *gin.Context, req *gcurd.Request) (reply *model.PageReply[*model.RolePermission], err error) {
 	obj := &model.RolePermission{}
 	return gPage(c, s.dao.DB(), obj, req, obj.New)

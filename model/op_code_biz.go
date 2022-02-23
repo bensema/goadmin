@@ -43,10 +43,6 @@ const (
 	OpRoleDel    OpCode = "role_del"
 	OpRoleUpdate OpCode = "role_update"
 
-	OpRoleMenuAdd    OpCode = "role_menu_add"
-	OpRoleMenuDel    OpCode = "role_menu_del"
-	OpRoleMenuUpdate OpCode = "role_menu_update"
-
 	OpRolePermissionAdd    OpCode = "role_permission_add"
 	OpRolePermissionDel    OpCode = "role_permission_del"
 	OpRolePermissionUpdate OpCode = "role_permission_update"

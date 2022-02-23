@@ -497,55 +497,6 @@ func (d *Dao) PageFindRole(c *gin.Context, req *gcurd.Request) ([]*model.Role, e
 	return PageFind(c, d.db, obj, req, obj.New)
 }
 
-func (d *Dao) CreateRoleMenu(c *gin.Context, obj *model.RoleMenu) (sql.Result, error) {
-	return Create(c, d.db, obj)
-}
-
-func (d *Dao) DeleteRoleMenu(c *gin.Context, id int) error {
-	obj := &model.RoleMenu{}
-	return Delete(c, d.db, obj, id)
-}
-
-func (d *Dao) UpdateRoleMenu(c *gin.Context, id int, key string, value interface{}) error {
-	obj := &model.RoleMenu{}
-	return Update(c, d.db, obj, id, key, value)
-}
-
-func (d *Dao) UpdateWhereRoleMenu(c *gin.Context, key string, value interface{}, wvs []*gcurd.WhereValue) error {
-	obj := &model.RoleMenu{}
-	return UpdateWhere(c, d.db, obj, key, value, wvs)
-}
-
-func (d *Dao) UpdateWhereKVRoleMenu(c *gin.Context, kvs []gcurd.KeyValue, wvs []*gcurd.WhereValue) error {
-	obj := &model.RoleMenu{}
-	return UpdateWhereKV(c, d.db, obj, kvs, wvs)
-}
-
-func (d *Dao) GetRoleMenu(c *gin.Context, id int) (*model.RoleMenu, error) {
-	obj := &model.RoleMenu{}
-	return Get(c, d.db, obj, id)
-}
-
-func (d *Dao) GetWhereRoleMenu(c *gin.Context, wvs []*gcurd.WhereValue) (*model.RoleMenu, error) {
-	obj := &model.RoleMenu{}
-	return GetWhere(c, d.db, obj, wvs)
-}
-
-func (d *Dao) FindRoleMenu(c *gin.Context, wvs []*gcurd.WhereValue) ([]*model.RoleMenu, error) {
-	obj := &model.RoleMenu{}
-	return Find(c, d.db, obj, wvs, obj.New)
-}
-
-func (d *Dao) PageTotalRoleMenu(c *gin.Context, req *gcurd.Request) (int, error) {
-	obj := &model.RoleMenu{}
-	return PageTotal(c, d.db, obj, req)
-}
-
-func (d *Dao) PageFindRoleMenu(c *gin.Context, req *gcurd.Request) ([]*model.RoleMenu, error) {
-	obj := &model.RoleMenu{}
-	return PageFind(c, d.db, obj, req, obj.New)
-}
-
 func (d *Dao) CreateRolePermission(c *gin.Context, obj *model.RolePermission) (sql.Result, error) {
 	return Create(c, d.db, obj)
 }

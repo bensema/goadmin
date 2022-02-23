@@ -19,6 +19,10 @@ func gPage[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, req *gcurd.Request,
 	objs := make([]T, 0)
 	reply = &model.PageReply[T]{}
 
+	reply.Rows = objs
+	reply.Page = req.Pagination.Page
+	reply.PageSize = req.Pagination.PageSize
+
 	if count, err = dao.PageTotal(c, db, obj, req); err != nil {
 		return
 	}
@@ -30,11 +34,10 @@ func gPage[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, req *gcurd.Request,
 	if objs, err = dao.PageFind(c, db, obj, req, f); err != nil {
 		return
 	}
-	reply.Rows = make([]T, 0)
+
 	reply.Rows = objs
 	reply.RowsTotal = count
-	reply.Page = req.Pagination.Page
-	reply.PageSize = req.Pagination.PageSize
+
 	return
 }
 
@@ -47,7 +50,7 @@ func gCreate[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, op model.OpCode, 
 	obj.SetID(int(id))
 
 	content := ContentNew(obj, mosaicsColumns)
-	result := 1
+	result := model.SUCCESS
 	return logAction(c, db, string(op), content, result)
 }
 
@@ -62,7 +65,7 @@ func gDelete[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, id int, op model.
 		return err
 	}
 	content := ContentNew(old, mosaicsColumns)
-	result := 1
+	result := model.SUCCESS
 	return logAction(c, db, string(op), content, result)
 }
 
@@ -111,23 +114,23 @@ func gUpdate[T gcurd.Model](c *gin.Context, db *sql.DB, obj T, id int, op model.
 	}
 
 	content := logFieldTemp("id", id, nil, true, false) + ";" + ContentDiff(obj, old, mosaicsColumns)
-	result := 1
+	result := model.SUCCESS
 	return logAction(c, db, string(op), content, result)
 }
 
-func logAction(c *gin.Context, db *sql.DB, opCode string, content string, result int) error {
+func logAction(c *gin.Context, db *sql.DB, opCode string, content string, result string) error {
 	operatorInfo, err := GetAdminFromContext(c)
 	if err != nil {
 		return err
 	}
 	recordLog := &model.LogAdminOperation{
-		AdminId:       operatorInfo.Id,
-		Name:          operatorInfo.Name,
-		OperationCode: opCode,
-		Content:       content,
-		Result:        result,
-		Ip:            c.ClientIP(),
-		RecordAt:      xtime.Time(time.Now().Unix()),
+		AdminId:  operatorInfo.Id,
+		Name:     operatorInfo.Name,
+		Action:   opCode,
+		Content:  content,
+		Result:   result,
+		Ip:       c.ClientIP(),
+		RecordAt: xtime.Time(time.Now().Unix()),
 	}
 	_, err = dao.Create(c, db, recordLog)
 	return err

@@ -34,7 +34,7 @@ func (s *Service) AdminLogin(c *gin.Context, username string, password string) e
 		Browser:   b1 + bv,
 		UserAgent: ua.UA(),
 		Url:       c.FullPath(),
-		Result:    1,
+		Result:    model.SUCCESS,
 		Ip:        c.ClientIP(),
 		RecordAt:  xtime.Time(time.Now().Unix()),
 		Remark:    "",
@@ -45,21 +45,32 @@ func (s *Service) AdminLogin(c *gin.Context, username string, password string) e
 
 func (s *Service) FindAdminMenu(c *gin.Context, adminId int) ([]*model.Menu, error) {
 	var res []*model.Menu
+	temp := map[int]struct{}{}
 	adminRoles, err := s.dao.FindAdminRole(c, []*gcurd.WhereValue{gcurd.EQ("admin_id", adminId)})
 	if err != nil {
 		return nil, err
 	}
 	for _, adminRole := range adminRoles {
-		roleMenus, err := s.dao.FindRoleMenu(c, []*gcurd.WhereValue{gcurd.EQ("role_id", adminRole.RoleId)})
+		rolePermissions, err := s.dao.FindRolePermission(c, []*gcurd.WhereValue{gcurd.EQ("role_id", adminRole.RoleId)})
 		if err != nil {
 			continue
 		}
-		for _, roleMenu := range roleMenus {
-			menu, err := s.dao.GetMenu(c, roleMenu.MenuId)
+		for _, rolePermission := range rolePermissions {
+			permissionMenus, err := s.dao.FindPermissionMenu(c, []*gcurd.WhereValue{gcurd.EQ("permission_id", rolePermission.PermissionId)})
 			if err != nil {
 				continue
 			}
-			res = append(res, menu)
+			for _, permissionMenu := range permissionMenus {
+				menu, err := s.dao.GetMenu(c, permissionMenu.MenuId)
+				if err != nil {
+					continue
+				}
+				//去重
+				if _, ok := temp[menu.Id]; !ok {
+					temp[menu.Id] = struct{}{}
+					res = append(res, menu)
+				}
+			}
 		}
 	}
 	return res, err
@@ -191,7 +202,8 @@ func (s *Service) UpdateRoleV2(c *gin.Context, info *model.UpdateRole, filed []s
 	}
 
 	cc := fmt.Sprintf("修改管理员:账户:%s;账户编号:%d;%s", aInfo.Name, aInfo.Id, content)
-	return s.logAction(c, "update_admin", cc, 1)
+	result := model.SUCCESS
+	return s.logAction(c, "update_admin", cc, result)
 
 }
 
@@ -237,7 +249,8 @@ func (s *Service) UpdateAdminV2(c *gin.Context, info *model.UpdateAdmin, filed [
 	}
 
 	cc := fmt.Sprintf("修改管理员:账户:%s;账户编号:%d;%s", aInfo.Name, aInfo.Id, content)
-	return s.logAction(c, "update_admin", cc, 1)
+	result := model.SUCCESS
+	return s.logAction(c, "update_admin", cc, result)
 
 }
 
@@ -253,7 +266,8 @@ func (s *Service) DeleteAdminV2(c *gin.Context, adminId int) error {
 	err = s.dao.DeleteAdminRoleByAdminId(c, adminId)
 
 	cc := fmt.Sprintf("删除管理员:账户:%s;账户编号:%d;%s", aInfo.Name, aInfo.Id, content)
-	return s.logAction(c, "delete_admin", cc, 1)
+	result := model.SUCCESS
+	return s.logAction(c, "delete_admin", cc, result)
 }
 
 func (s *Service) AddAdminV2(c *gin.Context, info *model.AddAdmin) error {
@@ -298,7 +312,8 @@ func (s *Service) AddAdminV2(c *gin.Context, info *model.AddAdmin) error {
 	}
 
 	cc := fmt.Sprintf("添加管理员:账户:%s;账户编号:%d;", info.Name, id)
-	return s.logAction(c, "add_admin", cc, 1)
+	result := model.SUCCESS
+	return s.logAction(c, "add_admin", cc, result)
 }
 
 // 角色
@@ -404,7 +419,8 @@ func (s *Service) AddRoleV2(c *gin.Context, role *model.AddRole) error {
 	}
 
 	content := fmt.Sprintf("添加角色:角色:%s;角色编号:%d;备注：%s", aInfo.Name, id, aInfo.Remark)
-	return s.logAction(c, "add_role", content, 1)
+	result := model.SUCCESS
+	return s.logAction(c, "add_role", content, result)
 }
 
 func (s *Service) DeleteRoleV1(c *gin.Context, id int) error {
@@ -429,13 +445,12 @@ func (s *Service) DeleteRoleV1(c *gin.Context, id int) error {
 	}
 
 	err = s.dao.DeleteRole(c, id)
-	err = s.dao.DeleteRoleMenuByRoleId(c, id)
 	err = s.dao.DeleteRolePermission(c, id)
-
-	return s.logAction(c, "delete_role", fmt.Sprintf("删除角色:角色:%s;角色编号:%d;%s", roleInfo.Name, roleInfo.Id, content), 1)
+	result := model.SUCCESS
+	return s.logAction(c, "delete_role", fmt.Sprintf("删除角色:角色:%s;角色编号:%d;%s", roleInfo.Name, roleInfo.Id, content), result)
 }
 
-func (s *Service) logAction(c *gin.Context, opCode string, content string, result int) error {
+func (s *Service) logAction(c *gin.Context, opCode string, content string, result string) error {
 	return logAction(c, s.dao.DB(), opCode, content, result)
 }
 
@@ -545,7 +560,8 @@ func (s *Service) UpdatePermissionV1(c *gin.Context, info *model.UpdatePermissio
 	}
 
 	cc := fmt.Sprintf("set permission:permission:%s;permission id:%d;%s", pInfo.Name, pInfo.Id, content)
-	return s.logAction(c, "update_permission", cc, 1)
+	result := model.SUCCESS
+	return s.logAction(c, "update_permission", cc, result)
 
 }
 
@@ -580,7 +596,8 @@ func (s *Service) AddPermissionV1(c *gin.Context, permission *model.AddPermissio
 	}
 
 	content := fmt.Sprintf("add permission:permission:%s;permission id:%d;permission group:%s;remark：%s", aInfo.Name, id, aInfo.PermissionGroup, aInfo.Remark)
-	return s.logAction(c, "add_permission", content, 1)
+	result := model.SUCCESS
+	return s.logAction(c, "add_permission", content, result)
 }
 
 func (s *Service) DeletePermissionV1(c *gin.Context, permissionId int) error {
@@ -594,6 +611,6 @@ func (s *Service) DeletePermissionV1(c *gin.Context, permissionId int) error {
 	err = s.dao.DeletePermission(c, permissionId)
 	err = s.dao.DeletePermissionMenuByPermissionId(c, permissionId)
 	err = s.dao.DeletePermissionApiByPermissionId(c, permissionId)
-
-	return s.logAction(c, "delete_permission", fmt.Sprintf("delete permission:permission:%s;permission id:%d;%s", permission.Name, permission.Id, content), 1)
+	result := model.SUCCESS
+	return s.logAction(c, "delete_permission", fmt.Sprintf("delete permission:permission:%s;permission id:%d;%s", permission.Name, permission.Id, content), result)
 }
