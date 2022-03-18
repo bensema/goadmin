@@ -1,9 +1,7 @@
 # GoAdmin
 
 ## 特征
-- 基于 golang+layui 构建管理后台
-- 选型http使用gin框架，layui admin 管理后台(layui对后端开发者友好)
-- 开箱即用的rbac认证系统
+- 基于 golang + react 构建管理后台
 
 ![](https://github.com/bensema/goadmin/blob/main/run.png)
 
@@ -19,9 +17,17 @@ $ cd goadmin
 
 导入目录下的`goadmin.sql`到数据库`goadmin`中
 
+### Backend
 ```shell
 $ cd cmd
-$ go run main.go -c goadmin.toml
+$ go run main.go
 ```
-访问：[http://127.0.0.1:8890](http://127.0.0.1:8890) 账户:root 密码:mozi123
+
+### Frontend 
+```shell
+$ cd web
+$ npm start
+```
+
+访问：[http://127.0.0.1:3000](http://127.0.0.1:3000) 账户:root 密码:mozi123
 
