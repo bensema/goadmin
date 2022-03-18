@@ -3,7 +3,7 @@
 ## 特征
 - 基于 golang + react 构建管理后台
 
-![](https://github.com/bensema/goadmin/blob/main/run.png)
+![run image](https://github.com/bensema/goadmin/blob/main/run.jpg)
 
 
 ## 使用
